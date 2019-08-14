@@ -114,6 +114,9 @@
     <ClCompile Include="Source\SoundEngine.cpp">
       <Filter>SoundEngine</Filter>
     </ClCompile>
+    <ClCompile Include="Source\SpriteAnimation.cpp">
+      <Filter>Scene2D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -193,6 +196,9 @@
     </ClInclude>
     <ClInclude Include="Source\SoundEngine.h">
       <Filter>SoundEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SpriteAnimation.h">
+      <Filter>Scene2D</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
