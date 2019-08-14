@@ -103,7 +103,6 @@ bool CMap::LoadFile(const string mapName)
 					}
 				}
 			}
-
 			theLineCounter++;
 		}
 	}
