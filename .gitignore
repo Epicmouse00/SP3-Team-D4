@@ -3,3 +3,12 @@
 ################################################################################
 
 /.vs/NYP_Framework/v15
+/Base/Debug/Base.tlog/Base.lastbuildstate
+/Base/Debug/Base.tlog
+/Base/Debug
+/Base/Test
+/Common/Debug
+*.exe
+/Debug/Base.pdb
+/Debug/Common.lib
+/Debug/Common.pdb
