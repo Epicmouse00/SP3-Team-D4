@@ -13,18 +13,18 @@
 CPlayerInfo2D *CPlayerInfo2D::s_instance = 0;
 
 CPlayerInfo2D::CPlayerInfo2D(void)
-	: m_dSpeed(5.0)
-	, m_dAcceleration(10.0)
+	: m_dSpeed(4.0)
+	, m_dAcceleration(8.0)
 	, m_bJumpUpwards(false)
 	, m_bJumped(false)
-	, m_dJumpSpeed(10.0)
-	, m_dJumpAcceleration(-10.0)
+	, m_dJumpSpeed(12.0)
+	, m_dJumpAcceleration(-8.0)
 	, m_bJumpKeyHeld(false)
 	, m_bDoubleJump(false)
 	, m_bDoubleJumped(false)
 	, m_bFallDownwards(false)
 	, m_dFallSpeed(0.0)
-	, m_dFallAcceleration(-10.0)
+	, m_dFallAcceleration(-4.0)
 	, m_dElapsedTime(0.0)
 	, mapOffset_x(0)
 	, mapOffset_y(0)
@@ -40,6 +40,7 @@ CPlayerInfo2D::CPlayerInfo2D(void)
 	, rearMapOffset_y(0)
 	, rearMapFineOffset_x(0)
 	, rearMapFineOffset_y(0)
+	, frameState(0)
 {
 }
 
@@ -51,12 +52,12 @@ CPlayerInfo2D::~CPlayerInfo2D(void)
 void CPlayerInfo2D::Init(void)
 {
 	// Set the default values
-	defaultPosition.Set(0,0,10);
+	defaultPosition.Set(0,0,8);
 	defaultTarget.Set(0,0,0);
 	defaultUp.Set(0,1,0);
 
 	// Set the current values
-	position.Set(0, 0, 10);
+	position.Set(0, 0, 8);
 	target.Set(0, 0, 0);
 	up.Set(0, 1, 0);
 
@@ -65,8 +66,8 @@ void CPlayerInfo2D::Init(void)
 	minBoundary.Set(-1, -1, -1);
 
 	// Set default tile sizes
-	tileSize_Width = 25;
-	tileSize_Height = 25;
+	tileSize_Width = 16;
+	tileSize_Height = 16;
 
 	CSoundEngine::GetInstance()->Init();
 	CSoundEngine::GetInstance()->AddSound("Jump", "Image//Mario-jump-sound.mp3");
@@ -137,7 +138,7 @@ void CPlayerInfo2D::SetToJumpUpwards(bool isOnJumpUpwards)
 	{
 		m_bJumpUpwards = true;
 		m_bFallDownwards = false;
-		m_dJumpSpeed = 16.0;
+		m_dJumpSpeed = 12.0;
 
 		CSoundEngine::GetInstance()->PlayASound("Jump");
 	}
@@ -239,7 +240,7 @@ void CPlayerInfo2D::UpdateJumpUpwards(double dt)
 		return;
 	if (m_bDoubleJump && !m_bDoubleJumped)
 	{
-		m_dJumpSpeed = 16.0f;
+		m_dJumpSpeed = 12.0f;
 		m_bDoubleJumped = true;
 	}
 
@@ -859,4 +860,14 @@ void CPlayerInfo2D::UpdateGoodies(const int tileIndex_Column, const int tileInde
 			theMapReference->theScreenMap[tileIndex_Row][tileIndex_Column] = 0;
 		}
 	}
+}
+
+void CPlayerInfo2D::SetFrameState(int frameState)
+{
+	this->frameState = frameState;
+}
+
+int CPlayerInfo2D::SetFrameState(void) const
+{
+	return frameState;
 }

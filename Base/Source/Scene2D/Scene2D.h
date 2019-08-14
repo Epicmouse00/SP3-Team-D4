@@ -36,8 +36,8 @@ private:
 	static CScene2D* sInstance; // The pointer to the object that gets registered
 
 	// Tile information
-	const int kiHalfTileWidth = 12;
-	const int kiHalfTileHeight = 12;
+	const int kiHalfTileWidth = 8;
+	const int kiHalfTileHeight = 8;
 
 	// Scene2D images
 	SpriteEntity* Scene2D_Background;

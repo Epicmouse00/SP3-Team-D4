@@ -194,14 +194,14 @@ void CScene2D::Init()
 
 	// Initialise and load the tile map
 	m_cMap = new CMap();
-	m_cMap->Init(600, 800, 24, 32, 600, 1600);
+	m_cMap->Init(240, 320, 15, 64, 240, 64 * 16);
 	m_cMap->LoadMap("Image//MapDesign.csv");
 
 	// Create the Goodies
 	CreateGoodies();
 
 	m_cRearMap = new CMap();
-	m_cRearMap->Init(600, 800, 24, 32, 600, 1600);
+	m_cRearMap->Init(240, 320, 15, 64, 240, 64 * 16);
 	m_cRearMap->LoadMap("Image//RearMapDesign.csv");
 
 	// Create the playerinfo instance, which manages all information about the player
@@ -220,49 +220,49 @@ void CScene2D::Init()
 	// Create the background image
 	Scene2D_Background = Create::Sprite2DObject("SCENE2D_BKGROUND",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(800.0f, 600.0f, 0.0f), true);
+		Vector3(320.0f, 240.0f, 0.0f), true);
 	Scene2D_TileGround = Create::Sprite2DObject("SCENE2D_TILE_GROUND",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(25.0f, 25.0f, 0.0f));
+		Vector3(16.0f, 16.0f, 0.0f));
 	Scene2D_Hero = Create::Sprite2DObject("SCENE2D_TILE_HERO",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(25.0f, 25.0f, 0.0f));
+		Vector3(16.0f, 16.0f, 0.0f));
 	Scene2D_TileTree = Create::Sprite2DObject("SCENE2D_TILE_TREE",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(25.0f, 25.0f, 0.0f));
+		Vector3(16.0f, 16.0f, 0.0f));
 	Scene2D_TileDoor = Create::Sprite2DObject("SCENE2D_TILE_DOOR",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(25.0f, 25.0f, 0.0f));
+		Vector3(16.0f, 16.0f, 0.0f));
 	Scene2D_RearStructure = Create::Sprite2DObject("SCENE2D_TILE_REARSTRUCTURE",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(25.0f, 25.0f, 0.0f));
+		Vector3(16.0f, 16.0f, 0.0f));
 
 	Scene2D_Hero_Animated = new SpriteEntity*[7];
 	Scene2D_Hero_Animated[0] = Create::Sprite2DObject("SCENE2D_TILE_HERO_RIGHT_0",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(25.0f, 25.0f, 0.0f));
+		Vector3(16.0f, 16.0f, 0.0f));
 	Scene2D_Hero_Animated[1] = Create::Sprite2DObject("SCENE2D_TILE_HERO_RIGHT_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(25.0f, 25.0f, 0.0f));
+		Vector3(16.0f, 16.0f, 0.0f));
 	Scene2D_Hero_Animated[2] = Create::Sprite2DObject("SCENE2D_TILE_HERO_RIGHT_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(25.0f, 25.0f, 0.0f));
+		Vector3(16.0f, 16.0f, 0.0f));
 	Scene2D_Hero_Animated[3] = Create::Sprite2DObject("SCENE2D_TILE_HERO_RIGHT_3",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(25.0f, 25.0f, 0.0f));
+		Vector3(16.0f, 16.0f, 0.0f));
 	Scene2D_Hero_Animated[4] = Create::Sprite2DObject("SCENE2D_TILE_HERO_LEFT_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(25.0f, 25.0f, 0.0f));
+		Vector3(16.0f, 16.0f, 0.0f));
 	Scene2D_Hero_Animated[5] = Create::Sprite2DObject("SCENE2D_TILE_HERO_LEFT_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(25.0f, 25.0f, 0.0f));
+		Vector3(16.0f, 16.0f, 0.0f));
 	Scene2D_Hero_Animated[6] = Create::Sprite2DObject("SCENE2D_TILE_HERO_LEFT_3",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(25.0f, 25.0f, 0.0f));
+		Vector3(16.0f, 16.0f, 0.0f));
 
 	Scene2D_Goodies_TreasureChest = Create::Sprite2DObject("SCENE2D_TILE_TREASURECHEST",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(25.0f, 25.0f, 0.0f));
+		Vector3(16.0f, 16.0f, 0.0f));
 	
 	// Set the Animation indices
 	thePlayerInfo->SetRightIndices(0, 3);
@@ -286,7 +286,7 @@ void CScene2D::Init()
 	//	Vector3(25.0f, 25.0f, 0.0f));
 		
 	// Create a text object
-	float fontSize = 25.0f;
+	float fontSize = 16.0f;
 	float halfFontSize = fontSize / 2.0f;
 	for (int i = 0; i < 3; ++i)
 	{
@@ -413,7 +413,7 @@ void CScene2D::RenderTileMap()
 			{
 				Scene2D_TileGround->SetPosition(Vector3(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
 															- thePlayerInfo->GetMapFineOffset_x(), 
-														575 - i*m_cMap->GetTileSize_Height() + kiHalfTileHeight, 
+														224 - i*m_cMap->GetTileSize_Height() + kiHalfTileHeight, 
 														0.0f));
 				Scene2D_TileGround->RenderUI();
 			}
@@ -421,7 +421,7 @@ void CScene2D::RenderTileMap()
 			{
 				Scene2D_TileTree->SetPosition(Vector3(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth 
 															- thePlayerInfo->GetMapFineOffset_x(),
-													  575 - i*m_cMap->GetTileSize_Height() + kiHalfTileHeight,
+													  224 - i*m_cMap->GetTileSize_Height() + kiHalfTileHeight,
 													  0.0f));
 				Scene2D_TileTree->RenderUI();
 			}
@@ -429,7 +429,7 @@ void CScene2D::RenderTileMap()
 			{
 				Scene2D_TileDoor->SetPosition(Vector3(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
 					- thePlayerInfo->GetMapFineOffset_x(),
-					575 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight,
+					224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight,
 					0.0f));
 				Scene2D_TileDoor->RenderUI();
 			}
@@ -437,7 +437,7 @@ void CScene2D::RenderTileMap()
 			{
 				Scene2D_Goodies_TreasureChest->SetPosition(Vector3(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
 					- thePlayerInfo->GetMapFineOffset_x(),
-					575 - i*m_cMap->GetTileSize_Height() + kiHalfTileHeight,
+					224 - i*m_cMap->GetTileSize_Height() + kiHalfTileHeight,
 					0.0f));
 				Scene2D_Goodies_TreasureChest->RenderUI();
 			}
