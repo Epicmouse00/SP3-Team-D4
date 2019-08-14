@@ -1,0 +1,26 @@
+﻿  CameraBase.cpp
+  Collider.cpp
+  EntityBase.cpp
+  GraphicsManager.cpp
+  KeyboardController.cpp
+  LightBase.cpp
+  LoadOBJ.cpp
+  LoadTGA.cpp
+  MathUtility.cpp
+  MatrixStack.cpp
+  Mesh.cpp
+  MeshBuilder.cpp
+  MouseController.cpp
+  Mtx44.cpp
+  RenderHelper.cpp
+  SceneManager.cpp
+  ShaderProgram.cpp
+  timer.cpp
+  Utility.cpp
+  Vector2.cpp
+  Generating Code...
+  Compiling...
+  Vector3.cpp
+  Win32Input.cpp
+  Generating Code...
+  Common.vcxproj -> C:\Users\Jeremy Yeo\Desktop\NYP_Framework_Week07_SOLUTION - Copy\Debug\Common.lib
