@@ -45,8 +45,8 @@ CScene2D::~CScene2D()
 	// Delete the sprites
 	delete Scene2D_Goodies_TreasureChest;
 	Scene2D_Goodies_TreasureChest = NULL;
-	delete Scene2D_Enemy;
-	Scene2D_Enemy = NULL;
+	//delete Scene2D_Enemy;
+	//Scene2D_Enemy = NULL;
 	delete Scene2D_Background;
 	Scene2D_Background = NULL;
 	delete Scene2D_TileGround;
@@ -60,13 +60,13 @@ CScene2D::~CScene2D()
 	delete Scene2D_RearStructure;
 	Scene2D_RearStructure = NULL;
 
-	for (int i = 0; i < m_iNumEnemy; ++i)
-	{
-		delete theEnemy[i];
-		theEnemy[i] = NULL;
-	}
-	delete theEnemy;
-	theEnemy = NULL;
+	//for (int i = 0; i < m_iNumEnemy; ++i)
+	//{
+	//	delete theEnemy[i];
+	//	theEnemy[i] = NULL;
+	//}
+	//delete theEnemy;
+	//theEnemy = NULL;
 
 	for (int i = 0; i < 7; ++i)
 	{
