@@ -42,6 +42,8 @@ CScene2D::CScene2D(SceneManager* _sceneMgr)
 
 CScene2D::~CScene2D()
 {
+	delete spritesheet;
+	spritesheet = NULL;
 	// Delete the sprites
 	delete Scene2D_Goodies_TreasureChest;
 	Scene2D_Goodies_TreasureChest = NULL;
@@ -182,11 +184,14 @@ void CScene2D::Init()
 	MeshBuilder::GetInstance()->GetMesh("SCENE2D_TILE_HERO_LEFT_2")->textureID = LoadTGA("Image//Scene2D_Tile_Hero_Left_2.tga");
 	MeshBuilder::GetInstance()->GenerateQuad("SCENE2D_TILE_HERO_LEFT_3", Color(1, 1, 1), 1.f);
 	MeshBuilder::GetInstance()->GetMesh("SCENE2D_TILE_HERO_LEFT_3")->textureID = LoadTGA("Image//Scene2D_Tile_Hero_Left_3.tga");
-
+	
 	MeshBuilder::GetInstance()->GenerateQuad("SCENE2D_TILE_ENEMY", Color(1, 1, 1), 1.f);
 	MeshBuilder::GetInstance()->GetMesh("SCENE2D_TILE_ENEMY")->textureID = LoadTGA("Image//Scene2D_Tile_Enemy.tga");
 	MeshBuilder::GetInstance()->GenerateQuad("SCENE2D_TILE_TREASURECHEST", Color(1, 1, 1), 1.f);
 	MeshBuilder::GetInstance()->GetMesh("SCENE2D_TILE_TREASURECHEST")->textureID = LoadTGA("Image//Scene2D_Tile_TreasureChest.tga");
+	
+	MeshBuilder::GetInstance()->GenerateSpriteAnimation("sprite", 16, 16);
+	MeshBuilder::GetInstance()->GetMesh("sprite")->textureID = LoadTGA("Image//spritesheet.tga");
 
 	// Create entities into the scene
 	Create::Entity("reference", Vector3(0.0f, 0.0f, 0.0f)); // Reference
@@ -236,7 +241,7 @@ void CScene2D::Init()
 	Scene2D_RearStructure = Create::Sprite2DObject("SCENE2D_TILE_REARSTRUCTURE",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-
+	
 	Scene2D_Hero_Animated = new SpriteEntity*[7];
 	Scene2D_Hero_Animated[0] = Create::Sprite2DObject("SCENE2D_TILE_HERO_RIGHT_0",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
@@ -259,7 +264,7 @@ void CScene2D::Init()
 	Scene2D_Hero_Animated[6] = Create::Sprite2DObject("SCENE2D_TILE_HERO_LEFT_3",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-
+	
 	Scene2D_Goodies_TreasureChest = Create::Sprite2DObject("SCENE2D_TILE_TREASURECHEST",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));

@@ -32,6 +32,7 @@ private:
 	ShaderProgram* currProg;
 	FPSCamera camera;
 	TextEntity* textObj[3];
+	SpriteAnimation* spritesheet;
 
 	static CScene2D* sInstance; // The pointer to the object that gets registered
 
