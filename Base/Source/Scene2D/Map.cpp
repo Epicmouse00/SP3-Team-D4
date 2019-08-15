@@ -22,7 +22,8 @@ CMap::~CMap(void)
 
 void CMap::Init(const int theScreen_Height, const int theScreen_Width, 
 				const int theNumOfTiles_Height, const int theNumOfTiles_Width, 
-				int theTileSize_Height, int theTileSize_Width)
+				const int theMap_Height, const int theMap_Width,
+	int theTileSize_Height, int theTileSize_Width)
 {
 	this->theScreen_Height		= theScreen_Height;
 	this->theScreen_Width		= theScreen_Width;
@@ -136,6 +137,14 @@ int CMap::getMapHeight(void)
 int CMap::getMapWidth(void)
 {
 	return theMap_Width;
+}
+int CMap::getScreenHeight(void)
+{
+	return theScreen_Height;
+}
+int CMap::getScreenWidth(void)
+{
+	return theScreen_Width;
 }
 // Get the number of tiles for height of the map
 int CMap::getNumOfTiles_MapHeight(void)

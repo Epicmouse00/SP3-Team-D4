@@ -157,21 +157,22 @@ void CScene2D::Init()
 
 	// Initialise and load the tile map
 	m_cMap = new CMap();
-	m_cMap->Init(Application::GetInstance().GetWindowHeight(), Application::GetInstance().GetWindowWidth(), 15, 64);
+	m_cMap->Init(Application::GetInstance().GetWindowHeight(), Application::GetInstance().GetWindowWidth(), 15, 64, 240, 1024);
 	m_cMap->LoadMap("Image//MapDesign.csv");
 
 	// Create the Goodies
 	CreateGoodies();
 
 	m_cRearMap = new CMap();
-	m_cRearMap->Init(Application::GetInstance().GetWindowHeight(), Application::GetInstance().GetWindowWidth(), 15, 64);
+	m_cRearMap->Init(Application::GetInstance().GetWindowHeight(), Application::GetInstance().GetWindowWidth(), 15, 64, 240, 1024);
 	m_cRearMap->LoadMap("Image//RearMapDesign.csv");
 
 	// Create the playerinfo instance, which manages all information about the player
 	thePlayerInfo = CPlayerInfo2D::GetInstance();
 	thePlayerInfo->Init();
 	thePlayerInfo->SetPos(Vector3(50.0f + kiHalfTileWidth, 100.0f + kiHalfTileHeight));
-	thePlayerInfo->SetBoundary(Vector3(m_cMap->getMapWidth() , m_cMap->getMapHeight(), 0.0f), Vector3(m_cMap->GetTileSize_Width(), m_cMap->GetTileSize_Height(), 0.0f));
+	//thePlayerInfo->SetBoundary(Vector3(210.f, 230.0f, 0.0f), Vector3(10.0f, 10.0f, 0.0f));
+	thePlayerInfo->SetBoundary(Vector3(m_cMap->getScreenWidth(), m_cMap->getScreenHeight(), 0.0f), Vector3(32, 0, 0.0f));
 	thePlayerInfo->SetTileSize(m_cMap->GetTileSize_Width(), m_cMap->GetTileSize_Height());
 	thePlayerInfo->SetMap(m_cMap);
 	thePlayerInfo->SetRearMap(m_cRearMap);
@@ -197,17 +198,41 @@ void CScene2D::Init()
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
 	
-	Scene2D_Hero_Animated = new SpriteEntity*[8];
-	Scene2D_Hero_Animated[0] = Create::Sprite2DObject("Lonin_Right_Run_1",
+	Scene2D_Hero_Animated = new SpriteEntity*[thePlayerInfo->GetFrameTotal()];
+	Scene2D_Hero_Animated[0] = Create::Sprite2DObject("Lonin_Right_Idle_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[1] = Create::Sprite2DObject("Lonin_Right_Run_2",
+	Scene2D_Hero_Animated[1] = Create::Sprite2DObject("Lonin_Right_Idle_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[2] = Create::Sprite2DObject("Lonin_Left_Run_1",
+	Scene2D_Hero_Animated[2] = Create::Sprite2DObject("Lonin_Left_Idle_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[3] = Create::Sprite2DObject("Lonin_Left_Run_2",
+	Scene2D_Hero_Animated[3] = Create::Sprite2DObject("Lonin_Left_Idle_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[4] = Create::Sprite2DObject("Lonin_Right_Run_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[5] = Create::Sprite2DObject("Lonin_Right_Run_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[6] = Create::Sprite2DObject("Lonin_Left_Run_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[7] = Create::Sprite2DObject("Lonin_Left_Run_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[4] = Create::Sprite2DObject("Lonin_Right_Attack_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[5] = Create::Sprite2DObject("Lonin_Right_Attack_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[6] = Create::Sprite2DObject("Lonin_Left_Attack_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[7] = Create::Sprite2DObject("Lonin_Left_Attack_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
 	Scene2D_Hero_Animated[4] = Create::Sprite2DObject("Lonin_Right_Jump_1",
@@ -226,10 +251,6 @@ void CScene2D::Init()
 	//Scene2D_Goodies_TreasureChest = Create::Sprite2DObject("SCENE2D_TILE_TREASURECHEST",
 	//	Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 	//	Vector3(16.0f, 16.0f, 0.0f));
-	
-	// Set the Animation indices
-	thePlayerInfo->SetRightIndices(0, 1);
-	thePlayerInfo->SetLeftIndices(2, 3);
 
 	// Create the 3 enemies
 	//m_iNumEnemy = 3;
@@ -362,9 +383,9 @@ void CScene2D::RenderTileMap()
 {
 	int m = 0;
 	thePlayerInfo->UpdateMapFineOffset();
-	for (int i = 0; i < m_cMap->GetNumOfTiles_Height(); i++)
+	for (int i = 0; i < m_cMap->getNumOfTiles_MapHeight(); i++)
 	{
-		for (int k = 0; k < m_cMap->GetNumOfTiles_Width()+1; k++)
+		for (int k = 0; k < m_cMap->getNumOfTiles_MapWidth()+1; k++)
 		{
 			m = thePlayerInfo->GetTileOffset_x() + k;
 
@@ -433,9 +454,9 @@ void CScene2D::RenderRearTileMap(void)
 {
 	int m = 0;
 	thePlayerInfo->UpdateRearMap();
-	for (int i = 0; i < m_cRearMap->GetNumOfTiles_Height(); i++)
+	for (int i = 0; i < m_cRearMap->GetNumOfTiles_Height(); ++i)
 	{
-		for (int k = 0; k < m_cRearMap->GetNumOfTiles_Width() + 1; k++)
+		for (int k = 0; k < m_cRearMap->GetNumOfTiles_Width() + 1; ++k)
 		{
 			m = thePlayerInfo->GetRearTileOffset_x() + k;
 
@@ -469,8 +490,8 @@ void CScene2D::RenderPlayer()
 	//	Scene2D_Hero->RenderUI();
 
 	// Display the player
-	Scene2D_Hero_Animated[thePlayerInfo->GetAnimationIndex()]->SetPosition(thePlayerInfo->GetPos());
-	Scene2D_Hero_Animated[thePlayerInfo->GetAnimationIndex()]->RenderUI();
+	Scene2D_Hero_Animated[thePlayerInfo->GetFrameState()]->SetPosition(thePlayerInfo->GetPos());
+	Scene2D_Hero_Animated[thePlayerInfo->GetFrameState()]->RenderUI();
 }
 
 // Render the enemy

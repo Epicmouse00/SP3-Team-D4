@@ -2,12 +2,8 @@
 
 
 CAnimation::CAnimation()
-	: m_bAnimationInvert(false)
-	, m_iAnimation_Index(0)
-	, m_iRight_Start(0)
-	, m_iRight_End(0)
-	, m_iLeft_Start(0)
-	, m_iLeft_End(0)
+	: time(0)
+	, frameState(P_IDLE_R1)
 {
 }
 
@@ -17,59 +13,60 @@ CAnimation::~CAnimation()
 }
 
 // Set Animation status; left or right
-void CAnimation::SetAnimationStatus(bool m_bAnimationInvert)
+void CAnimation::SetAnimationStatus(int frameState)
 {
-	this->m_bAnimationInvert = m_bAnimationInvert;
-	if (m_bAnimationInvert == false)
-	{
-		// If the player is facing right
-		m_iAnimation_Index = m_iRight_Start;
-	}
-	else
-	{
-		// If the player is facing left
-		m_iAnimation_Index = m_iLeft_Start;
-	}
+	if (this->frameState != GuessNextFrame(frameState))
+		this->frameState = frameState;
 }
 // Update the Animation Index
-void CAnimation::UpdateAnimationIndex(void)
+void CAnimation::UpdateAnimationIndex(double dt)
 {
-	if (m_bAnimationInvert == false)
+	time += dt;
+	if (time > 3)
 	{
-		// If the player is facing right
-		m_iAnimation_Index += 1;
-		if (m_iAnimation_Index >= m_iRight_End)
-			m_iAnimation_Index = m_iRight_Start;
-	}
-	else
-	{
-		// If the player is facing left
-		m_iAnimation_Index -= 1;
-		if (m_iAnimation_Index <= m_iLeft_Start)
-			m_iAnimation_Index = m_iLeft_End;
+		time = 0;
+		frameState = GuessNextFrame(frameState);
 	}
 }
-// Get the Animation status
-bool CAnimation::GetAnimationStatus(void) const
+
+int CAnimation::GetFrameState(void) const
 {
-	return m_bAnimationInvert;
-}
-// Get the Animation index
-int CAnimation::GetAnimationIndex(void) const
-{
-	return m_iAnimation_Index;
+	return frameState;
 }
 
-// Set right indices
-void CAnimation::SetRightIndices(const int m_iRight_Start, const int m_iRight_End)
+int CAnimation::GetFrameTotal(void) const
 {
-	this->m_iRight_Start = m_iRight_Start;
-	this->m_iRight_End = m_iRight_End;
+	return P_TOTAL;
 }
 
-// Set left indices
-void CAnimation::SetLeftIndices(const int m_iLeft_Start, const int m_iLeft_End)
+int CAnimation::GuessNextFrame(int frame) const
 {
-	this->m_iLeft_Start = m_iLeft_Start;
-	this->m_iLeft_End = m_iLeft_End;
+	switch (frame)
+	{
+	case P_IDLE_L2:
+	case P_IDLE_R2:
+	case P_RUN_L2:
+	case P_RUN_R2:
+	case P_FALL_L2:
+	case P_FALL_R2:
+	case P_POGO_L2:
+	case P_POGO_R2:
+		return frame - 1;
+		break;
+	case P_ATTACK_L2:
+	case P_ROLL_L4:
+		return P_IDLE_L1;
+		break;
+	case P_ATTACK_R2:
+	case P_ROLL_R4:
+		return P_IDLE_R1;
+		break;
+	case P_JUMP_L2:
+	case P_JUMP_R2:
+		return frame;
+		break;
+	default:
+		return frame + 1;
+		break;
+	}
 }

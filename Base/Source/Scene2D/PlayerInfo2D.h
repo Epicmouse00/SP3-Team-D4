@@ -10,41 +10,6 @@ protected:
 	CPlayerInfo2D(void);
 
 public:
-	enum framestate
-	{
-		P_IDLE_R1,
-		P_IDLE_R2,
-		P_IDLE_L1,
-		P_IDLE_L2,
-		P_RUN_R1,
-		P_RUN_R2,
-		P_RUN_L1,
-		P_RUN_L2,
-		P_ATTACK_R1,
-		P_ATTACK_R2,
-		P_ATTACK_L1,
-		P_ATTACK_L2,
-		P_JUMP_R1,
-		P_JUMP_R2,
-		P_JUMP_L1,
-		P_JUMP_L2,
-		P_FALL_R1,
-		P_FALL_R2,
-		P_FALL_L1,
-		P_FALL_L2,
-		P_POGO_R1,
-		P_POGO_R2,
-		P_POGO_L1,
-		P_POGO_L2,
-		P_ROLL_R1,
-		P_ROLL_R2,
-		P_ROLL_R3,
-		P_ROLL_R4,
-		P_ROLL_L1,
-		P_ROLL_L2,
-		P_ROLL_L3,
-		P_ROLL_L4
-	};
 	static CPlayerInfo2D *GetInstance()
 	{
 		if (!s_instance)
@@ -175,10 +140,6 @@ public:
 	// Check for collision with CGoodies instances
 	void UpdateGoodies(const int tileIndex_Column, const int tileIndex_Row);
 
-	// Animation
-	void SetFrameState(int frameState);
-	int SetFrameState(void) const;
-
 private:
 	Vector3 defaultPosition, defaultTarget, defaultUp;
 	Vector3 target, up;
@@ -214,7 +175,4 @@ private:
 	int rearTileOffset_x, rearTileOffset_y;
 	int rearMapOffset_x, rearMapOffset_y;
 	int rearMapFineOffset_x, rearMapFineOffset_y;
-
-	// For Animation
-	int frameState;
 };

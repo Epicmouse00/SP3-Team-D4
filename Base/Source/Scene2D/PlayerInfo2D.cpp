@@ -40,7 +40,6 @@ CPlayerInfo2D::CPlayerInfo2D(void)
 	, rearMapOffset_y(0)
 	, rearMapFineOffset_x(0)
 	, rearMapFineOffset_y(0)
-	, frameState(0)
 {
 }
 
@@ -424,7 +423,7 @@ void CPlayerInfo2D::Update(double dt)
 	// Calculate the tile indices for the PlayerInfo2D's latest position
 	checkPosition_X = (int)((mapOffset_x + position.x - (tileSize_Width >> 1)) / tileSize_Width);
 	checkPosition_Y = theMapReference->GetNumOfTiles_Height() -
-						(int)ceil(position.y / theMapReference->GetTileSize_Height());
+		(int)ceil(position.y / theMapReference->GetTileSize_Height());
 
 	UpdateGoodies(checkPosition_X, checkPosition_Y);
 }
@@ -441,39 +440,34 @@ void CPlayerInfo2D::UpdateTileOffset(void)
 void CPlayerInfo2D::UpdateSideMovements(void)
 {
 	// Calculate the position to check on, using the player's reference point
-	checkPosition_Y = theMapReference->GetNumOfTiles_Height() - 
-						(int)ceil(position.y / theMapReference->GetTileSize_Height());
+	checkPosition_Y = theMapReference->GetNumOfTiles_Height() -
+		(int)ceil(position.y / theMapReference->GetTileSize_Height());
 
 	// Check if the hero can move sideways
-	if (KeyboardController::GetInstance()->IsKeyDown('A'))
+	if (KeyboardController::GetInstance()->IsKeyDown('A') && !isOnAir())
 	{
 		// Find the tile number which the player's left side is on
 		checkPosition_X = (int)((mapOffset_x + position.x - (tileSize_Width >> 1)) / tileSize_Width);
-
-		if (position.y + tileSize_Height > maxBoundary.y)
-			return;
 
 		if (checkPosition_X >= 0)
 		{
 			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
 			{
-				position.x = (checkPosition_X + 1 - tileOffset_x) * tileSize_Width - 
-								mapFineOffset_x + (tileSize_Width >> 1);
+				position.x = (checkPosition_X + 1 - tileOffset_x) * tileSize_Width - mapFineOffset_x + (tileSize_Width >> 1);
 			}
 		}
 	}
-	else if (KeyboardController::GetInstance()->IsKeyDown('D'))
+	else if (KeyboardController::GetInstance()->IsKeyDown('D') && !isOnAir())
 	{
 		// Find the tile number which the player's right side is on
 		checkPosition_X = (int)((mapOffset_x + position.x + (tileSize_Width >> 1)) / tileSize_Width);
 
-		if (checkPosition_X < theMapReference->GetNumOfTiles_Width())
+		if (checkPosition_X < theMapReference->getNumOfTiles_MapWidth())
 		{
 			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
 			{
 				// this part causes the player to be stuck when there is a tile on its right
-				position.x = (checkPosition_X - 1 - tileOffset_x) * tileSize_Width - 
-					mapFineOffset_x + (tileSize_Width >> 1);
+				position.x = (checkPosition_X - 1 - tileOffset_x) * tileSize_Width - mapFineOffset_x + (tileSize_Width >> 1);
 			}
 		}
 	}
@@ -502,14 +496,14 @@ void CPlayerInfo2D::MoveLeftRight(const bool mode, const float timeDiff)
 	if (mode)
 	{
 		position.x = position.x - (int)(m_dSpeed * timeDiff);
-		SetAnimationStatus(true);
-		UpdateAnimationIndex();
+		SetAnimationStatus(CAnimation::P_RUN_L1);
+		UpdateAnimationIndex(timeDiff);
 	}
 	else
 	{
 		position.x = position.x + (int)(m_dSpeed * timeDiff);
-		SetAnimationStatus(false);
-		UpdateAnimationIndex();
+		SetAnimationStatus(CAnimation::P_RUN_R1);
+		UpdateAnimationIndex(timeDiff);
 	}
 
 	UpdateSideMovements();
@@ -550,22 +544,22 @@ bool CPlayerInfo2D::isOnAir(void)
 void CPlayerInfo2D::Constrain(void)
 {
 	// Constrain player within the boundary
-	if (position.x > maxBoundary.x - (tileSize_Width >> 1))
+	if (position.x >= maxBoundary.x - (tileSize_Width >> 1))
 	{
 		position.x = maxBoundary.x - (tileSize_Width >> 1);
-		mapOffset_x = mapOffset_x + m_dSpeed;
-		if (mapOffset_x > maxBoundary.x + tileSize_Width)
-			mapOffset_x = maxBoundary.x + tileSize_Width;
+		mapOffset_x += m_dSpeed;
+		if (mapOffset_x > theMapReference->getScreenWidth())
+			mapOffset_x = theMapReference->getScreenWidth();
 	}
 	if (position.y > maxBoundary.y - tileSize_Height)
 	{
 		position.y = maxBoundary.y - (tileSize_Height >> 1);
 	}
-	if (position.x < minBoundary.x - (tileSize_Width >> 1))
+	if (position.x <= minBoundary.x)
 	{
-		position.x = minBoundary.x - (tileSize_Width >> 1);
-		mapOffset_x = mapOffset_x - m_dSpeed;
-		if (mapOffset_x < minBoundary.x)
+		position.x = minBoundary.x;
+		mapOffset_x -= m_dSpeed;
+		if (mapOffset_x < 0)
 			mapOffset_x = 0;
 	}
 	if (position.y < minBoundary.y)
@@ -599,7 +593,7 @@ void CPlayerInfo2D::SetRearMap(CMap* m_cRearMap)
 // Update the rear map
 void CPlayerInfo2D::UpdateRearMap(void)
 {
-	rearMapOffset_x = (int)(mapOffset_x / 2);
+	rearMapOffset_x = (int)(mapOffset_x/* / 2*/);
 	rearTileOffset_x = (int)(rearMapOffset_x / theRearMapReference->GetTileSize_Width());
 	if (rearTileOffset_x + theRearMapReference->GetNumOfTiles_Width() > 
 			theRearMapReference->getNumOfTiles_MapWidth())
@@ -867,14 +861,4 @@ void CPlayerInfo2D::UpdateGoodies(const int tileIndex_Column, const int tileInde
 			theMapReference->theScreenMap[tileIndex_Row][tileIndex_Column] = 0;
 		}
 	}
-}
-
-void CPlayerInfo2D::SetFrameState(int frameState)
-{
-	this->frameState = frameState;
-}
-
-int CPlayerInfo2D::SetFrameState(void) const
-{
-	return frameState;
 }

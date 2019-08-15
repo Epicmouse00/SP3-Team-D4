@@ -12,9 +12,11 @@ public:
 	CMap(void);
 	~CMap(void);
 
-	void Init(	const int theScreen_Height, const int theScreen_Width, 
-				const int theNumOfTiles_Height, const int theNumOfTiles_Width, 
-				const int theTileSize_Height = 16, const int theTileSize_Width = 16);
+
+	void Init(const int theScreen_Height, const int theScreen_Width,
+		const int theNumOfTiles_Height, const int theNumOfTiles_Width,
+		const int theMap_Height, const int theMap_Width,
+		const int theTileSize_Height = 16, const int theTileSize_Width = 16);
 	bool LoadMap(const string mapName);
 	int GetNumOfTiles_Height(void);			// Get the number of tiles for height of the screen
 	int GetNumOfTiles_Width(void);			// Get the number of tiles for width of the screen
@@ -26,6 +28,9 @@ public:
 
 	int getMapHeight(void);				// Get height of screen
 	int getMapWidth(void);				// Get width of screen
+
+	int getScreenHeight(void);
+	int getScreenWidth(void);
 
 	vector<vector<int> > theScreenMap;
 

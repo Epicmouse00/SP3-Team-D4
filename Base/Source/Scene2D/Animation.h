@@ -2,39 +2,56 @@
 class CAnimation
 {
 public:
+	enum framestate
+	{
+		P_IDLE_R1,
+		P_IDLE_R2,
+		P_IDLE_L1,
+		P_IDLE_L2,
+		P_RUN_R1,
+		P_RUN_R2,
+		P_RUN_L1,
+		P_RUN_L2,
+		P_ATTACK_R1,
+		P_ATTACK_R2,
+		P_ATTACK_L1,
+		P_ATTACK_L2,
+		P_JUMP_R1,
+		P_JUMP_R2,
+		P_JUMP_L1,
+		P_JUMP_L2,
+		P_FALL_R1,
+		P_FALL_R2,
+		P_FALL_L1,
+		P_FALL_L2,
+		P_POGO_R1,
+		P_POGO_R2,
+		P_POGO_L1,
+		P_POGO_L2,
+		P_ROLL_R1,
+		P_ROLL_R2,
+		P_ROLL_R3,
+		P_ROLL_R4,
+		P_ROLL_L1,
+		P_ROLL_L2,
+		P_ROLL_L3,
+		P_ROLL_L4,
+		P_TOTAL
+	};
 	CAnimation();
 	virtual ~CAnimation();
 
 	// Set Animation status; left or right
-	void SetAnimationStatus(bool m_bAnimationInvert);
+	void SetAnimationStatus(int frameState);
 	// Update the Animation Index
-	void UpdateAnimationIndex(void);
-	// Get the Animation status
-	bool GetAnimationStatus(void) const;
-	// Get the Animation index
-	int GetAnimationIndex(void) const;
+	void UpdateAnimationIndex(double dt);
 
-	// Set right indices
-	void SetRightIndices(const int m_iRight_Start, const int m_iRight_End);
-	// Set left indices
-	void SetLeftIndices(const int m_iLeft_Start, const int m_iLeft_End);
+	int GetFrameState(void) const;
+	int GetFrameTotal(void) const;
+	int GuessNextFrame(int frame) const;
 
 private:
-	// Flag to indicate if the Animation is inverted to the left. 
-	// true==face right, false==face left
-	bool m_bAnimationInvert;
-
-	// 0 == The default hero frame, 1/2/3 == Right facing animations, 
-	// 4/5/6 == Left facing animations
-	int m_iAnimation_Index;
-
-	// Start index of right facing Animations
-	int m_iRight_Start;
-	// End index of right facing Animations
-	int m_iRight_End;
-	// Start index of left facing Animations
-	int m_iLeft_Start;
-	// End index of left facing Animations
-	int m_iLeft_End;
+	int frameState;
+	double time;
 };
 
