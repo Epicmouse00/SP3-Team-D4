@@ -42,9 +42,11 @@ CScene2D::CScene2D(SceneManager* _sceneMgr)
 
 CScene2D::~CScene2D()
 {
+	//delete spritesheet;
+	//spritesheet = NULL;
 	// Delete the sprites
-	delete Scene2D_Goodies_TreasureChest;
-	Scene2D_Goodies_TreasureChest = NULL;
+	//delete Scene2D_Goodies_TreasureChest;
+	//Scene2D_Goodies_TreasureChest = NULL;
 	//delete Scene2D_Enemy;
 	//Scene2D_Enemy = NULL;
 	delete Scene2D_Background;
@@ -53,8 +55,8 @@ CScene2D::~CScene2D()
 	Scene2D_TileGround = NULL;
 	delete Scene2D_Hero;
 	Scene2D_Hero = NULL;
-	delete Scene2D_TileTree;
-	Scene2D_TileTree = NULL;
+	//delete Scene2D_TileTree;
+	//Scene2D_TileTree = NULL;
 	delete Scene2D_TileDoor;
 	Scene2D_TileDoor = NULL;
 	delete Scene2D_RearStructure;
@@ -144,49 +146,10 @@ void CScene2D::Init()
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// Load all the meshes
-	MeshBuilder::GetInstance()->GenerateAxes("reference");
-	MeshBuilder::GetInstance()->GenerateCrossHair("crosshair");
-	MeshBuilder::GetInstance()->GenerateQuad("quad", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GetMesh("quad")->textureID = LoadTGA("Image//calibri.tga");
-	MeshBuilder::GetInstance()->GenerateText("text", 16, 16);
-	MeshBuilder::GetInstance()->GetMesh("text")->textureID = LoadTGA("Image//calibri.tga");
-	MeshBuilder::GetInstance()->GetMesh("text")->material.kAmbient.Set(1, 0, 0);
-
-	// Load background image
-	MeshBuilder::GetInstance()->GenerateQuad("SCENE2D_BKGROUND", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GetMesh("SCENE2D_BKGROUND")->textureID = LoadTGA("Image//Scene2D_Background.tga");
-
-	MeshBuilder::GetInstance()->GenerateQuad("SCENE2D_TILE_GROUND", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GetMesh("SCENE2D_TILE_GROUND")->textureID = LoadTGA("Image//Scene2D_Tile_Ground.tga");
-	MeshBuilder::GetInstance()->GenerateQuad("SCENE2D_TILE_HERO", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GetMesh("SCENE2D_TILE_HERO")->textureID = LoadTGA("Image//Scene2D_Tile_Hero.tga");
-	MeshBuilder::GetInstance()->GenerateQuad("SCENE2D_TILE_TREE", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GetMesh("SCENE2D_TILE_TREE")->textureID = LoadTGA("Image//Scene2D_Tile_Tree.tga");
-	MeshBuilder::GetInstance()->GenerateQuad("SCENE2D_TILE_DOOR", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GetMesh("SCENE2D_TILE_DOOR")->textureID = LoadTGA("Image//Scene2D_Tile_Door.tga");
-	MeshBuilder::GetInstance()->GenerateQuad("SCENE2D_TILE_REARSTRUCTURE", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GetMesh("SCENE2D_TILE_REARSTRUCTURE")->textureID = 
-		LoadTGA("Image//Scene2D_RearStructure.tga");
-
-	MeshBuilder::GetInstance()->GenerateQuad("SCENE2D_TILE_HERO_RIGHT_0", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GetMesh("SCENE2D_TILE_HERO_RIGHT_0")->textureID = LoadTGA("Image//Scene2D_Tile_Hero_Right_0.tga");
-	MeshBuilder::GetInstance()->GenerateQuad("SCENE2D_TILE_HERO_RIGHT_1", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GetMesh("SCENE2D_TILE_HERO_RIGHT_1")->textureID = LoadTGA("Image//Scene2D_Tile_Hero_Right_1.tga");
-	MeshBuilder::GetInstance()->GenerateQuad("SCENE2D_TILE_HERO_RIGHT_2", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GetMesh("SCENE2D_TILE_HERO_RIGHT_2")->textureID = LoadTGA("Image//Scene2D_Tile_Hero_Right_2.tga");
-	MeshBuilder::GetInstance()->GenerateQuad("SCENE2D_TILE_HERO_RIGHT_3", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GetMesh("SCENE2D_TILE_HERO_RIGHT_3")->textureID = LoadTGA("Image//Scene2D_Tile_Hero_Right_3.tga");
-	MeshBuilder::GetInstance()->GenerateQuad("SCENE2D_TILE_HERO_LEFT_1", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GetMesh("SCENE2D_TILE_HERO_LEFT_1")->textureID = LoadTGA("Image//Scene2D_Tile_Hero_Left_1.tga");
-	MeshBuilder::GetInstance()->GenerateQuad("SCENE2D_TILE_HERO_LEFT_2", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GetMesh("SCENE2D_TILE_HERO_LEFT_2")->textureID = LoadTGA("Image//Scene2D_Tile_Hero_Left_2.tga");
-	MeshBuilder::GetInstance()->GenerateQuad("SCENE2D_TILE_HERO_LEFT_3", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GetMesh("SCENE2D_TILE_HERO_LEFT_3")->textureID = LoadTGA("Image//Scene2D_Tile_Hero_Left_3.tga");
-
-	MeshBuilder::GetInstance()->GenerateQuad("SCENE2D_TILE_ENEMY", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GetMesh("SCENE2D_TILE_ENEMY")->textureID = LoadTGA("Image//Scene2D_Tile_Enemy.tga");
-	MeshBuilder::GetInstance()->GenerateQuad("SCENE2D_TILE_TREASURECHEST", Color(1, 1, 1), 1.f);
-	MeshBuilder::GetInstance()->GetMesh("SCENE2D_TILE_TREASURECHEST")->textureID = LoadTGA("Image//Scene2D_Tile_TreasureChest.tga");
+	LoadMeshes();
+	
+	//MeshBuilder::GetInstance()->GenerateSpriteAnimation("sprite", 16, 16);
+	//MeshBuilder::GetInstance()->GetMesh("sprite")->textureID = LoadTGA("Image//spritesheet.tga");
 
 	// Create entities into the scene
 	Create::Entity("reference", Vector3(0.0f, 0.0f, 0.0f)); // Reference
@@ -220,53 +183,53 @@ void CScene2D::Init()
 	// Create the background image
 	Scene2D_Background = Create::Sprite2DObject("SCENE2D_BKGROUND",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(Application::GetInstance().GetWindowWidth(), Application::GetInstance().GetWindowHeight(), 0.0f), true);
-	Scene2D_TileGround = Create::Sprite2DObject("SCENE2D_TILE_GROUND",
+		Vector3(320.0f, 240.0f, 0.0f), true);
+	Scene2D_TileGround = Create::Sprite2DObject("Tile_1000",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
 	Scene2D_Hero = Create::Sprite2DObject("SCENE2D_TILE_HERO",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_TileTree = Create::Sprite2DObject("SCENE2D_TILE_TREE",
+	Scene2D_TileDoor = Create::Sprite2DObject("Tile_Door_Close",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_TileDoor = Create::Sprite2DObject("SCENE2D_TILE_DOOR",
-		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_RearStructure = Create::Sprite2DObject("SCENE2D_TILE_REARSTRUCTURE",
-		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(16.0f, 16.0f, 0.0f));
-
-	Scene2D_Hero_Animated = new SpriteEntity*[7];
-	Scene2D_Hero_Animated[0] = Create::Sprite2DObject("SCENE2D_TILE_HERO_RIGHT_0",
-		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[1] = Create::Sprite2DObject("SCENE2D_TILE_HERO_RIGHT_1",
-		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[2] = Create::Sprite2DObject("SCENE2D_TILE_HERO_RIGHT_2",
-		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[3] = Create::Sprite2DObject("SCENE2D_TILE_HERO_RIGHT_3",
-		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[4] = Create::Sprite2DObject("SCENE2D_TILE_HERO_LEFT_1",
-		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[5] = Create::Sprite2DObject("SCENE2D_TILE_HERO_LEFT_2",
-		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[6] = Create::Sprite2DObject("SCENE2D_TILE_HERO_LEFT_3",
-		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(16.0f, 16.0f, 0.0f));
-
-	Scene2D_Goodies_TreasureChest = Create::Sprite2DObject("SCENE2D_TILE_TREASURECHEST",
+	Scene2D_RearStructure = Create::Sprite2DObject("Tile_BG",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
 	
+	Scene2D_Hero_Animated = new SpriteEntity*[8];
+	Scene2D_Hero_Animated[0] = Create::Sprite2DObject("Lonin_Right_Run_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[1] = Create::Sprite2DObject("Lonin_Right_Run_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[2] = Create::Sprite2DObject("Lonin_Left_Run_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[3] = Create::Sprite2DObject("Lonin_Left_Run_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[4] = Create::Sprite2DObject("Lonin_Right_Jump_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[5] = Create::Sprite2DObject("Lonin_Right_Jump_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[6] = Create::Sprite2DObject("Lonin_Left_Jump_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[7] = Create::Sprite2DObject("Lonin_Left_Jump_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	
+	//Scene2D_Goodies_TreasureChest = Create::Sprite2DObject("SCENE2D_TILE_TREASURECHEST",
+	//	Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+	//	Vector3(16.0f, 16.0f, 0.0f));
+	
 	// Set the Animation indices
-	thePlayerInfo->SetRightIndices(0, 3);
-	thePlayerInfo->SetLeftIndices(4, 6);
+	thePlayerInfo->SetRightIndices(0, 1);
+	thePlayerInfo->SetLeftIndices(2, 3);
 
 	// Create the 3 enemies
 	//m_iNumEnemy = 3;
@@ -540,5 +503,300 @@ void CScene2D::CreateGoodies(void)
 				CGoodiesFactory::GetInstance()->Create(TREASURECHEST, k, i);
 			}
 		}
+	}
+}
+
+void CScene2D::LoadMeshes(void)
+{
+	MeshBuilder::GetInstance()->GenerateAxes("reference");
+	MeshBuilder::GetInstance()->GenerateCrossHair("crosshair");
+	MeshBuilder::GetInstance()->GenerateQuad("quad", Color(1, 1, 1), 1.f);
+	MeshBuilder::GetInstance()->GetMesh("quad")->textureID = LoadTGA("Image//calibri.tga");
+	MeshBuilder::GetInstance()->GenerateText("text", 16, 16);
+	MeshBuilder::GetInstance()->GetMesh("text")->textureID = LoadTGA("Image//calibri.tga");
+	MeshBuilder::GetInstance()->GetMesh("text")->material.kAmbient.Set(1, 0, 0);
+
+	// Load background image
+	MeshBuilder::GetInstance()->GenerateQuad("SCENE2D_BKGROUND", Color(1, 1, 1), 1.f);
+	MeshBuilder::GetInstance()->GetMesh("SCENE2D_BKGROUND")->textureID = LoadTGA("Image//Scene2D_Background.tga");
+	
+	// Tiles 1
+	{
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_0000", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_0000")->textureID = LoadTGA("Image//Sprites//Tile_0000.tga");
+		{
+			MeshBuilder::GetInstance()->GenerateQuad("Tile_0000_0001", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Tile_0000_0001")->textureID = LoadTGA("Image//Sprites//Tile_0000_0001.tga");
+			MeshBuilder::GetInstance()->GenerateQuad("Tile_0000_0010", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Tile_0000_0010")->textureID = LoadTGA("Image//Sprites//Tile_0000_0010.tga");
+			MeshBuilder::GetInstance()->GenerateQuad("Tile_0000_0011", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Tile_0000_0011")->textureID = LoadTGA("Image//Sprites//Tile_0000_0011.tga");
+			MeshBuilder::GetInstance()->GenerateQuad("Tile_0000_0100", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Tile_0000_0100")->textureID = LoadTGA("Image//Sprites//Tile_0000_0100.tga");
+			MeshBuilder::GetInstance()->GenerateQuad("Tile_0000_0101", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Tile_0000_0101")->textureID = LoadTGA("Image//Sprites//Tile_0000_0101.tga");
+			MeshBuilder::GetInstance()->GenerateQuad("Tile_0000_0110", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Tile_0000_0110")->textureID = LoadTGA("Image//Sprites//Tile_0000_0110.tga");
+			MeshBuilder::GetInstance()->GenerateQuad("Tile_0000_0111", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Tile_0000_0111")->textureID = LoadTGA("Image//Sprites//Tile_0000_0111.tga");
+			MeshBuilder::GetInstance()->GenerateQuad("Tile_0000_1000", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Tile_0000_1000")->textureID = LoadTGA("Image//Sprites//Tile_0000_1000.tga");
+			MeshBuilder::GetInstance()->GenerateQuad("Tile_0000_1001", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Tile_0000_1001")->textureID = LoadTGA("Image//Sprites//Tile_0000_1001.tga");
+			MeshBuilder::GetInstance()->GenerateQuad("Tile_0000_1010", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Tile_0000_1010")->textureID = LoadTGA("Image//Sprites//Tile_0000_1010.tga");
+			MeshBuilder::GetInstance()->GenerateQuad("Tile_0000_1011", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Tile_0000_1011")->textureID = LoadTGA("Image//Sprites//Tile_0000_1011.tga");
+			MeshBuilder::GetInstance()->GenerateQuad("Tile_0000_1100", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Tile_0000_1100")->textureID = LoadTGA("Image//Sprites//Tile_0000_1100.tga");
+			MeshBuilder::GetInstance()->GenerateQuad("Tile_0000_1101", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Tile_0000_1101")->textureID = LoadTGA("Image//Sprites//Tile_0000_1101.tga");
+			MeshBuilder::GetInstance()->GenerateQuad("Tile_0000_1110", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Tile_0000_1110")->textureID = LoadTGA("Image//Sprites//Tile_0000_1110.tga");
+			MeshBuilder::GetInstance()->GenerateQuad("Tile_0000_1111", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Tile_0000_1111")->textureID = LoadTGA("Image//Sprites//Tile_0000_1111.tga");
+		}
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_0001", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_0001")->textureID = LoadTGA("Image//Sprites//Tile_0001.tga");
+		{
+			MeshBuilder::GetInstance()->GenerateQuad("Tile_0001_0100", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Tile_0001_0100")->textureID = LoadTGA("Image//Sprites//Tile_0001_0100.tga");
+			MeshBuilder::GetInstance()->GenerateQuad("Tile_0001_1000", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Tile_0001_1000")->textureID = LoadTGA("Image//Sprites//Tile_0001_1000.tga");
+			MeshBuilder::GetInstance()->GenerateQuad("Tile_0001_1100", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Tile_0001_1100")->textureID = LoadTGA("Image//Sprites//Tile_0001_1100.tga");
+		}
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_0010", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_0010")->textureID = LoadTGA("Image//Sprites//Tile_0010.tga");
+		{
+			MeshBuilder::GetInstance()->GenerateQuad("Tile_0010_0001", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Tile_0010_0001")->textureID = LoadTGA("Image//Sprites//Tile_0010_0001.tga");
+			MeshBuilder::GetInstance()->GenerateQuad("Tile_0010_1000", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Tile_0010_1000")->textureID = LoadTGA("Image//Sprites//Tile_0010_1000.tga");
+			MeshBuilder::GetInstance()->GenerateQuad("Tile_0010_1001", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Tile_0010_1001")->textureID = LoadTGA("Image//Sprites//Tile_0010_1001.tga");
+		}
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_0011", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_0011")->textureID = LoadTGA("Image//Sprites//Tile_0011.tga");
+		{
+			MeshBuilder::GetInstance()->GenerateQuad("Tile_0011_1000", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Tile_0011_1000")->textureID = LoadTGA("Image//Sprites//Tile_0011_1000.tga");
+		}
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_0100", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_0100")->textureID = LoadTGA("Image//Sprites//Tile_0100.tga");
+		{
+			MeshBuilder::GetInstance()->GenerateQuad("Tile_0100_0001", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Tile_0100_0001")->textureID = LoadTGA("Image//Sprites//Tile_0100_0001.tga");
+			MeshBuilder::GetInstance()->GenerateQuad("Tile_0100_0010", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Tile_0100_0010")->textureID = LoadTGA("Image//Sprites//Tile_0100_0010.tga");
+			MeshBuilder::GetInstance()->GenerateQuad("Tile_0100_0011", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Tile_0100_0011")->textureID = LoadTGA("Image//Sprites//Tile_0100_0011.tga");
+		}
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_0101", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_0101")->textureID = LoadTGA("Image//Sprites//Tile_0101.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_0110", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_0110")->textureID = LoadTGA("Image//Sprites//Tile_0110.tga");
+		{
+			MeshBuilder::GetInstance()->GenerateQuad("Tile_0110_0001", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Tile_0110_0001")->textureID = LoadTGA("Image//Sprites//Tile_0110_0001.tga");
+		}
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_0111", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_0111")->textureID = LoadTGA("Image//Sprites//Tile_0111.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_1000", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_1000")->textureID = LoadTGA("Image//Sprites//Tile_1000.tga");
+		{
+			MeshBuilder::GetInstance()->GenerateQuad("Tile_1000_0010", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Tile_1000_0010")->textureID = LoadTGA("Image//Sprites//Tile_1000_0010.tga");
+			MeshBuilder::GetInstance()->GenerateQuad("Tile_1000_0100", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Tile_1000_0100")->textureID = LoadTGA("Image//Sprites//Tile_1000_0100.tga");
+			MeshBuilder::GetInstance()->GenerateQuad("Tile_0100_0011", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Tile_0100_0011")->textureID = LoadTGA("Image//Sprites//Tile_0100_0011.tga");
+		}
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_1001", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_1001")->textureID = LoadTGA("Image//Sprites//Tile_1001.tga");
+		{
+			MeshBuilder::GetInstance()->GenerateQuad("Tile_1001_0100", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Tile_1001_0100")->textureID = LoadTGA("Image//Sprites//Tile_1001_0100.tga");
+		}
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_1010", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_1010")->textureID = LoadTGA("Image//Sprites//Tile_1010.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_1011", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_1011")->textureID = LoadTGA("Image//Sprites//Tile_1011.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_1100", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_1100")->textureID = LoadTGA("Image//Sprites//Tile_1100.tga");
+		{
+			MeshBuilder::GetInstance()->GenerateQuad("Tile_1100_0010", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Tile_1100_0010")->textureID = LoadTGA("Image//Sprites//Tile_1100_0010.tga");
+		}
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_1101", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_1101")->textureID = LoadTGA("Image//Sprites//Tile_1101.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_1110", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_1110")->textureID = LoadTGA("Image//Sprites//Tile_1110.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_1111", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_1111")->textureID = LoadTGA("Image//Sprites//Tile_1111.tga");
+	}
+	// Tiles 2
+	{
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_Anvil", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_Anvil")->textureID = LoadTGA("Image//Sprites//Tile_Anvil.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_BG", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_BG")->textureID = LoadTGA("Image//Sprites//Tile_BG.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_BG_Safe", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_BG_Safe")->textureID = LoadTGA("Image//Sprites//Tile_BG_Safe.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_Crate", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_Crate")->textureID = LoadTGA("Image//Sprites//Tile_Crate.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_Door_Close", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_Door_Close")->textureID = LoadTGA("Image//Sprites//Tile_Door_Close.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_Door_Open", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_Door_Open")->textureID = LoadTGA("Image//Sprites//Tile_Door_Open.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_LevelUp", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_LevelUp")->textureID = LoadTGA("Image//Sprites//Tile_LevelUp.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_Poison_Back", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_Poison_Back")->textureID = LoadTGA("Image//Sprites//Tile_Poison_Back.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_Poison_Front", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_Poison_Front")->textureID = LoadTGA("Image//Sprites//Tile_Poison_Front.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_Shield", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_Shield")->textureID = LoadTGA("Image//Sprites//Tile_Shield.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_Spike_Down", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_Spike_Down")->textureID = LoadTGA("Image//Sprites//Tile_Spike_Down.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_Spike_Left", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_Spike_Left")->textureID = LoadTGA("Image//Sprites//Tile_Spike_Left.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_Spike_Right", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_Spike_Right")->textureID = LoadTGA("Image//Sprites//Tile_Spike_Right.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_Spike_Up", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_Spike_Up")->textureID = LoadTGA("Image//Sprites//Tile_Spike_Up.tga");
+	}
+	// Lonin
+	{
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Left_Attack_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Left_Attack_1")->textureID = LoadTGA("Image//Sprites//Lonin_Left_Attack_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Left_Attack_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Left_Attack_2")->textureID = LoadTGA("Image//Sprites//Lonin_Left_Attack_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Left_Fall_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Left_Fall_1")->textureID = LoadTGA("Image//Sprites//Lonin_Left_Fall_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Left_Fall_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Left_Fall_2")->textureID = LoadTGA("Image//Sprites//Lonin_Left_Fall_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Left_Idle_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Left_Idle_1")->textureID = LoadTGA("Image//Sprites//Lonin_Left_Idle_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Left_Idle_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Left_Idle_2")->textureID = LoadTGA("Image//Sprites//Lonin_Left_Idle_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Left_Jump_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Left_Jump_1")->textureID = LoadTGA("Image//Sprites//Lonin_Left_Jump_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Left_Jump_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Left_Jump_2")->textureID = LoadTGA("Image//Sprites//Lonin_Left_Jump_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Left_Pogo_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Left_Pogo_1")->textureID = LoadTGA("Image//Sprites//Lonin_Left_Pogo_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Left_Pogo_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Left_Pogo_2")->textureID = LoadTGA("Image//Sprites//Lonin_Left_Pogo_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Left_Roll_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Left_Roll_1")->textureID = LoadTGA("Image//Sprites//Lonin_Left_Roll_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Left_Roll_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Left_Roll_2")->textureID = LoadTGA("Image//Sprites//Lonin_Left_Roll_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Left_Roll_3", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Left_Roll_3")->textureID = LoadTGA("Image//Sprites//Lonin_Left_Roll_3.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Left_Roll_4", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Left_Roll_4")->textureID = LoadTGA("Image//Sprites//Lonin_Left_Roll_4.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Left_Run_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Left_Run_1")->textureID = LoadTGA("Image//Sprites//Lonin_Left_Run_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Left_Run_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Left_Run_2")->textureID = LoadTGA("Image//Sprites//Lonin_Left_Run_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Right_Attack_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Right_Attack_1")->textureID = LoadTGA("Image//Sprites//Lonin_Right_Attack_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Right_Attack_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Right_Attack_2")->textureID = LoadTGA("Image//Sprites//Lonin_Right_Attack_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Right_Fall_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Right_Fall_1")->textureID = LoadTGA("Image//Sprites//Lonin_Right_Fall_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Right_Fall_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Right_Fall_2")->textureID = LoadTGA("Image//Sprites//Lonin_Right_Fall_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Right_Idle_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Right_Idle_1")->textureID = LoadTGA("Image//Sprites//Lonin_Right_Idle_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Right_Idle_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Right_Idle_2")->textureID = LoadTGA("Image//Sprites//Lonin_Right_Idle_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Right_Jump_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Right_Jump_1")->textureID = LoadTGA("Image//Sprites//Lonin_Right_Jump_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Right_Jump_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Right_Jump_2")->textureID = LoadTGA("Image//Sprites//Lonin_Right_Jump_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Right_Pogo_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Right_Pogo_1")->textureID = LoadTGA("Image//Sprites//Lonin_Right_Pogo_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Right_Pogo_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Right_Pogo_2")->textureID = LoadTGA("Image//Sprites//Lonin_Right_Pogo_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Right_Roll_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Right_Roll_1")->textureID = LoadTGA("Image//Sprites//Lonin_Right_Roll_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Right_Roll_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Right_Roll_2")->textureID = LoadTGA("Image//Sprites//Lonin_Right_Roll_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Right_Roll_3", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Right_Roll_3")->textureID = LoadTGA("Image//Sprites//Lonin_Right_Roll_3.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Right_Roll_4", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Right_Roll_4")->textureID = LoadTGA("Image//Sprites//Lonin_Right_Roll_4.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Right_Run_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Right_Run_1")->textureID = LoadTGA("Image//Sprites//Lonin_Right_Run_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Right_Run_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Right_Run_2")->textureID = LoadTGA("Image//Sprites//Lonin_Right_Run_2.tga");
+	}
+	// Slashes
+	{
+		MeshBuilder::GetInstance()->GenerateQuad("Slash_Down_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Slash_Down_1")->textureID = LoadTGA("Image//Sprites//Slash_Down_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Slash_Down_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Slash_Down_2")->textureID = LoadTGA("Image//Sprites//Slash_Down_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Slash_Left_1_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Slash_Left_1_1")->textureID = LoadTGA("Image//Sprites//Slash_Left_1_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Slash_Left_1_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Slash_Left_1_2")->textureID = LoadTGA("Image//Sprites//Slash_Left_1_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Slash_Left_2_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Slash_Left_2_1")->textureID = LoadTGA("Image//Sprites//Slash_Left_2_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Slash_Left_2_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Slash_Left_2_2")->textureID = LoadTGA("Image//Sprites//Slash_Left_2_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Slash_Right_1_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Slash_Right_1_1")->textureID = LoadTGA("Image//Sprites//Slash_Right_1_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Slash_Right_1_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Slash_Right_1_2")->textureID = LoadTGA("Image//Sprites//Slash_Right_1_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Slash_Right_2_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Slash_Right_2_1")->textureID = LoadTGA("Image//Sprites//Slash_Right_2_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Slash_Right_2_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Slash_Right_2_2")->textureID = LoadTGA("Image//Sprites//Slash_Right_2_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Slash_Up_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Slash_Up_1")->textureID = LoadTGA("Image//Sprites//Slash_Up_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Slash_Up_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Slash_Up_2")->textureID = LoadTGA("Image//Sprites//Slash_Up_2.tga");
+	}
+	// Enemies
+	{
+		MeshBuilder::GetInstance()->GenerateQuad("Axe_Attack_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Axe_Attack_1")->textureID = LoadTGA("Image//Sprites//Axe_Attack_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Axe_Attack_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Axe_Attack_2")->textureID = LoadTGA("Image//Sprites//Axe_Attack_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Axe_Attack_3", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Axe_Attack_3")->textureID = LoadTGA("Image//Sprites//Axe_Attack_3.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Axe_Attack_4", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Axe_Attack_4")->textureID = LoadTGA("Image//Sprites//Axe_Attack_4.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Axe_Attack_5", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Axe_Attack_5")->textureID = LoadTGA("Image//Sprites//Axe_Attack_5.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Axe_Die", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Axe_Die")->textureID = LoadTGA("Image//Sprites//Axe_Die.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Axe_Idle_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Axe_Idle_1")->textureID = LoadTGA("Image//Sprites//Axe_Idle_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Axe_Idle_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Axe_Idle_2")->textureID = LoadTGA("Image//Sprites//Axe_Idle_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Axe_Run_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Axe_Run_1")->textureID = LoadTGA("Image//Sprites//Axe_Run_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Axe_Run_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Axe_Run_2")->textureID = LoadTGA("Image//Sprites//Axe_Run_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Crystal_Attack_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Crystal_Attack_1")->textureID = LoadTGA("Image//Sprites//Crystal_Attack_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Crystal_Attack_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Crystal_Attack_2")->textureID = LoadTGA("Image//Sprites//Crystal_Attack_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Crystal_Die_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Crystal_Die_1")->textureID = LoadTGA("Image//Sprites//Crystal_Die_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Crystal_Die_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Crystal_Die_2")->textureID = LoadTGA("Image//Sprites//Crystal_Die_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Crystal_Idle_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Crystal_Idle_1")->textureID = LoadTGA("Image//Sprites//Crystal_Idle_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Crystal_Idle_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Crystal_Idle_2")->textureID = LoadTGA("Image//Sprites//Crystal_Idle_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Crystal_Projectile_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Crystal_Projectile_1")->textureID = LoadTGA("Image//Sprites//Crystal_Projectile_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Crystal_Projectile_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Crystal_Projectile_2")->textureID = LoadTGA("Image//Sprites//Crystal_Projectile_2.tga");
 	}
 }
