@@ -447,7 +447,7 @@ void CScene2D::RenderRearTileMap(void)
 			{
 				Scene2D_RearStructure->SetPosition(Vector3(k*m_cRearMap->GetTileSize_Width() + kiHalfTileWidth
 					- thePlayerInfo->GetRearMapFineOffset_x(),
-					575 - i*m_cRearMap->GetTileSize_Height() + kiHalfTileHeight,
+					224 - i*m_cRearMap->GetTileSize_Height() + kiHalfTileHeight,
 					0.0f));
 				Scene2D_RearStructure->RenderUI();
 			}
@@ -455,7 +455,7 @@ void CScene2D::RenderRearTileMap(void)
 			{
 				Scene2D_RearStructure->SetPosition(Vector3(k*m_cRearMap->GetTileSize_Width() + kiHalfTileWidth
 					- thePlayerInfo->GetRearMapFineOffset_x(),
-					575 - i*m_cRearMap->GetTileSize_Height() + kiHalfTileHeight,
+					224 - i*m_cRearMap->GetTileSize_Height() + kiHalfTileHeight,
 					0.0f));
 				Scene2D_RearStructure->RenderUI();
 			}
