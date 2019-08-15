@@ -194,7 +194,7 @@ void CScene2D::Init()
 
 	// Initialise and load the tile map
 	m_cMap = new CMap();
-	m_cMap->Init(240, 320, 15, 64, 240, 64 * 16);
+	m_cMap->Init(240, 320, 15, 64, 15 * 16, 64 * 16);
 	m_cMap->LoadMap("Image//MapDesign.csv");
 
 	// Create the Goodies
@@ -368,7 +368,7 @@ void CScene2D::Render()
 
 	// Setup 2D pipeline then render 2D
 	GraphicsManager::GetInstance()->SetOrthographicProjection(0, Application::GetInstance().GetWindowWidth(),
-															  0, Application::GetInstance().GetWindowHeight(),
+															  0, Application::GetInstance().GetWindowHeight() - 16,
 															  -10, 10);
 	GraphicsManager::GetInstance()->DetachCamera();
 
