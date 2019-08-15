@@ -80,6 +80,11 @@ CScene2D::~CScene2D()
 	{
 		cout << "CScene2D: Unable to drop CPlayerInfo2D class" << endl;
 	}
+	if(ui)
+	{
+		delete ui;
+		ui = NULL;
+	}
 	if (m_cRearMap)
 	{
 		delete m_cRearMap;
@@ -188,6 +193,10 @@ void CScene2D::Init()
 	MeshBuilder::GetInstance()->GenerateQuad("SCENE2D_TILE_TREASURECHEST", Color(1, 1, 1), 1.f);
 	MeshBuilder::GetInstance()->GetMesh("SCENE2D_TILE_TREASURECHEST")->textureID = LoadTGA("Image//Scene2D_Tile_TreasureChest.tga");
 
+	MeshBuilder::GetInstance()->GenerateQuad("UI_BOX", Color(1, 0, 1), 1.f);
+	MeshBuilder::GetInstance()->GenerateQuad("UI_BOX2", Color(0, 1, 1), 1.f);
+
+
 	// Create entities into the scene
 	Create::Entity("reference", Vector3(0.0f, 0.0f, 0.0f)); // Reference
 	Create::Sprite2DObject("crosshair", Vector3(0.0f, 0.0f, 0.0f), Vector3(10.0f, 10.0f, 10.0f));
@@ -212,6 +221,8 @@ void CScene2D::Init()
 	thePlayerInfo->SetTileSize(m_cMap->GetTileSize_Width(), m_cMap->GetTileSize_Height());
 	thePlayerInfo->SetMap(m_cMap);
 	thePlayerInfo->SetRearMap(m_cRearMap);
+
+	ui = new UserInterface;
 
 	// Setup the 2D entities
 	float halfWindowWidth = Application::GetInstance().GetWindowWidth() / 2.0f;
@@ -302,55 +313,58 @@ void CScene2D::Init()
 
 void CScene2D::Update(double dt)
 {
-	// Update our entities
-	EntityManager::GetInstance()->Update(dt);
+	if (ui->Update())
+	{
+		// Update our entities
+		EntityManager::GetInstance()->Update(dt);
 
-	// THIS WHOLE CHUNK TILL <THERE> CAN REMOVE INTO ENTITIES LOGIC! Or maybe into a scene function to keep the update clean
-	if(KeyboardController::GetInstance()->IsKeyDown('1'))
-		glEnable(GL_CULL_FACE);
-	if(KeyboardController::GetInstance()->IsKeyDown('2'))
-		glDisable(GL_CULL_FACE);
-	if(KeyboardController::GetInstance()->IsKeyDown('3'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-	if(KeyboardController::GetInstance()->IsKeyDown('4'))
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	
-	// if the left mouse button was released
-	if (MouseController::GetInstance()->IsButtonReleased(MouseController::LMB))
-	{
-		cout << "Left Mouse Button was released!" << endl;
-	}
-	if (MouseController::GetInstance()->IsButtonReleased(MouseController::RMB))
-	{
-		cout << "Right Mouse Button was released!" << endl;
-	}
-	if (MouseController::GetInstance()->IsButtonReleased(MouseController::MMB))
-	{
-		cout << "Middle Mouse Button was released!" << endl;
-	}
-	if (MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_XOFFSET) != 0.0)
-	{
-		cout << "Mouse Wheel has offset in X-axis of " << MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_XOFFSET) << endl;
-	}
-	if (MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_YOFFSET) != 0.0)
-	{
-		cout << "Mouse Wheel has offset in Y-axis of " << MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_YOFFSET) << endl;
-	}
-	// <THERE>
+		// THIS WHOLE CHUNK TILL <THERE> CAN REMOVE INTO ENTITIES LOGIC! Or maybe into a scene function to keep the update clean
+		if (KeyboardController::GetInstance()->IsKeyDown('1'))
+			glEnable(GL_CULL_FACE);
+		if (KeyboardController::GetInstance()->IsKeyDown('2'))
+			glDisable(GL_CULL_FACE);
+		if (KeyboardController::GetInstance()->IsKeyDown('3'))
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		if (KeyboardController::GetInstance()->IsKeyDown('4'))
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-	// Update the thePlayerInfo
-	thePlayerInfo->Update(dt);
+		// if the left mouse button was released
+		if (MouseController::GetInstance()->IsButtonReleased(MouseController::LMB))
+		{
+			cout << "Left Mouse Button was released!" << endl;
+		}
+		if (MouseController::GetInstance()->IsButtonReleased(MouseController::RMB))
+		{
+			cout << "Right Mouse Button was released!" << endl;
+		}
+		if (MouseController::GetInstance()->IsButtonReleased(MouseController::MMB))
+		{
+			cout << "Middle Mouse Button was released!" << endl;
+		}
+		if (MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_XOFFSET) != 0.0)
+		{
+			cout << "Mouse Wheel has offset in X-axis of " << MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_XOFFSET) << endl;
+		}
+		if (MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_YOFFSET) != 0.0)
+		{
+			cout << "Mouse Wheel has offset in Y-axis of " << MouseController::GetInstance()->GetMouseScrollStatus(MouseController::SCROLL_TYPE_YOFFSET) << endl;
+		}
+		// <THERE>
 
-	// Update the enemies
-	for (int i = 0; i < m_iNumEnemy; ++i)
-	{
-		theEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x + thePlayerInfo->mapOffset_x, 
-											thePlayerInfo->GetPos().y, 
-											0));
-		theEnemy[i]->Update();
+		// Update the thePlayerInfo
+		thePlayerInfo->Update(dt);
+
+		// Update the enemies
+		for (int i = 0; i < m_iNumEnemy; ++i)
+		{
+			theEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x + thePlayerInfo->mapOffset_x,
+				thePlayerInfo->GetPos().y,
+				0));
+			theEnemy[i]->Update();
+		}
+
+		GraphicsManager::GetInstance()->UpdateLights(dt);
 	}
-
-	GraphicsManager::GetInstance()->UpdateLights(dt);
 }
 
 void CScene2D::Render()
@@ -367,26 +381,32 @@ void CScene2D::Render()
 	//EntityManager::GetInstance()->Render();
 
 	// Setup 2D pipeline then render 2D
-	GraphicsManager::GetInstance()->SetOrthographicProjection(0, Application::GetInstance().GetWindowWidth(),
-															  0, Application::GetInstance().GetWindowHeight(),
+	//GraphicsManager::GetInstance()->SetOrthographicProjection(0, Application::GetInstance().GetWindowWidth(),
+	//														  0, Application::GetInstance().GetWindowHeight(),
+	//														  -10, 10);
+	GraphicsManager::GetInstance()->SetOrthographicProjection(0, 360,
+															  0, 240,
 															  -10, 10);
 	GraphicsManager::GetInstance()->DetachCamera();
 
-	// Render the required entities
-	EntityManager::GetInstance()->RenderUI();
+	if (ui->GetScreenStatus()) {
+		// Render the required entities
+		EntityManager::GetInstance()->RenderUI();
 
-	// Render the rear tile map
-	RenderRearTileMap();
-	// Render the tile map
-	RenderTileMap();
-	// Render the Enemy
-	RenderEnemy();
-	// Render the player
-	RenderPlayer();
+		// Render the rear tile map
+		RenderRearTileMap();
+		// Render the tile map
+		RenderTileMap();
+		// Render the Enemy
+		RenderEnemy();
+		// Render the player
+		RenderPlayer();
 
-	textObj[0]->RenderUI();
-	textObj[1]->RenderUI();
-	textObj[2]->RenderUI();
+		textObj[0]->RenderUI();
+		textObj[1]->RenderUI();
+		textObj[2]->RenderUI();
+	}
+	ui->Render();
 }
 
 void CScene2D::Exit()

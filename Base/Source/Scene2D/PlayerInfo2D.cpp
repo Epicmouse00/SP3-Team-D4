@@ -397,7 +397,7 @@ void CPlayerInfo2D::Update(double dt)
 	Constrain();
 
 	// If the user presses R key, then reset the view to default values
-	if (KeyboardController::GetInstance()->IsKeyDown('P'))
+	if (KeyboardController::GetInstance()->IsKeyDown('R'))
 	{
 		Reset();
 	}
@@ -451,7 +451,7 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 		checkPosition_X = (int)((mapOffset_x + position.x - (tileSize_Width >> 1)) / tileSize_Width);
 
 		if (position.y + tileSize_Height > maxBoundary.y)
-			return;
+			return;// Note : Edit this eventually, to check the nearest highest right/left? else if wayy too high.. then just don't check
 
 		if (checkPosition_X >= 0)
 		{
@@ -466,6 +466,9 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 	{
 		// Find the tile number which the player's right side is on
 		checkPosition_X = (int)((mapOffset_x + position.x + (tileSize_Width >> 1)) / tileSize_Width);
+
+		if (position.y + tileSize_Height > maxBoundary.y)
+			return;
 
 		if (checkPosition_X < theMapReference->GetNumOfTiles_Width())
 		{

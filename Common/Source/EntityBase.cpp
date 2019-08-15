@@ -1,7 +1,8 @@
 #include "EntityBase.h"
 
-EntityBase::EntityBase() 
-	: position(0.0f, 0.0f, 0.0f)
+EntityBase::EntityBase(ENTITY_TYPE typeValue)
+	: type(typeValue)
+	, position(0.0f, 0.0f, 0.0f)
 	, scale(1.0f, 1.0f, 1.0f)
 	, isDone(false)
 	, m_bCollider(false)

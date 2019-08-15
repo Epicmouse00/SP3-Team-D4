@@ -31,6 +31,9 @@
     <Filter Include="SoundEngine">
       <UniqueIdentifier>{2aaf3674-dd40-4973-8e30-884ed6f8146a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene2D\IDK..Entities%3f">
+      <UniqueIdentifier>{88075b7b-fb92-42e8-8894-d7b568a2fab8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Application.cpp">
@@ -93,29 +96,32 @@
     <ClCompile Include="Source\Scene2D\Animation.cpp">
       <Filter>Scene2D</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Scene2D\Enemy.cpp">
-      <Filter>Scene2D</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Scene2D\Strategy.cpp">
-      <Filter>Scene2D</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Scene2D\Strategy_Kill.cpp">
-      <Filter>Scene2D</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Scene2D\Goodies.cpp">
-      <Filter>Scene2D</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Scene2D\GoodiesFactory.cpp">
-      <Filter>Scene2D</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Scene2D\TreasureChest.cpp">
-      <Filter>Scene2D</Filter>
-    </ClCompile>
     <ClCompile Include="Source\SoundEngine.cpp">
       <Filter>SoundEngine</Filter>
     </ClCompile>
     <ClCompile Include="Source\SpriteAnimation.cpp">
       <Filter>Scene2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene2D\Enemy.cpp">
+      <Filter>Scene2D\IDK..Entities%3f</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene2D\Goodies.cpp">
+      <Filter>Scene2D\IDK..Entities%3f</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene2D\GoodiesFactory.cpp">
+      <Filter>Scene2D\IDK..Entities%3f</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene2D\Strategy.cpp">
+      <Filter>Scene2D\IDK..Entities%3f</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene2D\Strategy_Kill.cpp">
+      <Filter>Scene2D\IDK..Entities%3f</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene2D\TreasureChest.cpp">
+      <Filter>Scene2D\IDK..Entities%3f</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UserInterface.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -176,29 +182,32 @@
     <ClInclude Include="Source\Scene2D\Animation.h">
       <Filter>Scene2D</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Scene2D\Enemy.h">
-      <Filter>Scene2D</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scene2D\Strategy.h">
-      <Filter>Scene2D</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scene2D\Strategy_Kill.h">
-      <Filter>Scene2D</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scene2D\Goodies.h">
-      <Filter>Scene2D</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scene2D\GoodiesFactory.h">
-      <Filter>Scene2D</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Scene2D\TreasureChest.h">
-      <Filter>Scene2D</Filter>
-    </ClInclude>
     <ClInclude Include="Source\SoundEngine.h">
       <Filter>SoundEngine</Filter>
     </ClInclude>
     <ClInclude Include="Source\SpriteAnimation.h">
       <Filter>Scene2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\GoodiesFactory.h">
+      <Filter>Scene2D\IDK..Entities%3f</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\Enemy.h">
+      <Filter>Scene2D\IDK..Entities%3f</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\Goodies.h">
+      <Filter>Scene2D\IDK..Entities%3f</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\TreasureChest.h">
+      <Filter>Scene2D\IDK..Entities%3f</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\Strategy.h">
+      <Filter>Scene2D\IDK..Entities%3f</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\Strategy_Kill.h">
+      <Filter>Scene2D\IDK..Entities%3f</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UserInterface.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

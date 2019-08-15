@@ -6,7 +6,11 @@
 class EntityBase
 {
 public:
-	EntityBase();
+	enum ENTITY_TYPE {
+		E_PLAYER = 0,
+		E_TOTAL
+	};
+	EntityBase(ENTITY_TYPE typeValue = E_TOTAL);
 	virtual ~EntityBase();
 
 	virtual void Update(double _dt);
@@ -19,6 +23,9 @@ public:
 	inline void SetScale(const Vector3& _value){ scale = _value; };
 	inline Vector3 GetScale(){ return scale; };
 
+	inline void SetType(const ENTITY_TYPE& _value) { type = _value; };
+	inline ENTITY_TYPE GetType(){ return type; };
+
 	bool IsDone();
 	void SetIsDone(const bool _value);
 
@@ -28,6 +35,7 @@ public:
 	virtual void SetCollider(const bool _value);
 
 protected:
+	ENTITY_TYPE type;
 	Vector3 position;
 	Vector3 scale;
 

@@ -16,6 +16,8 @@ void EntityManager::Update(double _dt)
 		(*it)->Update(_dt);
 	}
 
+	CheckForCollision();
+
 	// Clean up entities that are done
 	it = entityList.begin();
 	while (it != end)
@@ -84,6 +86,7 @@ bool EntityManager::RemoveEntity(EntityBase* _existingEntity)
 // Constructor
 EntityManager::EntityManager()
 {
+	thePlayerInfo = CPlayerInfo2D::GetInstance();
 }
 
 // Destructor
@@ -104,6 +107,16 @@ bool EntityManager::CheckSphereCollision(EntityBase *ThisEntity, EntityBase *Tha
 	return false;
 }
 
+bool EntityManager::CheckCircleCollision(EntityBase *ThisEntity, EntityBase *ThatEntity)
+{
+	Vector3 dist = ThisEntity->GetPosition() - ThatEntity->GetPosition();
+	if (dist.Length() < ThisEntity->GetScale().x + ThatEntity->GetScale().x)
+	{
+		return true;
+	}
+	return false;
+}
+
 // Check if this entity collided with another entity, but both must have collider
 bool EntityManager::CheckAABBCollision(EntityBase *ThisEntity, EntityBase *ThatEntity)
 {
@@ -114,5 +127,50 @@ bool EntityManager::CheckAABBCollision(EntityBase *ThisEntity, EntityBase *ThatE
 // Check if any Collider is colliding with another Collider
 bool EntityManager::CheckForCollision(void)
 {
+	EntityBase* player = new EntityBase;
+	player->SetType(player->E_PLAYER);
+	player->SetPosition(thePlayerInfo->GetPos());
+	player->SetScale(Vector3(1, 1, 1));
+	player->SetCollider(true);
+
+	// Check for Collision
+	std::list<EntityBase*>::iterator colliderThis, colliderThisEnd;
+	std::list<EntityBase*>::iterator colliderThat, colliderThatEnd;
+
+	colliderThisEnd = entityList.end();
+	for (colliderThis = entityList.begin(); colliderThis != colliderThisEnd; ++colliderThis)
+	{
+		if ((*colliderThis)->HasCollider())
+		{
+			EntityBase *thisEntity = dynamic_cast<EntityBase*>(*colliderThis);
+
+			if (thisEntity->GetType() != thisEntity->E_PLAYER) {// set based on what can hit the player(specifically the player)
+				if (CheckCircleCollision(thisEntity, player) == true)// can use multiple of this based on thePlayerInfoState
+				{//we probably are not calling the function checkCircleCollision.. since it needs hard code
+					thisEntity->SetIsDone(true);
+					//thePlayerInfo->SetDead(true); something lke this
+				}
+			}
+			else {//this just checks between enemies and player projectiles, Because anything that does not hurt player probably hurts enemies?
+				colliderThatEnd = entityList.end();
+				for (colliderThat = colliderThis; colliderThat != colliderThatEnd; ++colliderThat)
+				{
+					if (colliderThat == colliderThis)
+						continue;
+					if ((*colliderThat)->HasCollider())
+					{
+						EntityBase *thatEntity = dynamic_cast<EntityBase*>(*colliderThat);
+						if (CheckCircleCollision(thisEntity, thatEntity) == true)
+						{
+							thisEntity->SetIsDone(true);
+							thatEntity->SetIsDone(true);
+						}
+					}
+				}
+			}
+		}
+	}
+	delete player;
+	player = NULL;
 	return false;
 }
