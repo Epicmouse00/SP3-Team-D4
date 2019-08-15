@@ -32,7 +32,7 @@ private:
 	ShaderProgram* currProg;
 	FPSCamera camera;
 	TextEntity* textObj[3];
-	SpriteAnimation* spritesheet;
+	//SpriteAnimation* spritesheet;
 
 	static CScene2D* sInstance; // The pointer to the object that gets registered
 
@@ -72,6 +72,8 @@ private:
 	void RenderEnemy(void);
 	// Create the Goodies
 	void CreateGoodies(void);
+
+	void LoadMeshes(void);
 };
 
 #endif
