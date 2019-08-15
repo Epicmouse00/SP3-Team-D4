@@ -257,7 +257,6 @@ void CPlayerInfo2D::UpdateJumpUpwards(double dt)
 	// then quit this method (do not do collision detection anymore)
 	if (position.y + tileSize_Height > maxBoundary.y)
 		return;
-
 	// Check if the player is stopped by obstacles
 	int checkPosition_X = (int)((mapOffset_x + position.x - (tileSize_Width >> 1)) / tileSize_Width);
 	int checkPosition_Y = theMapReference->GetNumOfTiles_Height() - 
@@ -356,6 +355,11 @@ void CPlayerInfo2D::Update(double dt)
 	if (KeyboardController::GetInstance()->IsKeyDown('D'))
 		MoveLeftRight(false, 1.0f);
 
+	if (position.x + (tileSize_Width >> 1) > maxBoundary.x)
+		position.x = maxBoundary.x - tileSize_Width;
+	if (position.x - (tileSize_Width >> 1) < minBoundary.x)
+		position.x = minBoundary.x + tileSize_Width;
+
 	if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumped && isOnAir() && !m_bDoubleJump)
 	{
 		m_bJumped = true;
@@ -445,6 +449,9 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 	{
 		// Find the tile number which the player's left side is on
 		checkPosition_X = (int)((mapOffset_x + position.x - (tileSize_Width >> 1)) / tileSize_Width);
+
+		if (position.y + tileSize_Height > maxBoundary.y)
+			return;
 
 		if (checkPosition_X >= 0)
 		{

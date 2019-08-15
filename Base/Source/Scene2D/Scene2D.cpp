@@ -194,21 +194,21 @@ void CScene2D::Init()
 
 	// Initialise and load the tile map
 	m_cMap = new CMap();
-	m_cMap->Init(240, 320, 15, 64, 240, 64 * 16);
+	m_cMap->Init(Application::GetInstance().GetWindowHeight(), Application::GetInstance().GetWindowWidth(), 15, 64);
 	m_cMap->LoadMap("Image//MapDesign.csv");
 
 	// Create the Goodies
 	CreateGoodies();
 
 	m_cRearMap = new CMap();
-	m_cRearMap->Init(240, 320, 15, 64, 240, 64 * 16);
+	m_cRearMap->Init(Application::GetInstance().GetWindowHeight(), Application::GetInstance().GetWindowWidth(), 15, 64);
 	m_cRearMap->LoadMap("Image//RearMapDesign.csv");
 
 	// Create the playerinfo instance, which manages all information about the player
 	thePlayerInfo = CPlayerInfo2D::GetInstance();
 	thePlayerInfo->Init();
 	thePlayerInfo->SetPos(Vector3(50.0f + kiHalfTileWidth, 100.0f + kiHalfTileHeight));
-	thePlayerInfo->SetBoundary(Vector3(775.0f, 575.0f, 0.0f), Vector3(25.0f, 25.0f, 0.0f));
+	thePlayerInfo->SetBoundary(Vector3(m_cMap->getMapWidth() , m_cMap->getMapHeight(), 0.0f), Vector3(m_cMap->GetTileSize_Width(), m_cMap->GetTileSize_Height(), 0.0f));
 	thePlayerInfo->SetTileSize(m_cMap->GetTileSize_Width(), m_cMap->GetTileSize_Height());
 	thePlayerInfo->SetMap(m_cMap);
 	thePlayerInfo->SetRearMap(m_cRearMap);
@@ -220,7 +220,7 @@ void CScene2D::Init()
 	// Create the background image
 	Scene2D_Background = Create::Sprite2DObject("SCENE2D_BKGROUND",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(320.0f, 240.0f, 0.0f), true);
+		Vector3(Application::GetInstance().GetWindowWidth(), Application::GetInstance().GetWindowHeight(), 0.0f), true);
 	Scene2D_TileGround = Create::Sprite2DObject("SCENE2D_TILE_GROUND",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));

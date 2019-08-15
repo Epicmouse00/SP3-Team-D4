@@ -35,9 +35,9 @@ private:
 
 	static bool IsKeyPressed(unsigned short key);
 
-	// Should make these not hard-coded :P
-	const static int m_window_width = 320;
-	const static int m_window_height = 240;
+	// Just change this when you want to change screen size
+	const static int m_window_width = 320*3;
+	const static int m_window_height = 240*3;
 
 	//Declare a window object
 	StopWatch m_timer;

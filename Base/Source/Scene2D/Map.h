@@ -14,7 +14,6 @@ public:
 
 	void Init(	const int theScreen_Height, const int theScreen_Width, 
 				const int theNumOfTiles_Height, const int theNumOfTiles_Width, 
-				const int theMap_Height, const int theMap_Width,
 				const int theTileSize_Height = 16, const int theTileSize_Width = 16);
 	bool LoadMap(const string mapName);
 	int GetNumOfTiles_Height(void);			// Get the number of tiles for height of the screen
@@ -25,8 +24,8 @@ public:
 	int getNumOfTiles_MapHeight(void);		// Get the number of tiles for height of the map
 	int getNumOfTiles_MapWidth(void);		// Get the number of tiles for width of the map
 
-	int getScreenHeight(void);				// Get height of screen
-	int getScreenWidth(void);				// Get width of screen
+	int getMapHeight(void);				// Get height of screen
+	int getMapWidth(void);				// Get width of screen
 
 	vector<vector<int> > theScreenMap;
 
