@@ -70,3 +70,36 @@ int CAnimation::GuessNextFrame(int frame) const
 		break;
 	}
 }
+
+bool CAnimation::isFacingRight() const
+{
+	return isFacingRight(frameState);
+}
+
+bool CAnimation::isFacingRight(int frame) const
+{
+	switch (frame)
+	{
+	case P_IDLE_R1:
+	case P_IDLE_R2:
+	case P_RUN_R1:
+	case P_RUN_R2:
+	case P_ATTACK_R1:
+	case P_ATTACK_R2:
+	case P_JUMP_R1:
+	case P_JUMP_R2:
+	case P_FALL_R1:
+	case P_FALL_R2:
+	case P_POGO_R1:
+	case P_POGO_R2:
+	case P_ROLL_R1:
+	case P_ROLL_R2:
+	case P_ROLL_R3:
+	case P_ROLL_R4:
+		return true;
+		break;
+	default:
+		return false;
+		break;
+	}
+}

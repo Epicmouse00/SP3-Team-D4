@@ -127,6 +127,10 @@ void CPlayerInfo2D::SetOnFreeFall(bool isOnFreeFall)
 		m_bJumpUpwards = false;
 		m_bFallDownwards = true;
 		m_dFallSpeed = 0.0;
+		if (this->isFacingRight())
+			SetAnimationStatus(CAnimation::P_FALL_R1);
+		else
+			SetAnimationStatus(CAnimation::P_FALL_L1);
 	}
 }
 
@@ -139,6 +143,10 @@ void CPlayerInfo2D::SetToJumpUpwards(bool isOnJumpUpwards)
 		m_bFallDownwards = false;
 		m_dJumpSpeed = 12.0;
 
+		if (this->isFacingRight())
+			SetAnimationStatus(CAnimation::P_JUMP_R1);
+		else
+			SetAnimationStatus(CAnimation::P_JUMP_L1);
 		CSoundEngine::GetInstance()->PlayASound("Jump");
 	}
 }
@@ -351,8 +359,15 @@ void CPlayerInfo2D::Update(double dt)
 	//	MoveUpDown(false, 1.0f);
 	if (KeyboardController::GetInstance()->IsKeyDown('A'))
 		MoveLeftRight(true, 1.0f);
-	if (KeyboardController::GetInstance()->IsKeyDown('D'))
+	else if (KeyboardController::GetInstance()->IsKeyDown('D'))
 		MoveLeftRight(false, 1.0f);
+	else if (!KeyboardController::GetInstance()->IsKeyDown('A') && !KeyboardController::GetInstance()->IsKeyDown('D') && this->isOnGround())
+	{
+		if (this->isFacingRight())
+			SetAnimationStatus(CAnimation::P_IDLE_R1);
+		else
+			SetAnimationStatus(CAnimation::P_IDLE_L1);
+	}
 
 	if (position.x + (tileSize_Width >> 1) > maxBoundary.x)
 		position.x = maxBoundary.x - tileSize_Width;
@@ -496,13 +511,17 @@ void CPlayerInfo2D::MoveLeftRight(const bool mode, const float timeDiff)
 	if (mode)
 	{
 		position.x = position.x - (int)(m_dSpeed * timeDiff);
-		SetAnimationStatus(CAnimation::P_RUN_L1);
+		if (this->isOnGround())
+			SetAnimationStatus(CAnimation::P_RUN_L1);
+		//SetAnimationStatus(CAnimation::P_ROLL_L1);
 		UpdateAnimationIndex(timeDiff);
 	}
 	else
 	{
 		position.x = position.x + (int)(m_dSpeed * timeDiff);
-		SetAnimationStatus(CAnimation::P_RUN_R1);
+		if (this->isOnGround())
+			SetAnimationStatus(CAnimation::P_RUN_R1);
+		//SetAnimationStatus(CAnimation::P_ROLL_R1);
 		UpdateAnimationIndex(timeDiff);
 	}
 

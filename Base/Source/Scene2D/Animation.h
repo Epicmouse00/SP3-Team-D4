@@ -49,6 +49,8 @@ public:
 	int GetFrameState(void) const;
 	int GetFrameTotal(void) const;
 	int GuessNextFrame(int frame) const;
+	bool isFacingRight() const;
+	bool isFacingRight(int frame) const;
 
 private:
 	int frameState;

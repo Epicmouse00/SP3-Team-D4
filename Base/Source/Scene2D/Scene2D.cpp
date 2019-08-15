@@ -172,7 +172,7 @@ void CScene2D::Init()
 	thePlayerInfo->Init();
 	thePlayerInfo->SetPos(Vector3(50.0f + kiHalfTileWidth, 100.0f + kiHalfTileHeight));
 	//thePlayerInfo->SetBoundary(Vector3(210.f, 230.0f, 0.0f), Vector3(10.0f, 10.0f, 0.0f));
-	thePlayerInfo->SetBoundary(Vector3(m_cMap->getScreenWidth(), m_cMap->getScreenHeight(), 0.0f), Vector3(32, 0, 0.0f));
+	thePlayerInfo->SetBoundary(Vector3(m_cMap->getScreenWidth(), m_cMap->getScreenHeight(), 0.0f), Vector3(0, 0, 0.0f));
 	thePlayerInfo->SetTileSize(m_cMap->GetTileSize_Width(), m_cMap->GetTileSize_Height());
 	thePlayerInfo->SetMap(m_cMap);
 	thePlayerInfo->SetRearMap(m_cRearMap);
@@ -223,28 +223,76 @@ void CScene2D::Init()
 	Scene2D_Hero_Animated[7] = Create::Sprite2DObject("Lonin_Left_Run_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[4] = Create::Sprite2DObject("Lonin_Right_Attack_1",
+	Scene2D_Hero_Animated[8] = Create::Sprite2DObject("Lonin_Right_Attack_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[5] = Create::Sprite2DObject("Lonin_Right_Attack_2",
+	Scene2D_Hero_Animated[9] = Create::Sprite2DObject("Lonin_Right_Attack_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[6] = Create::Sprite2DObject("Lonin_Left_Attack_1",
+	Scene2D_Hero_Animated[10] = Create::Sprite2DObject("Lonin_Left_Attack_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[7] = Create::Sprite2DObject("Lonin_Left_Attack_2",
+	Scene2D_Hero_Animated[11] = Create::Sprite2DObject("Lonin_Left_Attack_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[4] = Create::Sprite2DObject("Lonin_Right_Jump_1",
+	Scene2D_Hero_Animated[12] = Create::Sprite2DObject("Lonin_Right_Jump_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[5] = Create::Sprite2DObject("Lonin_Right_Jump_2",
+	Scene2D_Hero_Animated[13] = Create::Sprite2DObject("Lonin_Right_Jump_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[6] = Create::Sprite2DObject("Lonin_Left_Jump_1",
+	Scene2D_Hero_Animated[14] = Create::Sprite2DObject("Lonin_Left_Jump_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[7] = Create::Sprite2DObject("Lonin_Left_Jump_2",
+	Scene2D_Hero_Animated[15] = Create::Sprite2DObject("Lonin_Left_Jump_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[16] = Create::Sprite2DObject("Lonin_Right_Fall_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[17] = Create::Sprite2DObject("Lonin_Right_Fall_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[18] = Create::Sprite2DObject("Lonin_Left_Fall_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[19] = Create::Sprite2DObject("Lonin_Left_Fall_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[20] = Create::Sprite2DObject("Lonin_Right_Pogo_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[21] = Create::Sprite2DObject("Lonin_Right_Pogo_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[22] = Create::Sprite2DObject("Lonin_Left_Pogo_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[23] = Create::Sprite2DObject("Lonin_Left_Pogo_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[24] = Create::Sprite2DObject("Lonin_Right_Roll_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[25] = Create::Sprite2DObject("Lonin_Right_Roll_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[26] = Create::Sprite2DObject("Lonin_Right_Roll_3",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[27] = Create::Sprite2DObject("Lonin_Right_Roll_4",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[28] = Create::Sprite2DObject("Lonin_Left_Roll_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[29] = Create::Sprite2DObject("Lonin_Left_Roll_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[30] = Create::Sprite2DObject("Lonin_Left_Roll_3",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[31] = Create::Sprite2DObject("Lonin_Left_Roll_4",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
 	
