@@ -1,46 +1,46 @@
 ﻿  Application.cpp
-c:\users\180200y\documents\github\sp3-team-d4\base\source\application.h(5): fatal error C1083: Cannot open include file: 'irrKlang.h': No such file or directory
+c:\users\user\documents\github\sp3-team-d4\base\source\application.h(5): fatal error C1083: Cannot open include file: 'irrKlang.h': No such file or directory
   EntityManager.cpp
   FPSCamera.cpp
   GenericEntity.cpp
   GroundEntity.cpp
   Light.cpp
   main.cpp
-c:\users\180200y\documents\github\sp3-team-d4\base\source\application.h(5): fatal error C1083: Cannot open include file: 'irrKlang.h': No such file or directory
+c:\users\user\documents\github\sp3-team-d4\base\source\application.h(5): fatal error C1083: Cannot open include file: 'irrKlang.h': No such file or directory
   OBJMesh.cpp
   PlayerInfo.cpp
   Projectile.cpp
   Animation.cpp
   Enemy.cpp
-c:\users\180200y\documents\github\sp3-team-d4\base\source\scene2d\enemy.cpp(39): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\180200y\documents\github\sp3-team-d4\base\source\scene2d\enemy.cpp(47): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-c:\users\180200y\documents\github\sp3-team-d4\base\source\scene2d\enemy.cpp(55): warning C4244: '=': conversion from 'const int' to 'float', possible loss of data
-c:\users\180200y\documents\github\sp3-team-d4\base\source\scene2d\enemy.cpp(56): warning C4244: '=': conversion from 'const int' to 'float', possible loss of data
-c:\users\180200y\documents\github\sp3-team-d4\base\source\scene2d\enemy.cpp(64): warning C4244: '=': conversion from 'const int' to 'float', possible loss of data
-c:\users\180200y\documents\github\sp3-team-d4\base\source\scene2d\enemy.cpp(65): warning C4244: '=': conversion from 'const int' to 'float', possible loss of data
-c:\users\180200y\documents\github\sp3-team-d4\base\source\scene2d\enemy.cpp(89): warning C4244: 'return': conversion from 'const float' to 'int', possible loss of data
-c:\users\180200y\documents\github\sp3-team-d4\base\source\scene2d\enemy.cpp(97): warning C4244: 'return': conversion from 'const float' to 'int', possible loss of data
-c:\users\180200y\documents\github\sp3-team-d4\base\source\scene2d\enemy.cpp(113): warning C4244: 'return': conversion from 'const float' to 'int', possible loss of data
-c:\users\180200y\documents\github\sp3-team-d4\base\source\scene2d\enemy.cpp(121): warning C4244: 'return': conversion from 'const float' to 'int', possible loss of data
+c:\users\user\documents\github\sp3-team-d4\base\source\scene2d\enemy.cpp(39): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\user\documents\github\sp3-team-d4\base\source\scene2d\enemy.cpp(47): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+c:\users\user\documents\github\sp3-team-d4\base\source\scene2d\enemy.cpp(55): warning C4244: '=': conversion from 'const int' to 'float', possible loss of data
+c:\users\user\documents\github\sp3-team-d4\base\source\scene2d\enemy.cpp(56): warning C4244: '=': conversion from 'const int' to 'float', possible loss of data
+c:\users\user\documents\github\sp3-team-d4\base\source\scene2d\enemy.cpp(64): warning C4244: '=': conversion from 'const int' to 'float', possible loss of data
+c:\users\user\documents\github\sp3-team-d4\base\source\scene2d\enemy.cpp(65): warning C4244: '=': conversion from 'const int' to 'float', possible loss of data
+c:\users\user\documents\github\sp3-team-d4\base\source\scene2d\enemy.cpp(89): warning C4244: 'return': conversion from 'const float' to 'int', possible loss of data
+c:\users\user\documents\github\sp3-team-d4\base\source\scene2d\enemy.cpp(97): warning C4244: 'return': conversion from 'const float' to 'int', possible loss of data
+c:\users\user\documents\github\sp3-team-d4\base\source\scene2d\enemy.cpp(113): warning C4244: 'return': conversion from 'const float' to 'int', possible loss of data
+c:\users\user\documents\github\sp3-team-d4\base\source\scene2d\enemy.cpp(121): warning C4244: 'return': conversion from 'const float' to 'int', possible loss of data
   Goodies.cpp
   GoodiesFactory.cpp
   Map.cpp
   PlayerInfo2D.cpp
-c:\users\180200y\documents\github\sp3-team-d4\base\source\soundengine.h(4): fatal error C1083: Cannot open include file: 'irrKlang.h': No such file or directory
+c:\users\user\documents\github\sp3-team-d4\base\source\soundengine.h(4): fatal error C1083: Cannot open include file: 'irrKlang.h': No such file or directory
   Scene2D.cpp
-c:\users\180200y\documents\github\sp3-team-d4\base\source\application.h(5): fatal error C1083: Cannot open include file: 'irrKlang.h': No such file or directory
+c:\users\user\documents\github\sp3-team-d4\base\source\application.h(5): fatal error C1083: Cannot open include file: 'irrKlang.h': No such file or directory
   Strategy.cpp
-c:\users\180200y\documents\github\sp3-team-d4\base\source\scene2d\strategy.cpp(21): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
+c:\users\user\documents\github\sp3-team-d4\base\source\scene2d\strategy.cpp(21): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
   Strategy_Kill.cpp
-c:\users\180200y\documents\github\sp3-team-d4\base\source\scene2d\strategy_kill.cpp(66): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
-c:\users\180200y\documents\github\sp3-team-d4\base\source\scene2d\strategy_kill.cpp(74): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
+c:\users\user\documents\github\sp3-team-d4\base\source\scene2d\strategy_kill.cpp(66): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
+c:\users\user\documents\github\sp3-team-d4\base\source\scene2d\strategy_kill.cpp(74): warning C4244: 'return': conversion from 'float' to 'int', possible loss of data
   TreasureChest.cpp
   Compiling...
   SceneText.cpp
-c:\users\180200y\documents\github\sp3-team-d4\base\source\application.h(5): fatal error C1083: Cannot open include file: 'irrKlang.h': No such file or directory
+c:\users\user\documents\github\sp3-team-d4\base\source\application.h(5): fatal error C1083: Cannot open include file: 'irrKlang.h': No such file or directory
   SkyBoxEntity.cpp
   SoundEngine.cpp
-c:\users\180200y\documents\github\sp3-team-d4\base\source\soundengine.h(4): fatal error C1083: Cannot open include file: 'irrKlang.h': No such file or directory
+c:\users\user\documents\github\sp3-team-d4\base\source\soundengine.h(4): fatal error C1083: Cannot open include file: 'irrKlang.h': No such file or directory
   SpriteEntity.cpp
   TextEntity.cpp
   Pistol.cpp

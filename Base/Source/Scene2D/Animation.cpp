@@ -103,3 +103,23 @@ bool CAnimation::isFacingRight(int frame) const
 		break;
 	}
 }
+
+bool CAnimation::isRolling(void) const
+{
+	switch (frameState)
+	{
+	case P_ROLL_R1:
+	case P_ROLL_R2:
+	case P_ROLL_R3:
+	case P_ROLL_R4:
+	case P_ROLL_L1:
+	case P_ROLL_L2:
+	case P_ROLL_L3:
+	case P_ROLL_L4:
+		return true;
+		break;
+	default:
+		return false;
+		break;
+	}
+}

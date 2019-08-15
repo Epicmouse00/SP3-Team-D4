@@ -357,7 +357,11 @@ void CPlayerInfo2D::Update(double dt)
 	//	MoveUpDown(true, 1.0f);
 	//if (KeyboardController::GetInstance()->IsKeyDown('S'))
 	//	MoveUpDown(false, 1.0f);
-	if (KeyboardController::GetInstance()->IsKeyDown('A'))
+	if (KeyboardController::GetInstance()->IsKeyPressed('Q') || (this->isRolling() && !this->isFacingRight()))
+		MoveLeftRight(true, 1.5f);
+	else if (KeyboardController::GetInstance()->IsKeyPressed('E') || (this->isRolling() && this->isFacingRight()))
+		MoveLeftRight(false, 1.5f);
+	else if (KeyboardController::GetInstance()->IsKeyDown('A'))
 		MoveLeftRight(true, 1.0f);
 	else if (KeyboardController::GetInstance()->IsKeyDown('D'))
 		MoveLeftRight(false, 1.0f);
@@ -459,10 +463,44 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 		(int)ceil(position.y / theMapReference->GetTileSize_Height());
 
 	// Check if the hero can move sideways
-	if (KeyboardController::GetInstance()->IsKeyDown('A') && !isOnAir())
+	if ((KeyboardController::GetInstance()->IsKeyPressed('Q') || (this->isRolling() && !this->isFacingRight())) && !isOnAir())
 	{
 		// Find the tile number which the player's left side is on
 		checkPosition_X = (int)((mapOffset_x + position.x - (tileSize_Width >> 1)) / tileSize_Width);
+		if (this->isOnGround() && KeyboardController::GetInstance()->IsKeyPressed('Q'))
+			SetAnimationStatus(CAnimation::P_ROLL_L1);
+
+		if (checkPosition_X >= 0)
+		{
+			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
+			{
+				position.x = (checkPosition_X + 1 - tileOffset_x) * tileSize_Width - mapFineOffset_x + (tileSize_Width >> 1);
+			}
+		}
+	}
+	else if ((KeyboardController::GetInstance()->IsKeyPressed('E') || (this->isRolling() && this->isFacingRight())) && !isOnAir())
+	{
+		// Find the tile number which the player's right side is on
+		checkPosition_X = (int)((mapOffset_x + position.x + (tileSize_Width >> 1)) / tileSize_Width);
+		if (this->isOnGround() && KeyboardController::GetInstance()->IsKeyPressed('E'))
+			SetAnimationStatus(CAnimation::P_ROLL_R1);
+
+		if (checkPosition_X < theMapReference->getNumOfTiles_MapWidth())
+		{
+			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
+			{
+				// this part causes the player to be stuck when there is a tile on its right
+				position.x = (checkPosition_X - 1 - tileOffset_x) * tileSize_Width - mapFineOffset_x + (tileSize_Width >> 1);
+			}
+		}
+	}
+	// Check if the hero can move sideways
+	else if (KeyboardController::GetInstance()->IsKeyDown('A') && !isOnAir())
+	{
+		// Find the tile number which the player's left side is on
+		checkPosition_X = (int)((mapOffset_x + position.x - (tileSize_Width >> 1)) / tileSize_Width);
+		if (this->isOnGround())
+			SetAnimationStatus(CAnimation::P_RUN_L1);
 
 		if (checkPosition_X >= 0)
 		{
@@ -476,6 +514,8 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 	{
 		// Find the tile number which the player's right side is on
 		checkPosition_X = (int)((mapOffset_x + position.x + (tileSize_Width >> 1)) / tileSize_Width);
+		if (this->isOnGround())
+			SetAnimationStatus(CAnimation::P_RUN_R1);
 
 		if (checkPosition_X < theMapReference->getNumOfTiles_MapWidth())
 		{
@@ -511,21 +551,14 @@ void CPlayerInfo2D::MoveLeftRight(const bool mode, const float timeDiff)
 	if (mode)
 	{
 		position.x = position.x - (int)(m_dSpeed * timeDiff);
-		if (this->isOnGround())
-			SetAnimationStatus(CAnimation::P_RUN_L1);
-		//SetAnimationStatus(CAnimation::P_ROLL_L1);
-		UpdateAnimationIndex(timeDiff);
 	}
 	else
 	{
 		position.x = position.x + (int)(m_dSpeed * timeDiff);
-		if (this->isOnGround())
-			SetAnimationStatus(CAnimation::P_RUN_R1);
-		//SetAnimationStatus(CAnimation::P_ROLL_R1);
-		UpdateAnimationIndex(timeDiff);
 	}
 
 	UpdateSideMovements();
+	UpdateAnimationIndex(timeDiff);
 
 }
 

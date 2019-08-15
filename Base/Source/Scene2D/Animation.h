@@ -51,6 +51,7 @@ public:
 	int GuessNextFrame(int frame) const;
 	bool isFacingRight() const;
 	bool isFacingRight(int frame) const;
+	bool isRolling(void) const;
 
 private:
 	int frameState;
