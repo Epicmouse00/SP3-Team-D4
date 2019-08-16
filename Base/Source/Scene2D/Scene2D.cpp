@@ -400,7 +400,7 @@ void CScene2D::Render()
 
 	// Setup 2D pipeline then render 2D
 	GraphicsManager::GetInstance()->SetOrthographicProjection(0, Application::GetInstance().GetWindowWidth(),
-															  0, Application::GetInstance().GetWindowHeight(),
+															  0, Application::GetInstance().GetWindowHeight() - 16,
 															  -10, 10);
 	GraphicsManager::GetInstance()->DetachCamera();
 
