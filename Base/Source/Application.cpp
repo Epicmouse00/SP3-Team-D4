@@ -70,9 +70,13 @@ void Application::Init()
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //We don't want the old OpenGL 
 
-	//Create a window and create its OpenGL context
-	m_window = glfwCreateWindow(m_window_width, m_window_height, "NYP Framework", NULL, NULL);
+	int m_Width = 320 * 3;
+	int m_Height = 240 * 3;
 
+	//Create a window and create its OpenGL context
+	m_window = glfwCreateWindow(m_Width, m_Height, "NYP Framework", NULL, NULL);
+
+	glfwWindowHint(GLFW_DECORATED, false);
 
 	//If the window couldn't be created
 	if (!m_window)
@@ -82,7 +86,7 @@ void Application::Init()
 		exit(EXIT_FAILURE);
 	}
 	// Set windows position
-	glfwSetWindowPos(m_window, 10, 30);
+	glfwSetWindowPos(m_window, 0, 30);
 
 	//This function makes the context of the specified window current on the calling thread. 
 	glfwMakeContextCurrent(m_window);

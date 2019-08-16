@@ -44,6 +44,7 @@ CPlayerInfo2D::CPlayerInfo2D(void)
 	, rollBounceTime(0)
 	, attackBounceTimeLimit(0.5)
 	, rollBounceTimeLimit(0.7)
+	, rollSpeed(0.8f)
 {
 }
 
@@ -376,6 +377,8 @@ void CPlayerInfo2D::UpdateFreeFall(double dt)
  ********************************************************************************/
 void CPlayerInfo2D::Update(double dt)
 {
+	if (rollSpeed <= 0.8f)
+		rollSpeed += dt * 0.05;
 	attackBounceTime += dt;
 	rollBounceTime += dt;
 	// Update the player position
@@ -385,9 +388,9 @@ void CPlayerInfo2D::Update(double dt)
 	//	MoveUpDown(false, 1.0f);
 	
 	if (KeyboardController::GetInstance()->IsKeyPressed('Q') && rollBounceTime > rollBounceTimeLimit || !isFacingRight() && isRolling()) // Roll Left
-		MoveLeftRight(true, 0.8f);
+		MoveLeftRight(true, rollSpeed);
 	else if (KeyboardController::GetInstance()->IsKeyPressed('E') && rollBounceTime > rollBounceTimeLimit || isFacingRight() && isRolling()) // Roll Right
-		MoveLeftRight(false, 0.8f);
+		MoveLeftRight(false, rollSpeed);
 	else if (KeyboardController::GetInstance()->IsKeyDown('A')  && !KeyboardController::GetInstance()->IsKeyPressed('J')) // Move Left
 		MoveLeftRight(true, 0.6f);
 	else if (KeyboardController::GetInstance()->IsKeyDown('D') && !KeyboardController::GetInstance()->IsKeyPressed('J')) // Move Right
@@ -531,6 +534,8 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 		SetAnimationStatus(CAnimation::P_ROLL_L1);
 		CSoundEngine::GetInstance()->PlayASound("roll");
 		rollBounceTime = 0;
+		if (rollSpeed > 0.4f)
+			rollSpeed -= 0.1;
 	}
 
 	if (checkPosition_X >= 0)
@@ -550,6 +555,8 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 		SetAnimationStatus(CAnimation::P_ROLL_R1);
 		CSoundEngine::GetInstance()->PlayASound("roll");
 		rollBounceTime = 0;
+		if (rollSpeed > 0.4f)
+			rollSpeed -= 0.1;
 	}
 
 	if (checkPosition_X < theMapReference->getNumOfTiles_MapWidth())
