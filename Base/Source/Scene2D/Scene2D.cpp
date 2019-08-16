@@ -208,7 +208,7 @@ void CScene2D::Init()
 	// Create the background image
 	Scene2D_Background = Create::Sprite2DObject("SCENE2D_BKGROUND",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(320.0f, 240.0f, 0.0f), true);
+		Vector3(400.0f, 240.0f, 0.0f), true);
 	Scene2D_TileGround = Create::Sprite2DObject("Tile_1111",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
