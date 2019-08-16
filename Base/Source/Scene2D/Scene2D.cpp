@@ -32,7 +32,7 @@ CScene2D::CScene2D()
 	, m_cRearMap(NULL)
 	, thePlayerInfo(NULL)
 	, theSlashInfo(NULL)
-	, m_iNumEnemy(3)
+	, m_iNumEnemy(1)
 {
 }
 
@@ -48,8 +48,8 @@ CScene2D::~CScene2D()
 	// Delete the sprites
 	//delete Scene2D_Goodies_TreasureChest;
 	//Scene2D_Goodies_TreasureChest = NULL;
-	//delete Scene2D_Enemy;
-	//Scene2D_Enemy = NULL;
+	delete Scene2D_Enemy;
+	Scene2D_Enemy = NULL;
 	delete Scene2D_Background;
 	Scene2D_Background = NULL;
 	delete Scene2D_TileGround;
@@ -59,13 +59,13 @@ CScene2D::~CScene2D()
 	delete Scene2D_RearStructure;
 	Scene2D_RearStructure = NULL;
 
-	//for (int i = 0; i < m_iNumEnemy; ++i)
-	//{
-	//	delete theEnemy[i];
-	//	theEnemy[i] = NULL;
-	//}
-	//delete theEnemy;
-	//theEnemy = NULL;
+	for (int i = 0; i < m_iNumEnemy; ++i)
+	{
+		delete theEnemy[i];
+		theEnemy[i] = NULL;
+	}
+	delete theEnemy;
+	theEnemy = NULL;
 
 	for (int i = 0; i < thePlayerInfo->GetFrameTotal(); ++i)
 	{
@@ -360,21 +360,35 @@ void CScene2D::Init()
 	//	Vector3(16.0f, 16.0f, 0.0f));
 
 	// Create the 3 enemies
-	//m_iNumEnemy = 3;
-	//theEnemy = new CEnemy*[m_iNumEnemy];
-	//for (int i = 0; i < m_iNumEnemy; i++)
-	//{
-	//	theEnemy[i] = new CEnemy();
-	//	theEnemy[i]->Init(m_cMap);
-	//	theEnemy[i]->ChangeStrategy(new CStrategy_Kill(), false);
-	//}
-	//theEnemy[0]->SetPos(450 + 12, 100 + 12);
-	//theEnemy[1]->SetPos(700 + 12, 100 + 12);
-	//theEnemy[2]->SetPos(950 + 12, 100 + 12);
-	//
-	//Scene2D_Enemy = Create::Sprite2DObject("SCENE2D_TILE_ENEMY",
-	//	Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-	//	Vector3(25.0f, 25.0f, 0.0f));
+	m_iNumEnemy = 1;
+	theEnemy = new CEnemy*[m_iNumEnemy];
+	for (int i = 0; i < m_iNumEnemy; i++)
+	{
+		theEnemy[i] = new CEnemy();
+		theEnemy[i]->Init(m_cMap);
+		theEnemy[i]->ChangeStrategy(new CStrategy_Kill(), false);
+	}
+	theEnemy[0]->SetPos(256, 32 + 8);
+
+	Scene2D_Enemy = new SpriteEntity*[theEnemy[0]->GetFrameTotal()];
+	Scene2D_Enemy[0] = Create::Sprite2DObject("Crystal_Attack_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Enemy[1] = Create::Sprite2DObject("Crystal_Attack_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Enemy[2] = Create::Sprite2DObject("Crystal_Die_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Enemy[3] = Create::Sprite2DObject("Crystal_Die_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Enemy[4] = Create::Sprite2DObject("Crystal_Idle_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Enemy[5] = Create::Sprite2DObject("Crystal_Idle_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
 		
 	// Create a text object
 	float fontSize = 8.0f;
@@ -436,9 +450,9 @@ void CScene2D::Update(double dt)
 		theSlashInfo->Update(dt);
 
 		// Update the enemies
-		for (int i = 0; i < m_iNumEnemy; ++i)
+		for (int i = 0; i < m_iNumEnemy; ++i) // This is the AI of the enemies??
 		{
-			theEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x + thePlayerInfo->mapOffset_x,
+			theEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x - thePlayerInfo->mapOffset_x,
 				thePlayerInfo->GetPos().y,
 				0));
 			theEnemy[i]->Update();
@@ -625,11 +639,12 @@ void CScene2D::RenderEnemy(void)
 		int theEnemy_x = theEnemy[i]->GetPos_x() - thePlayerInfo->mapOffset_x;
 		int theEnemy_y = theEnemy[i]->GetPos_y();
 
-		if (((theEnemy_x >= thePlayerInfo->GetMinBoundary().x) && (theEnemy_x<thePlayerInfo->GetMaxBoundary().x)) &&
-			((theEnemy_y >= thePlayerInfo->GetMinBoundary().y) && (theEnemy_y<thePlayerInfo->GetMaxBoundary().y)))
+		if (((theEnemy_x >= thePlayerInfo->GetMinBoundary().x) && (theEnemy_x < thePlayerInfo->GetMaxBoundary().x)) &&
+			((theEnemy_y >= thePlayerInfo->GetMinBoundary().y) && (theEnemy_y < thePlayerInfo->GetMaxBoundary().y)) &&
+			theEnemy[i]->GetFrameState() != CEnemy::C_TOTAL);
 		{
-			Scene2D_Enemy->SetPosition(Vector3(theEnemy_x, theEnemy_y, 0));
-			Scene2D_Enemy->RenderUI();
+			Scene2D_Enemy[theEnemy[i]->GetFrameState()]->SetPosition(Vector3(theEnemy_x, theEnemy_y, 0));
+			Scene2D_Enemy[theEnemy[i]->GetFrameState()]->RenderUI();
 		}
 	}
 }

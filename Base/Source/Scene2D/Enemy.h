@@ -2,9 +2,10 @@
 #include "Vector3.h"
 #include "Map.h"
 #include "Strategy.h"
-#include "Animation.h"
+#include "Strategy_Kill.h"
+#include "AnimationCrystal.h"
 
-class CEnemy : public CAnimation
+class CEnemy : public CAnimationCrystal
 {
 //	friend class CStrategy;
 public:

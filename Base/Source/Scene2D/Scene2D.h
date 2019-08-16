@@ -65,7 +65,7 @@ private:
 	// The enemies
 	CEnemy** theEnemy;
 	int m_iNumEnemy;
-	SpriteEntity* Scene2D_Enemy;
+	SpriteEntity** Scene2D_Enemy;
 
 	// Render the tile map
 	void RenderTileMap(void);

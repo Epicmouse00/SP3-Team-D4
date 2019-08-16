@@ -137,6 +137,7 @@ void CEnemy::Update(void)
 	if (theStrategy != NULL)
 	{
 		theStrategy->Update(theDestination, theENEMYPosition);
+		UpdateAnimationIndex(0.2f);
 	}
 }
 
