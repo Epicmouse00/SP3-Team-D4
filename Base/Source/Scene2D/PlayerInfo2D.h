@@ -143,8 +143,14 @@ public:
 
 	// Check for collision with CGoodies instances
 	void UpdateGoodies(const int tileIndex_Column, const int tileIndex_Row);
+	// Sound
+	void AttackSound(void) const;
+	void StepSound(void) const;
+	void DoorSound(void) const;
 
 private:
+	void InitSound(void) const;
+
 	Vector3 defaultPosition, defaultTarget, defaultUp;
 	Vector3 target, up;
 	Vector3 maxBoundary, minBoundary;
@@ -161,7 +167,7 @@ private:
 	bool m_bJumpKeyHeld;
 	bool m_bDoubleJump;
 	bool m_bDoubleJumped;
-
+	
 	bool m_bFallDownwards;
 	double m_dFallSpeed;
 	double m_dFallAcceleration;

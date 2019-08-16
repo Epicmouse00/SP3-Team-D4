@@ -1,5 +1,5 @@
 #include "Animation.h"
-#include "../SoundEngine.h"
+#include "PlayerInfo2D.h"
 
 
 CAnimation::CAnimation()
@@ -34,7 +34,7 @@ void CAnimation::UpdateAnimationIndex(double dt)
 		case P_RUN_L2:
 		case P_RUN_R1:
 		case P_RUN_R2:
-			CSoundEngine::GetInstance()->PlayASound("walk");
+			CPlayerInfo2D::GetInstance()->StepSound();
 			break;
 		default:
 			break;

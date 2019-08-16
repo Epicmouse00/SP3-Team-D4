@@ -73,16 +73,7 @@ void CPlayerInfo2D::Init(void)
 	tileSize_Width = 16;
 	tileSize_Height = 16;
 
-	CSoundEngine::GetInstance()->Init();
-	CSoundEngine::GetInstance()->AddSound("bgm", "Image//bgm.mp3");
-	CSoundEngine::GetInstance()->AddSound("bgmwalk", "Image//bgmwalk.mp3");
-	CSoundEngine::GetInstance()->AddSound("Jump", "Image//jump.wav");
-	CSoundEngine::GetInstance()->AddSound("walk", "Image//walk.wav");
-	CSoundEngine::GetInstance()->AddSound("attack", "Image//attack.wav");
-	CSoundEngine::GetInstance()->AddSound("roll", "Image//roll.wav");
-
-
-	CSoundEngine::GetInstance()->PlayBGM("bgmwalk");
+	InitSound();
 }
 
 // Set the boundary for the player info
@@ -168,7 +159,7 @@ void CPlayerInfo2D::SetToJumpUpwards(bool isOnJumpUpwards)
 		else
 			SetAnimationStatus(CAnimation::P_JUMP_L1);
 		UpdateAnimationIndex(1.f);
-		CSoundEngine::GetInstance()->PlayASound("Jump");
+		CSoundEngine::GetInstance()->PlayASound("jump");
 	}
 }
 
@@ -646,12 +637,12 @@ void CPlayerInfo2D::Attack(const bool mode, const float timeDiff)
 			if (mode)
 			{
 				SetAnimationStatus(CAnimation::P_ATTACK_L1);
-				CSoundEngine::GetInstance()->PlayASound("attack");
+				AttackSound();
 			}
 			else
 			{
 				SetAnimationStatus(CAnimation::P_ATTACK_R1);
-				CSoundEngine::GetInstance()->PlayASound("attack");
+				AttackSound();
 			}
 		}
 		UpdateAnimationIndex(timeDiff);
@@ -1021,4 +1012,99 @@ void CPlayerInfo2D::UpdateGoodies(const int tileIndex_Column, const int tileInde
 			theMapReference->theScreenMap[tileIndex_Row][tileIndex_Column] = 0;
 		}
 	}
+}
+
+void CPlayerInfo2D::AttackSound(void) const
+{
+	switch (rand() % 6)
+	{
+	case 0:
+		CSoundEngine::GetInstance()->PlayASound("slash1");
+		break;
+	case 1:
+		CSoundEngine::GetInstance()->PlayASound("slash2");
+		break;
+	case 2:
+		CSoundEngine::GetInstance()->PlayASound("slash3");
+		break;
+	case 3:
+		CSoundEngine::GetInstance()->PlayASound("slash4");
+		break;
+	case 4:
+		CSoundEngine::GetInstance()->PlayASound("slash5");
+		break;
+	case 5:
+		CSoundEngine::GetInstance()->PlayASound("slash6");
+		break;
+	default:
+		break;
+	}
+}
+
+void CPlayerInfo2D::StepSound(void) const
+{
+	switch (rand() % 4)
+	{
+	case 0:
+		CSoundEngine::GetInstance()->PlayASound("step1");
+		break;
+	case 1:
+		CSoundEngine::GetInstance()->PlayASound("step2");
+		break;
+	case 2:
+		CSoundEngine::GetInstance()->PlayASound("step3");
+		break;
+	case 3:
+		CSoundEngine::GetInstance()->PlayASound("step4");
+		break;
+	default:
+		break;
+	}
+}
+
+void CPlayerInfo2D::DoorSound(void) const
+{
+	switch (rand() % 4)
+	{
+	case 0:
+		CSoundEngine::GetInstance()->PlayASound("door1");
+		break;
+	case 1:
+		CSoundEngine::GetInstance()->PlayASound("door2");
+		break;
+	case 2:
+		CSoundEngine::GetInstance()->PlayASound("door3");
+		break;
+	case 3:
+		CSoundEngine::GetInstance()->PlayASound("door4");
+		break;
+	default:
+		break;
+	}
+}
+
+void CPlayerInfo2D::InitSound(void) const
+{
+	CSoundEngine::GetInstance()->Init();
+	CSoundEngine::GetInstance()->AddSound("bgm", "Sound//bgm.mp3");
+	CSoundEngine::GetInstance()->AddSound("bgmwalk", "Sound//bgmwalk.mp3");
+	CSoundEngine::GetInstance()->AddSound("jump", "Sound//jump.wav");
+	CSoundEngine::GetInstance()->AddSound("step1", "Sound//step1.wav");
+	CSoundEngine::GetInstance()->AddSound("step2", "Sound//step2.wav");
+	CSoundEngine::GetInstance()->AddSound("step3", "Sound//step3.wav");
+	CSoundEngine::GetInstance()->AddSound("step4", "Sound//step4.wav");
+	CSoundEngine::GetInstance()->AddSound("slash1", "Sound//slash1.wav");
+	CSoundEngine::GetInstance()->AddSound("slash2", "Sound//slash2.wav");
+	CSoundEngine::GetInstance()->AddSound("slash3", "Sound//slash3.wav");
+	CSoundEngine::GetInstance()->AddSound("slash4", "Sound//slash4.wav");
+	CSoundEngine::GetInstance()->AddSound("slash5", "Sound//slash5.wav");
+	CSoundEngine::GetInstance()->AddSound("slash6", "Sound//slash6.wav");
+	CSoundEngine::GetInstance()->AddSound("roll", "Sound//roll.wav");
+	CSoundEngine::GetInstance()->AddSound("door1", "Sound//door1.wav");
+	CSoundEngine::GetInstance()->AddSound("door2", "Sound//door2.wav");
+	CSoundEngine::GetInstance()->AddSound("door3", "Sound//door3.wav");
+	CSoundEngine::GetInstance()->AddSound("door4", "Sound//door4.wav");
+	CSoundEngine::GetInstance()->AddSound("death", "Sound//death.wav");
+
+	CSoundEngine::GetInstance()->PlayBGM("bgmwalk");
 }
