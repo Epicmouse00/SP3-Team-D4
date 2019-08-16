@@ -103,6 +103,8 @@ public:
 	void MoveUpDown(const bool mode, const float timeDiff);
 	void MoveLeftRight(const bool mode, const float timeDiff);
 
+	void Attack(const bool mode, const float timeDiff);
+
 	// Check if the player is standing on air
 	bool isOnAir(void);
 

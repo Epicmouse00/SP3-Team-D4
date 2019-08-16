@@ -136,3 +136,19 @@ bool CAnimation::isRolling(void) const
 		break;
 	}
 }
+
+bool CAnimation::isAttacking(void) const
+{
+	switch (frameState)
+	{
+	case P_ATTACK_R1:
+	case P_ATTACK_R2:
+	case P_ATTACK_L1:
+	case P_ATTACK_L2:
+		return true;
+		break;
+	default:
+		return false;
+		break;
+	}
+}

@@ -365,20 +365,34 @@ void CPlayerInfo2D::Update(double dt)
 	//	MoveUpDown(true, 1.0f);
 	//if (KeyboardController::GetInstance()->IsKeyDown('S'))
 	//	MoveUpDown(false, 1.0f);
-	if (KeyboardController::GetInstance()->IsKeyPressed('Q') || (isRolling() && !isFacingRight()))
+	
+	if (KeyboardController::GetInstance()->IsKeyPressed('Q') || !isFacingRight() && isRolling()) // Roll Left
 		MoveLeftRight(true, 0.8f);
-	else if (KeyboardController::GetInstance()->IsKeyPressed('E') || (isRolling() && isFacingRight()))
+	else if (KeyboardController::GetInstance()->IsKeyPressed('E') || isFacingRight() && isRolling()) // Roll Right
 		MoveLeftRight(false, 0.8f);
-	else if (KeyboardController::GetInstance()->IsKeyDown('A'))
+	else if (KeyboardController::GetInstance()->IsKeyPressed('P') && KeyboardController::GetInstance()->IsKeyDown('W') || KeyboardController::GetInstance()->IsKeyPressed('P') && KeyboardController::GetInstance()->IsKeyDown('S') && !isOnGround())
+		Attack((!isFacingRight()), 0.5f);
+	else if (KeyboardController::GetInstance()->IsKeyPressed('P') && KeyboardController::GetInstance()->IsKeyDown('A') && !isAttacking()) // Attack Left
+		Attack(true, 0.5f);
+	else if (KeyboardController::GetInstance()->IsKeyPressed('P') && KeyboardController::GetInstance()->IsKeyDown('D') && !isAttacking()) // Attack Right
+		Attack(false, 0.5f);
+	else if (KeyboardController::GetInstance()->IsKeyPressed('P'))
+		Attack(!isFacingRight(), 0.5f);
+	else if (isAttacking())
+	{
+		UpdateAnimationIndex(0.5f);
+	}
+	else if (KeyboardController::GetInstance()->IsKeyDown('A')) // Move Left
 		MoveLeftRight(true, 0.6f);
-	else if (KeyboardController::GetInstance()->IsKeyDown('D'))
+	else if (KeyboardController::GetInstance()->IsKeyDown('D')) // Move Right
 		MoveLeftRight(false, 0.6f);
-	else if (!KeyboardController::GetInstance()->IsKeyDown('A') && !KeyboardController::GetInstance()->IsKeyDown('D') && isOnGround())
+	else if (isOnGround()) // Idle
 	{
 		if (isFacingRight())
 			SetAnimationStatus(CAnimation::P_IDLE_R1);
 		else
 			SetAnimationStatus(CAnimation::P_IDLE_L1);
+		UpdateAnimationIndex(0.1f);
 	}
 
 	if (position.x + (tileSize_Width >> 1) > maxBoundary.x)
@@ -386,7 +400,7 @@ void CPlayerInfo2D::Update(double dt)
 	if (position.x - (tileSize_Width >> 1) < minBoundary.x)
 		position.x = minBoundary.x + tileSize_Width;
 
-	if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumped && isOnAir() && !m_bDoubleJump && isRolling())
+	if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumped && isOnAir() && !m_bDoubleJump && isRolling() && !isAttacking())
 	{
 		m_bJumped = true;
 		m_bDoubleJump = true;
@@ -398,7 +412,7 @@ void CPlayerInfo2D::Update(double dt)
 		m_bJumpKeyHeld = false;
 	}
 
-	if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumpKeyHeld && !m_bDoubleJump && m_bJumped && !isRolling())
+	if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumpKeyHeld && !m_bDoubleJump && m_bJumped && !isRolling() && !isAttacking())
 	{
  		m_bJumpKeyHeld = true;
 		m_bDoubleJump = true;
@@ -406,7 +420,7 @@ void CPlayerInfo2D::Update(double dt)
 	}
 
 	// If the user presses SPACEBAR, then make him jump
-	if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumped && !isOnAir() && !isRolling())
+	if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumped && !isOnAir() && !isRolling() && !isAttacking())
 	{
 		m_bJumped = true;
 		m_bJumpKeyHeld = true;
@@ -422,8 +436,8 @@ void CPlayerInfo2D::Update(double dt)
 	// Constrain the position
 	Constrain();
 
-	// If the user presses R key, then reset the view to default values
-	if (KeyboardController::GetInstance()->IsKeyDown('P'))
+	// If the user presses M key, then reset the view to default values
+	if (KeyboardController::GetInstance()->IsKeyDown('M'))
 	{
 		Reset();
 	}
@@ -574,6 +588,21 @@ void CPlayerInfo2D::MoveLeftRight(const bool mode, const float timeDiff)
 	UpdateSideMovements();
 	UpdateAnimationIndex(timeDiff);
 
+}
+
+void CPlayerInfo2D::Attack(const bool mode, const float timeDiff)
+{
+	if (mode)
+	{
+		SetAnimationStatus(CAnimation::P_ATTACK_L1);
+		CSoundEngine::GetInstance()->PlayASound("attack");
+	}
+	else
+	{
+		SetAnimationStatus(CAnimation::P_ATTACK_R1);
+		CSoundEngine::GetInstance()->PlayASound("attack");
+	}
+	UpdateAnimationIndex(timeDiff);
 }
 
 // Check if the player is standing on air
