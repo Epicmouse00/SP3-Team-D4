@@ -113,5 +113,11 @@ bool CSoundEngine::RemoveSound(const std::string& _soundIndex)
 void CSoundEngine::PlayASound(const std::string& _soundIndex)
 {
 	std::string aSound = GetSound(_soundIndex);
-	theSoundEngine->play2D(aSound.c_str(), false, false);
+
+	//if (!theSoundEngine->isCurrentlyPlaying(aSound.c_str()))
+	//{
+		// Play a sound
+		theSoundEngine->play2D(aSound.c_str(), false, false);
+	//}
+
 }

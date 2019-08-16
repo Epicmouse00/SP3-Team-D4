@@ -423,7 +423,7 @@ void CPlayerInfo2D::Update(double dt)
 	Constrain();
 
 	// If the user presses R key, then reset the view to default values
-	if (KeyboardController::GetInstance()->IsKeyDown('P'))
+	if (KeyboardController::GetInstance()->IsKeyDown('R'))
 	{
 		Reset();
 	}
@@ -499,7 +499,7 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 			CSoundEngine::GetInstance()->PlayASound("roll");
 		}
 
-		if (checkPosition_X < theMapReference->getNumOfTiles_MapWidth())
+		if (checkPosition_X < theMapReference->getNumOfTiles_MapWidth()&& !position.y + tileSize_Height > maxBoundary.y)
 		{
 			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
 			{
@@ -531,7 +531,7 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 		if (isOnGround())
 			SetAnimationStatus(CAnimation::P_RUN_R1);
 
-		if (checkPosition_X < theMapReference->getNumOfTiles_MapWidth())
+		if (checkPosition_X < theMapReference->GetNumOfTiles_Width()&&!position.y + tileSize_Height > maxBoundary.y)
 		{
 			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
 			{

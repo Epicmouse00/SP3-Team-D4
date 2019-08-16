@@ -9,6 +9,7 @@
 #include "../GenericEntity.h"
 #include "../SpriteEntity.h"
 #include "Map.h"
+#include "../UserInterface.h"
 #include "PlayerInfo2D.h"
 #include "Enemy.h"
 
@@ -49,6 +50,8 @@ private:
 	SpriteEntity** Scene2D_Hero_Animated;
 	SpriteEntity* Scene2D_Goodies_TreasureChest;
 
+
+	UserInterface* ui;
 	// Handle to the tilemaps
 	CMap* m_cMap;
 	CMap* m_cRearMap;	// Pointer to the rear map

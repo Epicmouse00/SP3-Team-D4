@@ -36,6 +36,7 @@
     <ClCompile Include="Source\SoundEngine.cpp" />
     <ClCompile Include="Source\SpriteEntity.cpp" />
     <ClCompile Include="Source\TextEntity.cpp" />
+    <ClCompile Include="Source\UserInterface.cpp" />
     <ClCompile Include="Source\WeaponInfo\Pistol.cpp" />
     <ClCompile Include="Source\WeaponInfo\WeaponInfo.cpp" />
   </ItemGroup>
@@ -64,6 +65,7 @@
     <ClInclude Include="Source\SoundEngine.h" />
     <ClInclude Include="Source\SpriteEntity.h" />
     <ClInclude Include="Source\TextEntity.h" />
+    <ClInclude Include="Source\UserInterface.h" />
     <ClInclude Include="Source\WeaponInfo\Pistol.h" />
     <ClInclude Include="Source\WeaponInfo\WeaponInfo.h" />
   </ItemGroup>
