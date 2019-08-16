@@ -8,7 +8,7 @@
 #include "GoodiesFactory.h"
 #include "../SoundEngine.h"
 
-// Allocating and initializing CPlayerInfo2D's static data member.  
+// Allocating and initializing CPlayerInfo2D's static data member.
 // The pointer is allocated but not the object's constructor.
 CPlayerInfo2D *CPlayerInfo2D::s_instance = 0;
 
@@ -137,12 +137,22 @@ void CPlayerInfo2D::SetOnFreeFall(bool isOnFreeFall)
 		m_dFallSpeed = 0.0;
 		if (!isRolling()) // Air roll?
 		{
-			if (isFacingRight())
-				SetAnimationStatus(CAnimation::P_FALL_R1);
-			else
-				SetAnimationStatus(CAnimation::P_FALL_L1);
-		}
-		UpdateAnimationIndex(1.0f);
+			 if (KeyboardController::GetInstance()->IsKeyDown('K'))
+			{
+				if (isFacingRight())
+					SetAnimationStatus(CAnimation::P_POGO_R1);
+				else
+					SetAnimationStatus(CAnimation::P_POGO_L1);
+			}
+			 else
+			 {
+				 if (isFacingRight())
+					 SetAnimationStatus(CAnimation::P_FALL_R1);
+				 else
+					 SetAnimationStatus(CAnimation::P_FALL_L1);
+			 }
+			}
+		UpdateAnimationIndex(1.5f);
 	}
 }
 

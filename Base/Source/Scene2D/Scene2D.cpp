@@ -377,7 +377,7 @@ void CScene2D::Init()
 	//	Vector3(25.0f, 25.0f, 0.0f));
 		
 	// Create a text object
-	float fontSize = 16.0f;
+	float fontSize = 8.0f;
 	float halfFontSize = fontSize / 2.0f;
 	for (int i = 0; i < 3; ++i)
 	{

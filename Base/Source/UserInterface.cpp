@@ -128,6 +128,7 @@ void UserInterface::Render()// this is at the back since it needs to be on top? 
 	switch(screen) {
 	case SC_MAIN:
 		scene2DQuad2->SetPosition(Vector3(120, 120, 0));
+		scene2DQuad2->SetScale(Vector3(360, 240));
 		scene2DQuad2->RenderUI();
 		textObj[0]->RenderUI();
 		textObj[1]->RenderUI();
@@ -137,6 +138,9 @@ void UserInterface::Render()// this is at the back since it needs to be on top? 
 		return;
 		break;
 	case SC_PAUSE:
+		scene2DQuad2->SetPosition(Vector3(160, 120, 0));
+		scene2DQuad2->SetScale(Vector3(360, 240));
+		scene2DQuad2->RenderUI();
 		textObj[0]->RenderUI();
 		textObj[1]->RenderUI();
 		textObj[2]->RenderUI();
