@@ -135,10 +135,13 @@ void CPlayerInfo2D::SetOnFreeFall(bool isOnFreeFall)
 		m_bJumpUpwards = false;
 		m_bFallDownwards = true;
 		m_dFallSpeed = 0.0;
-		if (isFacingRight())
-			SetAnimationStatus(CAnimation::P_FALL_R1);
-		else
-			SetAnimationStatus(CAnimation::P_FALL_L1);
+		if (!isRolling()) // Air roll?
+		{
+			if (isFacingRight())
+				SetAnimationStatus(CAnimation::P_FALL_R1);
+			else
+				SetAnimationStatus(CAnimation::P_FALL_L1);
+		}
 		UpdateAnimationIndex(1.0f);
 	}
 }
@@ -372,18 +375,26 @@ void CPlayerInfo2D::Update(double dt)
 		MoveLeftRight(true, 0.8f);
 	else if (KeyboardController::GetInstance()->IsKeyPressed('E') || isFacingRight() && isRolling()) // Roll Right
 		MoveLeftRight(false, 0.8f);
-	else if (KeyboardController::GetInstance()->IsKeyDown('A')  && !KeyboardController::GetInstance()->IsKeyPressed('P')) // Move Left
+	else if (KeyboardController::GetInstance()->IsKeyDown('A')  && !KeyboardController::GetInstance()->IsKeyPressed('J')) // Move Left
 		MoveLeftRight(true, 0.6f);
-	else if (KeyboardController::GetInstance()->IsKeyDown('D') && !KeyboardController::GetInstance()->IsKeyPressed('P')) // Move Right
+	else if (KeyboardController::GetInstance()->IsKeyDown('D') && !KeyboardController::GetInstance()->IsKeyPressed('J')) // Move Right
 		MoveLeftRight(false, 0.6f);
-	else if (KeyboardController::GetInstance()->IsKeyPressed('P') && KeyboardController::GetInstance()->IsKeyDown('W') || KeyboardController::GetInstance()->IsKeyPressed('P') && KeyboardController::GetInstance()->IsKeyDown('S') && !isOnGround())
+	else if (KeyboardController::GetInstance()->IsKeyPressed('J') && KeyboardController::GetInstance()->IsKeyDown('W') || KeyboardController::GetInstance()->IsKeyPressed('J') && KeyboardController::GetInstance()->IsKeyDown('S') && !isOnGround())
+	{
 		Attack((!isFacingRight()), 0.5f);
-	else if (KeyboardController::GetInstance()->IsKeyPressed('P') && KeyboardController::GetInstance()->IsKeyDown('A') && !isAttacking()) // Attack Left
+	}
+	else if (KeyboardController::GetInstance()->IsKeyPressed('J') && KeyboardController::GetInstance()->IsKeyDown('A') && !isAttacking()) // Attack Left
+	{
 		Attack(true, 0.5f);
-	else if (KeyboardController::GetInstance()->IsKeyPressed('P') && KeyboardController::GetInstance()->IsKeyDown('D') && !isAttacking()) // Attack Right
+	}
+	else if (KeyboardController::GetInstance()->IsKeyPressed('J') && KeyboardController::GetInstance()->IsKeyDown('D') && !isAttacking()) // Attack Right
+	{
 		Attack(false, 0.5f);
-	else if (KeyboardController::GetInstance()->IsKeyPressed('P'))
+	}
+	else if (KeyboardController::GetInstance()->IsKeyPressed('J'))
+	{
 		Attack(!isFacingRight(), 0.5f);
+	}
 	else if (isAttacking())
 	{
 		UpdateAnimationIndex(0.5f);
@@ -487,11 +498,11 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 		(int)ceil(position.y / theMapReference->GetTileSize_Height());
 
 	// Check if the hero can move sideways
-	if ((KeyboardController::GetInstance()->IsKeyPressed('Q') || (isRolling() && !isFacingRight())) && !isOnAir())
+	if (KeyboardController::GetInstance()->IsKeyPressed('Q') || isRolling() && !isFacingRight())
 	{
 		// Find the tile number which the player's left side is on
 		checkPosition_X = (int)((mapOffset_x + position.x - (tileSize_Width >> 1)) / tileSize_Width);
-		if (isOnGround() && KeyboardController::GetInstance()->IsKeyPressed('Q'))
+		if (KeyboardController::GetInstance()->IsKeyPressed('Q'))
 		{
 			SetAnimationStatus(CAnimation::P_ROLL_L1);
 			CSoundEngine::GetInstance()->PlayASound("roll");
@@ -505,11 +516,11 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 			}
 		}
 	}
-	else if ((KeyboardController::GetInstance()->IsKeyPressed('E') || (isRolling() && isFacingRight())) && !isOnAir())
+	else if (KeyboardController::GetInstance()->IsKeyPressed('E') || isRolling() && isFacingRight())
 	{
 		// Find the tile number which the player's right side is on
 		checkPosition_X = (int)((mapOffset_x + position.x + (tileSize_Width >> 1)) / tileSize_Width);
-		if (isOnGround() && KeyboardController::GetInstance()->IsKeyPressed('E'))
+		if (KeyboardController::GetInstance()->IsKeyPressed('E'))
 		{
 			SetAnimationStatus(CAnimation::P_ROLL_R1);
 			CSoundEngine::GetInstance()->PlayASound("roll");
@@ -525,7 +536,7 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 		}
 	}
 	// Check if the hero can move sideways
-	else if (KeyboardController::GetInstance()->IsKeyDown('A') && !isOnAir())
+	else if (KeyboardController::GetInstance()->IsKeyDown('A'))
 	{
 		// Find the tile number which the player's left side is on
 		checkPosition_X = (int)((mapOffset_x + position.x - (tileSize_Width >> 1)) / tileSize_Width);
@@ -540,7 +551,7 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 			}
 		}
 	}
-	else if (KeyboardController::GetInstance()->IsKeyDown('D') && !isOnAir())
+	else if (KeyboardController::GetInstance()->IsKeyDown('D'))
 	{
 		// Find the tile number which the player's right side is on
 		checkPosition_X = (int)((mapOffset_x + position.x + (tileSize_Width >> 1)) / tileSize_Width);

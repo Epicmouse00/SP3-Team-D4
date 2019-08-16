@@ -10,6 +10,7 @@
 #include "../SpriteEntity.h"
 #include "Map.h"
 #include "PlayerInfo2D.h"
+#include "Slash.h"
 #include "Enemy.h"
 
 class ShaderProgram;
@@ -47,6 +48,7 @@ private:
 	SpriteEntity* Scene2D_TileDoor;
 	SpriteEntity* Scene2D_RearStructure;
 	SpriteEntity** Scene2D_Hero_Animated;
+	SpriteEntity** Scene2D_Slash_Animated;
 	SpriteEntity* Scene2D_Goodies_TreasureChest;
 
 	// Handle to the tilemaps
@@ -55,6 +57,7 @@ private:
 
 	// This class stores all information about the player / avatar
 	CPlayerInfo2D* thePlayerInfo;
+	Slash* theSlashInfo;
 
 	// The enemies
 	CEnemy** theEnemy;
