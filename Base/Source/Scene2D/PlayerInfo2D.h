@@ -179,4 +179,12 @@ private:
 	int rearTileOffset_x, rearTileOffset_y;
 	int rearMapOffset_x, rearMapOffset_y;
 	int rearMapFineOffset_x, rearMapFineOffset_y;
+
+	// BounceTime
+	double attackBounceTime;
+	double rollBounceTime;
+
+	// BounceTime Limit
+	double attackBounceTimeLimit;
+	double rollBounceTimeLimit;
 };

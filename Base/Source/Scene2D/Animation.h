@@ -53,6 +53,7 @@ public:
 	bool isFacingRight(int frame) const;
 	bool isRolling(void) const;
 	bool isAttacking(void) const;
+	bool isPogo(void) const;
 
 private:
 	int frameState;
