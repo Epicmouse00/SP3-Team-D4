@@ -139,6 +139,7 @@ void CPlayerInfo2D::SetOnFreeFall(bool isOnFreeFall)
 			SetAnimationStatus(CAnimation::P_FALL_R1);
 		else
 			SetAnimationStatus(CAnimation::P_FALL_L1);
+		UpdateAnimationIndex(1.0f);
 	}
 }
 
@@ -155,6 +156,7 @@ void CPlayerInfo2D::SetToJumpUpwards(bool isOnJumpUpwards)
 			SetAnimationStatus(CAnimation::P_JUMP_R1);
 		else
 			SetAnimationStatus(CAnimation::P_JUMP_L1);
+		UpdateAnimationIndex(1.f);
 		CSoundEngine::GetInstance()->PlayASound("Jump");
 	}
 }
