@@ -17,7 +17,7 @@ CPlayerInfo2D::CPlayerInfo2D(void)
 	, m_dAcceleration(8.0)
 	, m_bJumpUpwards(false)
 	, m_bJumped(false)
-	, m_dJumpSpeed(12.0)
+	, m_dJumpSpeed(6.0)
 	, m_dJumpAcceleration(-8.0)
 	, m_bJumpKeyHeld(false)
 	, m_bDoubleJump(false)
@@ -149,7 +149,7 @@ void CPlayerInfo2D::SetToJumpUpwards(bool isOnJumpUpwards)
 	{
 		m_bJumpUpwards = true;
 		m_bFallDownwards = false;
-		m_dJumpSpeed = 12.0;
+		m_dJumpSpeed = 6.0;
 
 		if (isFacingRight())
 			SetAnimationStatus(CAnimation::P_JUMP_R1);
@@ -255,7 +255,7 @@ void CPlayerInfo2D::UpdateJumpUpwards(double dt)
 		return;
 	if (m_bDoubleJump && !m_bDoubleJumped)
 	{
-		m_dJumpSpeed = 12.0f;
+		m_dJumpSpeed = 6.0f;
 		m_bDoubleJumped = true;
 	}
 
@@ -264,8 +264,8 @@ void CPlayerInfo2D::UpdateJumpUpwards(double dt)
 
 	// Update the jump
 	position.y += m_dJumpSpeed;
-	m_dJumpSpeed -= 1;
-	if (m_dJumpSpeed == 0)
+	m_dJumpSpeed -= 0.5f;
+	if (m_dJumpSpeed <= 0)
 		SetOnFreeFall(true);
 
 	// If the player has jumped out of the screen, 
@@ -315,7 +315,7 @@ void CPlayerInfo2D::UpdateFreeFall(double dt)
 
 	// Update the free fall
 	position.y -= m_dFallSpeed;
-	m_dFallSpeed += 1;
+	m_dFallSpeed += 0.5;
 
 	// Check if the player is still in mid air...
 	int checkPosition_X = (int)((mapOffset_x + position.x - (tileSize_Width >> 1)) / tileSize_Width);
