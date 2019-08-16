@@ -17,7 +17,7 @@ CPlayerInfo2D::CPlayerInfo2D(void)
 	, m_dAcceleration(8.0)
 	, m_bJumpUpwards(false)
 	, m_bJumped(false)
-	, m_dJumpSpeed(12.0)
+	, m_dJumpSpeed(6.0)
 	, m_dJumpAcceleration(-8.0)
 	, m_bJumpKeyHeld(false)
 	, m_bDoubleJump(false)
@@ -77,7 +77,7 @@ void CPlayerInfo2D::Init(void)
 	CSoundEngine::GetInstance()->AddSound("roll", "Image//roll.wav");
 
 
-	CSoundEngine::GetInstance()->PlayASound("bgmwalk");
+	CSoundEngine::GetInstance()->PlayBGM("bgmwalk");
 }
 
 // Set the boundary for the player info
@@ -139,6 +139,7 @@ void CPlayerInfo2D::SetOnFreeFall(bool isOnFreeFall)
 			SetAnimationStatus(CAnimation::P_FALL_R1);
 		else
 			SetAnimationStatus(CAnimation::P_FALL_L1);
+		UpdateAnimationIndex(1.0f);
 	}
 }
 
@@ -149,12 +150,13 @@ void CPlayerInfo2D::SetToJumpUpwards(bool isOnJumpUpwards)
 	{
 		m_bJumpUpwards = true;
 		m_bFallDownwards = false;
-		m_dJumpSpeed = 12.0;
+		m_dJumpSpeed = 6.0;
 
 		if (isFacingRight())
 			SetAnimationStatus(CAnimation::P_JUMP_R1);
 		else
 			SetAnimationStatus(CAnimation::P_JUMP_L1);
+		UpdateAnimationIndex(1.f);
 		CSoundEngine::GetInstance()->PlayASound("Jump");
 	}
 }
@@ -255,7 +257,7 @@ void CPlayerInfo2D::UpdateJumpUpwards(double dt)
 		return;
 	if (m_bDoubleJump && !m_bDoubleJumped)
 	{
-		m_dJumpSpeed = 12.0f;
+		m_dJumpSpeed = 6.0f;
 		m_bDoubleJumped = true;
 	}
 
@@ -264,8 +266,8 @@ void CPlayerInfo2D::UpdateJumpUpwards(double dt)
 
 	// Update the jump
 	position.y += m_dJumpSpeed;
-	m_dJumpSpeed -= 1;
-	if (m_dJumpSpeed == 0)
+	m_dJumpSpeed -= 0.5f;
+	if (m_dJumpSpeed <= 0)
 		SetOnFreeFall(true);
 
 	// If the player has jumped out of the screen, 
@@ -315,7 +317,7 @@ void CPlayerInfo2D::UpdateFreeFall(double dt)
 
 	// Update the free fall
 	position.y -= m_dFallSpeed;
-	m_dFallSpeed += 1;
+	m_dFallSpeed += 0.5;
 
 	// Check if the player is still in mid air...
 	int checkPosition_X = (int)((mapOffset_x + position.x - (tileSize_Width >> 1)) / tileSize_Width);
@@ -365,20 +367,34 @@ void CPlayerInfo2D::Update(double dt)
 	//	MoveUpDown(true, 1.0f);
 	//if (KeyboardController::GetInstance()->IsKeyDown('S'))
 	//	MoveUpDown(false, 1.0f);
-	if (KeyboardController::GetInstance()->IsKeyPressed('Q') || (isRolling() && !isFacingRight()))
+	
+	if (KeyboardController::GetInstance()->IsKeyPressed('Q') || !isFacingRight() && isRolling()) // Roll Left
 		MoveLeftRight(true, 0.8f);
-	else if (KeyboardController::GetInstance()->IsKeyPressed('E') || (isRolling() && isFacingRight()))
+	else if (KeyboardController::GetInstance()->IsKeyPressed('E') || isFacingRight() && isRolling()) // Roll Right
 		MoveLeftRight(false, 0.8f);
-	else if (KeyboardController::GetInstance()->IsKeyDown('A'))
+	else if (KeyboardController::GetInstance()->IsKeyDown('A')  && !KeyboardController::GetInstance()->IsKeyPressed('P')) // Move Left
 		MoveLeftRight(true, 0.6f);
-	else if (KeyboardController::GetInstance()->IsKeyDown('D'))
+	else if (KeyboardController::GetInstance()->IsKeyDown('D') && !KeyboardController::GetInstance()->IsKeyPressed('P')) // Move Right
 		MoveLeftRight(false, 0.6f);
-	else if (!KeyboardController::GetInstance()->IsKeyDown('A') && !KeyboardController::GetInstance()->IsKeyDown('D') && isOnGround())
+	else if (KeyboardController::GetInstance()->IsKeyPressed('P') && KeyboardController::GetInstance()->IsKeyDown('W') || KeyboardController::GetInstance()->IsKeyPressed('P') && KeyboardController::GetInstance()->IsKeyDown('S') && !isOnGround())
+		Attack((!isFacingRight()), 0.5f);
+	else if (KeyboardController::GetInstance()->IsKeyPressed('P') && KeyboardController::GetInstance()->IsKeyDown('A') && !isAttacking()) // Attack Left
+		Attack(true, 0.5f);
+	else if (KeyboardController::GetInstance()->IsKeyPressed('P') && KeyboardController::GetInstance()->IsKeyDown('D') && !isAttacking()) // Attack Right
+		Attack(false, 0.5f);
+	else if (KeyboardController::GetInstance()->IsKeyPressed('P'))
+		Attack(!isFacingRight(), 0.5f);
+	else if (isAttacking())
+	{
+		UpdateAnimationIndex(0.5f);
+	}
+	else if (isOnGround()) // Idle
 	{
 		if (isFacingRight())
 			SetAnimationStatus(CAnimation::P_IDLE_R1);
 		else
 			SetAnimationStatus(CAnimation::P_IDLE_L1);
+		UpdateAnimationIndex(0.1f);
 	}
 
 	if (position.x + (tileSize_Width >> 1) > maxBoundary.x)
@@ -386,7 +402,7 @@ void CPlayerInfo2D::Update(double dt)
 	if (position.x - (tileSize_Width >> 1) < minBoundary.x)
 		position.x = minBoundary.x + tileSize_Width;
 
-	if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumped && isOnAir() && !m_bDoubleJump && isRolling())
+	if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumped && isOnAir() && !m_bDoubleJump && isRolling() && !isAttacking())
 	{
 		m_bJumped = true;
 		m_bDoubleJump = true;
@@ -398,7 +414,7 @@ void CPlayerInfo2D::Update(double dt)
 		m_bJumpKeyHeld = false;
 	}
 
-	if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumpKeyHeld && !m_bDoubleJump && m_bJumped && !isRolling())
+	if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumpKeyHeld && !m_bDoubleJump && m_bJumped && !isRolling() && !isAttacking())
 	{
  		m_bJumpKeyHeld = true;
 		m_bDoubleJump = true;
@@ -406,7 +422,7 @@ void CPlayerInfo2D::Update(double dt)
 	}
 
 	// If the user presses SPACEBAR, then make him jump
-	if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumped && !isOnAir() && !isRolling())
+	if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumped && !isOnAir() && !isRolling() && !isAttacking())
 	{
 		m_bJumped = true;
 		m_bJumpKeyHeld = true;
@@ -422,10 +438,11 @@ void CPlayerInfo2D::Update(double dt)
 	// Constrain the position
 	Constrain();
 
-	// If the user presses R key, then reset the view to default values
-	if (KeyboardController::GetInstance()->IsKeyDown('R'))
+
+	// If the user presses M key, then reset the view to default values
+	if (KeyboardController::GetInstance()->IsKeyDown('M'))
 	{
-		Reset();
+		//Reset();
 	}
 	else if (KeyboardController::GetInstance()->IsKeyReleased(VK_F5))
 	{
@@ -513,7 +530,7 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 	{
 		// Find the tile number which the player's left side is on
 		checkPosition_X = (int)((mapOffset_x + position.x - (tileSize_Width >> 1)) / tileSize_Width);
-		if (isOnGround())
+		if (isOnGround() && !isAttacking())
 			SetAnimationStatus(CAnimation::P_RUN_L1);
 
 		if (checkPosition_X >= 0)
@@ -528,7 +545,7 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 	{
 		// Find the tile number which the player's right side is on
 		checkPosition_X = (int)((mapOffset_x + position.x + (tileSize_Width >> 1)) / tileSize_Width);
-		if (isOnGround())
+		if (isOnGround() && !isAttacking())
 			SetAnimationStatus(CAnimation::P_RUN_R1);
 
 		if (checkPosition_X < theMapReference->GetNumOfTiles_Width()&&!position.y + tileSize_Height > maxBoundary.y)
@@ -574,6 +591,24 @@ void CPlayerInfo2D::MoveLeftRight(const bool mode, const float timeDiff)
 	UpdateSideMovements();
 	UpdateAnimationIndex(timeDiff);
 
+}
+
+void CPlayerInfo2D::Attack(const bool mode, const float timeDiff)
+{
+	if (!isAttacking())
+	{
+		if (mode)
+		{
+			SetAnimationStatus(CAnimation::P_ATTACK_L1);
+			CSoundEngine::GetInstance()->PlayASound("attack");
+		}
+		else
+		{
+			SetAnimationStatus(CAnimation::P_ATTACK_R1);
+			CSoundEngine::GetInstance()->PlayASound("attack");
+		}
+	}
+	UpdateAnimationIndex(timeDiff);
 }
 
 // Check if the player is standing on air

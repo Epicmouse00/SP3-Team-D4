@@ -10,6 +10,7 @@ class CSoundEngine : public Singleton<CSoundEngine>
 protected:
 	// Destructor
 	ISoundEngine* theSoundEngine;
+	ISoundEngine* theSoundEngineBGM;
 
 	// The library map of all the sounds created
 	std::map<std::string, std::string> soundMap;
@@ -33,5 +34,6 @@ public:
 	bool RemoveSound(const std::string& _soundIndex);
 	// Play a sound from this map
 	void PlayASound(const std::string& _soundIndex);
+	void PlayBGM(const std::string& _soundIndex);
 };
 
