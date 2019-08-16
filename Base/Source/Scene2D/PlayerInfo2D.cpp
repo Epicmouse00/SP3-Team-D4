@@ -366,13 +366,13 @@ void CPlayerInfo2D::Update(double dt)
 	//if (KeyboardController::GetInstance()->IsKeyDown('S'))
 	//	MoveUpDown(false, 1.0f);
 	if (KeyboardController::GetInstance()->IsKeyPressed('Q') || (isRolling() && !isFacingRight()))
-		MoveLeftRight(true, 1.5f);
+		MoveLeftRight(true, 0.8f);
 	else if (KeyboardController::GetInstance()->IsKeyPressed('E') || (isRolling() && isFacingRight()))
-		MoveLeftRight(false, 1.5f);
+		MoveLeftRight(false, 0.8f);
 	else if (KeyboardController::GetInstance()->IsKeyDown('A'))
-		MoveLeftRight(true, 1.0f);
+		MoveLeftRight(true, 0.6f);
 	else if (KeyboardController::GetInstance()->IsKeyDown('D'))
-		MoveLeftRight(false, 1.0f);
+		MoveLeftRight(false, 0.6f);
 	else if (!KeyboardController::GetInstance()->IsKeyDown('A') && !KeyboardController::GetInstance()->IsKeyDown('D') && isOnGround())
 	{
 		if (isFacingRight())
