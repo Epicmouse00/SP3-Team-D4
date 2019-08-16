@@ -7,6 +7,7 @@
 CEnemy::CEnemy(void)
 	: theStrategy(NULL)
 	, theENEMYPosition(Vector3(0.0f, 0.0f, 0.0f))
+	, theMapReference(nullptr)
 {
 }
 
@@ -27,6 +28,7 @@ CEnemy::~CEnemy(void)
  ********************************************************************************/
 void CEnemy::Init(CMap* m_cMap)
 {
+	theMapReference = m_cMap;
 	theENEMYPosition.x=0;
 	theENEMYPosition.y=0;
 }

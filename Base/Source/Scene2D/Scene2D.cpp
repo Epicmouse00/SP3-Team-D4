@@ -362,8 +362,10 @@ void CScene2D::Init()
 	// Create the 3 enemies
 	m_iNumEnemy = m_cMap->getNumberOfEnemies();
 	theEnemy = new CEnemy*[m_iNumEnemy];
-	for (int i = 0; i < m_iNumEnemy; ++i)
+
 	{
+		int i=0;
+		bool breakk = false;
 		for (int width = 0; width < m_cMap->getNumOfTiles_MapWidth(); ++width)
 		{
 			for (int height = 0; height < m_cMap->getNumOfTiles_MapHeight(); ++height)
@@ -374,8 +376,16 @@ void CScene2D::Init()
 					theEnemy[i]->Init(m_cMap);
 					theEnemy[i]->ChangeStrategy(new CStrategy_Kill(), false);
 					theEnemy[i]->SetPos(width * m_cMap->GetTileSize_Width(), 232 - height * m_cMap->GetTileSize_Height());
+					++i;
+						if (i == m_iNumEnemy)
+						{
+							breakk = true;
+							break;
+						}
 				}
 			}
+			if (breakk)
+				break;
 		}
 	}
 
