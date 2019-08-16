@@ -77,7 +77,7 @@ void CPlayerInfo2D::Init(void)
 	CSoundEngine::GetInstance()->AddSound("roll", "Image//roll.wav");
 
 
-	CSoundEngine::GetInstance()->PlayASound("bgmwalk");
+	CSoundEngine::GetInstance()->PlayBGM("bgmwalk");
 }
 
 // Set the boundary for the player info

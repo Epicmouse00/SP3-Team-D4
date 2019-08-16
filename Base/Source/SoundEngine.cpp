@@ -6,6 +6,7 @@ using namespace std;
 // Constructor
 CSoundEngine::CSoundEngine()
 	: theSoundEngine(NULL)
+	, theSoundEngineBGM(NULL)
 {
 }
 
@@ -21,6 +22,11 @@ CSoundEngine::~CSoundEngine()
 		delete theSoundEngine;
 		theSoundEngine = NULL;
 	}
+	if (theSoundEngineBGM)
+	{
+		delete theSoundEngineBGM;
+		theSoundEngineBGM = NULL;
+	}
 }
 
 // Init this class and it will create the Sound Engine
@@ -29,6 +35,9 @@ bool CSoundEngine::Init(void)
 	// Create the sound engine
 	theSoundEngine = createIrrKlangDevice();
 	if (!theSoundEngine)
+		return false;	// error starting up the sound engine
+	theSoundEngineBGM = createIrrKlangDevice();
+	if (!theSoundEngineBGM)
 		return false;	// error starting up the sound engine
 
 	return true;
@@ -114,4 +123,11 @@ void CSoundEngine::PlayASound(const std::string& _soundIndex)
 {
 	std::string aSound = GetSound(_soundIndex);
 	theSoundEngine->play2D(aSound.c_str(), false, false);
+}
+
+void CSoundEngine::PlayBGM(const std::string & _soundIndex)
+{
+	std::string aSound = GetSound(_soundIndex);
+	theSoundEngineBGM->setSoundVolume(0.1f);
+	theSoundEngineBGM->play2D(aSound.c_str(), true, false);
 }
