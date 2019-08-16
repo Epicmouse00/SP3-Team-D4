@@ -31,6 +31,7 @@ CScene2D::CScene2D()
 	: m_cMap(NULL)
 	, m_cRearMap(NULL)
 	, thePlayerInfo(NULL)
+	, theSlashInfo(NULL)
 	, m_iNumEnemy(3)
 {
 }
@@ -53,10 +54,6 @@ CScene2D::~CScene2D()
 	Scene2D_Background = NULL;
 	delete Scene2D_TileGround;
 	Scene2D_TileGround = NULL;
-	delete Scene2D_Hero;
-	Scene2D_Hero = NULL;
-	//delete Scene2D_TileTree;
-	//Scene2D_TileTree = NULL;
 	delete Scene2D_TileDoor;
 	Scene2D_TileDoor = NULL;
 	delete Scene2D_RearStructure;
@@ -70,13 +67,21 @@ CScene2D::~CScene2D()
 	//delete theEnemy;
 	//theEnemy = NULL;
 
-	for (int i = 0; i < 7; ++i)
+	for (int i = 0; i < thePlayerInfo->GetFrameTotal(); ++i)
 	{
 		delete Scene2D_Hero_Animated[i];
 		Scene2D_Hero_Animated[i] = NULL;
 	}
 	delete Scene2D_Hero_Animated;
 	Scene2D_Hero_Animated = NULL;
+
+	for (int i = 0; i < theSlashInfo->GetFrameTotal(); ++i)
+	{
+		delete Scene2D_Slash_Animated[i];
+		Scene2D_Slash_Animated[i] = NULL;
+	}
+	delete Scene2D_Slash_Animated;
+	Scene2D_Slash_Animated = NULL;
 
 	if (thePlayerInfo->DropInstance() == false)
 	{
@@ -87,6 +92,11 @@ CScene2D::~CScene2D()
 		delete ui;
 		ui = NULL;
 	}
+	if (theSlashInfo->DropInstance() == false)
+	{
+		cout << "CScene2D: Unable to drop Slash class" << endl;
+	}
+
 	if (m_cRearMap)
 	{
 		delete m_cRearMap;
@@ -188,6 +198,8 @@ void CScene2D::Init()
 	thePlayerInfo->SetRearMap(m_cRearMap);
 
 	ui = new UserInterface;
+	theSlashInfo = Slash::GetInstance();
+	theSlashInfo->Init();
 
 	// Setup the 2D entities
 	float halfWindowWidth = Application::GetInstance().GetWindowWidth() / 2.0f;
@@ -198,9 +210,6 @@ void CScene2D::Init()
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(320.0f, 240.0f, 0.0f), true);
 	Scene2D_TileGround = Create::Sprite2DObject("Tile_1111",
-		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero = Create::Sprite2DObject("SCENE2D_TILE_HERO",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
 	Scene2D_TileDoor = Create::Sprite2DObject("Tile_Door_Close",
@@ -307,7 +316,45 @@ void CScene2D::Init()
 	Scene2D_Hero_Animated[31] = Create::Sprite2DObject("Lonin_Left_Roll_4",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	
+
+	Scene2D_Slash_Animated = new SpriteEntity*[theSlashInfo->GetFrameTotal()];
+	Scene2D_Slash_Animated[0] = Create::Sprite2DObject("Slash_Up_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Slash_Animated[1] = Create::Sprite2DObject("Slash_Up_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Slash_Animated[2] = Create::Sprite2DObject("Slash_Down_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Slash_Animated[3] = Create::Sprite2DObject("Slash_Down_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Slash_Animated[4] = Create::Sprite2DObject("Slash_Left_1_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Slash_Animated[5] = Create::Sprite2DObject("Slash_Left_1_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Slash_Animated[6] = Create::Sprite2DObject("Slash_Left_2_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Slash_Animated[7] = Create::Sprite2DObject("Slash_Left_2_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Slash_Animated[8] = Create::Sprite2DObject("Slash_Right_1_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Slash_Animated[9] = Create::Sprite2DObject("Slash_Right_1_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Slash_Animated[10] = Create::Sprite2DObject("Slash_Right_2_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Slash_Animated[11] = Create::Sprite2DObject("Slash_Right_2_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+
 	//Scene2D_Goodies_TreasureChest = Create::Sprite2DObject("SCENE2D_TILE_TREASURECHEST",
 	//	Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 	//	Vector3(16.0f, 16.0f, 0.0f));
@@ -386,6 +433,7 @@ void CScene2D::Update(double dt)
 
 		// Update the thePlayerInfo
 		thePlayerInfo->Update(dt);
+		theSlashInfo->Update(dt);
 
 		// Update the enemies
 		for (int i = 0; i < m_iNumEnemy; ++i)
@@ -561,6 +609,11 @@ void CScene2D::RenderPlayer()
 	// Display the player
 	Scene2D_Hero_Animated[thePlayerInfo->GetFrameState()]->SetPosition(Vector3(thePlayerInfo->GetPos().x-thePlayerInfo->GetMapOffset_x(), thePlayerInfo->GetPos().y,0));
 	Scene2D_Hero_Animated[thePlayerInfo->GetFrameState()]->RenderUI();
+	if (theSlashInfo->GetFrameState() != Slash::S_NOPE)
+	{
+		Scene2D_Slash_Animated[theSlashInfo->GetFrameState()]->SetPosition(theSlashInfo->GetPos());
+		Scene2D_Slash_Animated[theSlashInfo->GetFrameState()]->RenderUI();
+	}
 }
 
 // Render the enemy
