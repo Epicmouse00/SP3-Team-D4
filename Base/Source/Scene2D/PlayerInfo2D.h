@@ -187,4 +187,7 @@ private:
 	// BounceTime Limit
 	double attackBounceTimeLimit;
 	double rollBounceTimeLimit;
+
+	// Roll Speed
+	float rollSpeed;
 };
