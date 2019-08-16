@@ -111,10 +111,10 @@ CScene2D::~CScene2D()
 
 void CScene2D::Init()
 {
-	currProg = GraphicsManager::GetInstance()->LoadShader("default", 
-														  "Shader//Texture.vertexshader", 
-														  "Shader//Texture.fragmentshader");
-	
+	currProg = GraphicsManager::GetInstance()->LoadShader("default",
+		"Shader//Texture.vertexshader",
+		"Shader//Texture.fragmentshader");
+
 	// Tell the shader program to store these uniform locations
 	currProg->AddUniform("MVP");
 	currProg->AddUniform("MV");
@@ -151,7 +151,7 @@ void CScene2D::Init()
 	currProg->AddUniform("colorTexture");
 	currProg->AddUniform("textEnabled");
 	currProg->AddUniform("textColor");
-	
+
 	// Tell the graphics manager to use the shader we just loaded
 	GraphicsManager::GetInstance()->SetActiveShader("default");
 
@@ -162,7 +162,7 @@ void CScene2D::Init()
 
 	// Load all the meshes
 	LoadMeshes();
-	
+
 	//MeshBuilder::GetInstance()->GenerateSpriteAnimation("sprite", 16, 16);
 	//MeshBuilder::GetInstance()->GetMesh("sprite")->textureID = LoadTGA("Image//spritesheet.tga");
 
@@ -191,7 +191,7 @@ void CScene2D::Init()
 	thePlayerInfo->Init();
 	thePlayerInfo->SetPos(Vector3(50.0f + kiHalfTileWidth, 100.0f + kiHalfTileHeight));
 	//thePlayerInfo->SetBoundary(Vector3(210.f, 230.0f, 0.0f), Vector3(10.0f, 10.0f, 0.0f));
-	thePlayerInfo->SetBoundary(Vector3(m_cMap->getScreenWidth()/2, m_cMap->getScreenHeight(), 0.0f)
+	thePlayerInfo->SetBoundary(Vector3(m_cMap->getScreenWidth() / 2, m_cMap->getScreenHeight(), 0.0f)
 		, Vector3(m_cMap->getScreenWidth() / 2, 0, 0.0f));
 	thePlayerInfo->SetTileSize(m_cMap->GetTileSize_Width(), m_cMap->GetTileSize_Height());
 	thePlayerInfo->SetMap(m_cMap);
@@ -218,7 +218,7 @@ void CScene2D::Init()
 	Scene2D_RearStructure = Create::Sprite2DObject("Tile_BG",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	
+
 	Scene2D_Hero_Animated = new SpriteEntity*[thePlayerInfo->GetFrameTotal()];
 	Scene2D_Hero_Animated[0] = Create::Sprite2DObject("Lonin_Right_Idle_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
@@ -360,15 +360,24 @@ void CScene2D::Init()
 	//	Vector3(16.0f, 16.0f, 0.0f));
 
 	// Create the 3 enemies
-	m_iNumEnemy = 1;
+	m_iNumEnemy = m_cMap->getNumberOfEnemies();
 	theEnemy = new CEnemy*[m_iNumEnemy];
-	for (int i = 0; i < m_iNumEnemy; i++)
+	for (int i = 0; i < m_iNumEnemy; ++i)
 	{
-		theEnemy[i] = new CEnemy();
-		theEnemy[i]->Init(m_cMap);
-		theEnemy[i]->ChangeStrategy(new CStrategy_Kill(), false);
+		for (int width = 0; width < m_cMap->getNumOfTiles_MapWidth(); ++width)
+		{
+			for (int height = 0; height < m_cMap->getNumOfTiles_MapHeight(); ++height)
+			{
+				if (m_cMap->theScreenMap[height][width] == 101)
+				{
+					theEnemy[i] = new CEnemy();
+					theEnemy[i]->Init(m_cMap);
+					theEnemy[i]->ChangeStrategy(new CStrategy_Kill(), false);
+					theEnemy[i]->SetPos(width * m_cMap->GetTileSize_Width(), 232 - height * m_cMap->GetTileSize_Height());
+				}
+			}
+		}
 	}
-	theEnemy[0]->SetPos(256, 32 + 8);
 
 	Scene2D_Enemy = new SpriteEntity*[theEnemy[0]->GetFrameTotal()];
 	Scene2D_Enemy[0] = Create::Sprite2DObject("Crystal_Attack_1",
@@ -639,8 +648,8 @@ void CScene2D::RenderEnemy(void)
 		int theEnemy_x = theEnemy[i]->GetPos_x() - thePlayerInfo->mapOffset_x;
 		int theEnemy_y = theEnemy[i]->GetPos_y();
 
-		if (((theEnemy_x >= thePlayerInfo->GetMinBoundary().x) && (theEnemy_x < thePlayerInfo->GetMaxBoundary().x)) &&
-			((theEnemy_y >= thePlayerInfo->GetMinBoundary().y) && (theEnemy_y < thePlayerInfo->GetMaxBoundary().y)) &&
+		if (((theEnemy_x >= 0) && (theEnemy_x < m_cMap->GetNumOfTiles_Width()*m_cMap->GetTileSize_Width())) &&
+			((theEnemy_y >= 0) && (theEnemy_y < m_cMap->GetNumOfTiles_Height()*m_cMap->GetTileSize_Height())) &&
 			theEnemy[i]->GetFrameState() != CEnemy::C_TOTAL);
 		{
 			Scene2D_Enemy[theEnemy[i]->GetFrameState()]->SetPosition(Vector3(theEnemy_x, theEnemy_y, 0));
