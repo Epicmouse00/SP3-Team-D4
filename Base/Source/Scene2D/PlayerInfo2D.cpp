@@ -69,7 +69,15 @@ void CPlayerInfo2D::Init(void)
 	tileSize_Height = 16;
 
 	CSoundEngine::GetInstance()->Init();
-	CSoundEngine::GetInstance()->AddSound("Jump", "Image//Mario-jump-sound.mp3");
+	CSoundEngine::GetInstance()->AddSound("bgm", "Image//bgm.mp3");
+	CSoundEngine::GetInstance()->AddSound("bgmwalk", "Image//bgmwalk.mp3");
+	CSoundEngine::GetInstance()->AddSound("Jump", "Image//jump.wav");
+	CSoundEngine::GetInstance()->AddSound("walk", "Image//walk.wav");
+	CSoundEngine::GetInstance()->AddSound("attack", "Image//attack.wav");
+	CSoundEngine::GetInstance()->AddSound("roll", "Image//roll.wav");
+
+
+	CSoundEngine::GetInstance()->PlayASound("bgmwalk");
 }
 
 // Set the boundary for the player info
@@ -127,7 +135,7 @@ void CPlayerInfo2D::SetOnFreeFall(bool isOnFreeFall)
 		m_bJumpUpwards = false;
 		m_bFallDownwards = true;
 		m_dFallSpeed = 0.0;
-		if (this->isFacingRight())
+		if (isFacingRight())
 			SetAnimationStatus(CAnimation::P_FALL_R1);
 		else
 			SetAnimationStatus(CAnimation::P_FALL_L1);
@@ -143,7 +151,7 @@ void CPlayerInfo2D::SetToJumpUpwards(bool isOnJumpUpwards)
 		m_bFallDownwards = false;
 		m_dJumpSpeed = 12.0;
 
-		if (this->isFacingRight())
+		if (isFacingRight())
 			SetAnimationStatus(CAnimation::P_JUMP_R1);
 		else
 			SetAnimationStatus(CAnimation::P_JUMP_L1);
@@ -357,17 +365,17 @@ void CPlayerInfo2D::Update(double dt)
 	//	MoveUpDown(true, 1.0f);
 	//if (KeyboardController::GetInstance()->IsKeyDown('S'))
 	//	MoveUpDown(false, 1.0f);
-	if (KeyboardController::GetInstance()->IsKeyPressed('Q') || (this->isRolling() && !this->isFacingRight()))
+	if (KeyboardController::GetInstance()->IsKeyPressed('Q') || (isRolling() && !isFacingRight()))
 		MoveLeftRight(true, 1.5f);
-	else if (KeyboardController::GetInstance()->IsKeyPressed('E') || (this->isRolling() && this->isFacingRight()))
+	else if (KeyboardController::GetInstance()->IsKeyPressed('E') || (isRolling() && isFacingRight()))
 		MoveLeftRight(false, 1.5f);
 	else if (KeyboardController::GetInstance()->IsKeyDown('A'))
 		MoveLeftRight(true, 1.0f);
 	else if (KeyboardController::GetInstance()->IsKeyDown('D'))
 		MoveLeftRight(false, 1.0f);
-	else if (!KeyboardController::GetInstance()->IsKeyDown('A') && !KeyboardController::GetInstance()->IsKeyDown('D') && this->isOnGround())
+	else if (!KeyboardController::GetInstance()->IsKeyDown('A') && !KeyboardController::GetInstance()->IsKeyDown('D') && isOnGround())
 	{
-		if (this->isFacingRight())
+		if (isFacingRight())
 			SetAnimationStatus(CAnimation::P_IDLE_R1);
 		else
 			SetAnimationStatus(CAnimation::P_IDLE_L1);
@@ -378,7 +386,7 @@ void CPlayerInfo2D::Update(double dt)
 	if (position.x - (tileSize_Width >> 1) < minBoundary.x)
 		position.x = minBoundary.x + tileSize_Width;
 
-	if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumped && isOnAir() && !m_bDoubleJump)
+	if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumped && isOnAir() && !m_bDoubleJump && isRolling())
 	{
 		m_bJumped = true;
 		m_bDoubleJump = true;
@@ -390,7 +398,7 @@ void CPlayerInfo2D::Update(double dt)
 		m_bJumpKeyHeld = false;
 	}
 
-	if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumpKeyHeld && !m_bDoubleJump && m_bJumped)
+	if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumpKeyHeld && !m_bDoubleJump && m_bJumped && !isRolling())
 	{
  		m_bJumpKeyHeld = true;
 		m_bDoubleJump = true;
@@ -398,7 +406,7 @@ void CPlayerInfo2D::Update(double dt)
 	}
 
 	// If the user presses SPACEBAR, then make him jump
-	if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumped && !isOnAir())
+	if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumped && !isOnAir() && !isRolling())
 	{
 		m_bJumped = true;
 		m_bJumpKeyHeld = true;
@@ -408,7 +416,7 @@ void CPlayerInfo2D::Update(double dt)
 	{
 		// Check if the player has walked off the platform
 		if (isOnAir())
-			this->SetOnFreeFall(true);
+			SetOnFreeFall(true);
 	}
 
 	// Constrain the position
@@ -463,12 +471,15 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 		(int)ceil(position.y / theMapReference->GetTileSize_Height());
 
 	// Check if the hero can move sideways
-	if ((KeyboardController::GetInstance()->IsKeyPressed('Q') || (this->isRolling() && !this->isFacingRight())) && !isOnAir())
+	if ((KeyboardController::GetInstance()->IsKeyPressed('Q') || (isRolling() && !isFacingRight())) && !isOnAir())
 	{
 		// Find the tile number which the player's left side is on
 		checkPosition_X = (int)((mapOffset_x + position.x - (tileSize_Width >> 1)) / tileSize_Width);
-		if (this->isOnGround() && KeyboardController::GetInstance()->IsKeyPressed('Q'))
+		if (isOnGround() && KeyboardController::GetInstance()->IsKeyPressed('Q'))
+		{
 			SetAnimationStatus(CAnimation::P_ROLL_L1);
+			CSoundEngine::GetInstance()->PlayASound("roll");
+		}
 
 		if (checkPosition_X >= 0)
 		{
@@ -478,12 +489,15 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 			}
 		}
 	}
-	else if ((KeyboardController::GetInstance()->IsKeyPressed('E') || (this->isRolling() && this->isFacingRight())) && !isOnAir())
+	else if ((KeyboardController::GetInstance()->IsKeyPressed('E') || (isRolling() && isFacingRight())) && !isOnAir())
 	{
 		// Find the tile number which the player's right side is on
 		checkPosition_X = (int)((mapOffset_x + position.x + (tileSize_Width >> 1)) / tileSize_Width);
-		if (this->isOnGround() && KeyboardController::GetInstance()->IsKeyPressed('E'))
+		if (isOnGround() && KeyboardController::GetInstance()->IsKeyPressed('E'))
+		{
 			SetAnimationStatus(CAnimation::P_ROLL_R1);
+			CSoundEngine::GetInstance()->PlayASound("roll");
+		}
 
 		if (checkPosition_X < theMapReference->getNumOfTiles_MapWidth())
 		{
@@ -499,7 +513,7 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 	{
 		// Find the tile number which the player's left side is on
 		checkPosition_X = (int)((mapOffset_x + position.x - (tileSize_Width >> 1)) / tileSize_Width);
-		if (this->isOnGround())
+		if (isOnGround())
 			SetAnimationStatus(CAnimation::P_RUN_L1);
 
 		if (checkPosition_X >= 0)
@@ -514,7 +528,7 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 	{
 		// Find the tile number which the player's right side is on
 		checkPosition_X = (int)((mapOffset_x + position.x + (tileSize_Width >> 1)) / tileSize_Width);
-		if (this->isOnGround())
+		if (isOnGround())
 			SetAnimationStatus(CAnimation::P_RUN_R1);
 
 		if (checkPosition_X < theMapReference->getNumOfTiles_MapWidth())

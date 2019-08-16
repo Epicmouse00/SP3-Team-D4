@@ -1,4 +1,5 @@
 #include "Animation.h"
+#include "../SoundEngine.h"
 
 
 CAnimation::CAnimation()
@@ -26,6 +27,18 @@ void CAnimation::UpdateAnimationIndex(double dt)
 	{
 		time = 0;
 		frameState = GuessNextFrame(frameState);
+
+		switch (frameState)
+		{
+		case P_RUN_L1:
+		case P_RUN_L2:
+		case P_RUN_R1:
+		case P_RUN_R2:
+			CSoundEngine::GetInstance()->PlayASound("walk");
+			break;
+		default:
+			break;
+		}
 	}
 }
 
