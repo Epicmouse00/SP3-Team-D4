@@ -370,6 +370,10 @@ void CPlayerInfo2D::Update(double dt)
 		MoveLeftRight(true, 0.8f);
 	else if (KeyboardController::GetInstance()->IsKeyPressed('E') || isFacingRight() && isRolling()) // Roll Right
 		MoveLeftRight(false, 0.8f);
+	else if (KeyboardController::GetInstance()->IsKeyDown('A')  && !KeyboardController::GetInstance()->IsKeyPressed('P')) // Move Left
+		MoveLeftRight(true, 0.6f);
+	else if (KeyboardController::GetInstance()->IsKeyDown('D') && !KeyboardController::GetInstance()->IsKeyPressed('P')) // Move Right
+		MoveLeftRight(false, 0.6f);
 	else if (KeyboardController::GetInstance()->IsKeyPressed('P') && KeyboardController::GetInstance()->IsKeyDown('W') || KeyboardController::GetInstance()->IsKeyPressed('P') && KeyboardController::GetInstance()->IsKeyDown('S') && !isOnGround())
 		Attack((!isFacingRight()), 0.5f);
 	else if (KeyboardController::GetInstance()->IsKeyPressed('P') && KeyboardController::GetInstance()->IsKeyDown('A') && !isAttacking()) // Attack Left
@@ -382,10 +386,6 @@ void CPlayerInfo2D::Update(double dt)
 	{
 		UpdateAnimationIndex(0.5f);
 	}
-	else if (KeyboardController::GetInstance()->IsKeyDown('A')) // Move Left
-		MoveLeftRight(true, 0.6f);
-	else if (KeyboardController::GetInstance()->IsKeyDown('D')) // Move Right
-		MoveLeftRight(false, 0.6f);
 	else if (isOnGround()) // Idle
 	{
 		if (isFacingRight())
@@ -439,7 +439,7 @@ void CPlayerInfo2D::Update(double dt)
 	// If the user presses M key, then reset the view to default values
 	if (KeyboardController::GetInstance()->IsKeyDown('M'))
 	{
-		Reset();
+		//Reset();
 	}
 	else if (KeyboardController::GetInstance()->IsKeyReleased(VK_F5))
 	{
@@ -527,7 +527,7 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 	{
 		// Find the tile number which the player's left side is on
 		checkPosition_X = (int)((mapOffset_x + position.x - (tileSize_Width >> 1)) / tileSize_Width);
-		if (isOnGround())
+		if (isOnGround() && !isAttacking())
 			SetAnimationStatus(CAnimation::P_RUN_L1);
 
 		if (checkPosition_X >= 0)
@@ -542,7 +542,7 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 	{
 		// Find the tile number which the player's right side is on
 		checkPosition_X = (int)((mapOffset_x + position.x + (tileSize_Width >> 1)) / tileSize_Width);
-		if (isOnGround())
+		if (isOnGround() && !isAttacking())
 			SetAnimationStatus(CAnimation::P_RUN_R1);
 
 		if (checkPosition_X < theMapReference->getNumOfTiles_MapWidth())
@@ -592,15 +592,18 @@ void CPlayerInfo2D::MoveLeftRight(const bool mode, const float timeDiff)
 
 void CPlayerInfo2D::Attack(const bool mode, const float timeDiff)
 {
-	if (mode)
+	if (!isAttacking())
 	{
-		SetAnimationStatus(CAnimation::P_ATTACK_L1);
-		CSoundEngine::GetInstance()->PlayASound("attack");
-	}
-	else
-	{
-		SetAnimationStatus(CAnimation::P_ATTACK_R1);
-		CSoundEngine::GetInstance()->PlayASound("attack");
+		if (mode)
+		{
+			SetAnimationStatus(CAnimation::P_ATTACK_L1);
+			CSoundEngine::GetInstance()->PlayASound("attack");
+		}
+		else
+		{
+			SetAnimationStatus(CAnimation::P_ATTACK_R1);
+			CSoundEngine::GetInstance()->PlayASound("attack");
+		}
 	}
 	UpdateAnimationIndex(timeDiff);
 }
