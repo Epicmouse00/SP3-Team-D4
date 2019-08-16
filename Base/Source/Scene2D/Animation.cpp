@@ -152,3 +152,19 @@ bool CAnimation::isAttacking(void) const
 		break;
 	}
 }
+
+bool CAnimation::isPogo(void) const
+{
+	switch (frameState)
+	{
+	case P_POGO_R1:
+	case P_POGO_R2:
+	case P_POGO_L1:
+	case P_POGO_L2:
+		return true;
+		break;
+	default:
+		return false;
+		break;
+	}
+}
