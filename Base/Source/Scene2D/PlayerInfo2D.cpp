@@ -664,7 +664,10 @@ void CPlayerInfo2D::Constrain(void)
 	if (position.x >= maxBoundary.x + mapOffset_x - (tileSize_Width >> 1))
 	{
 		//position.x = maxBoundary.x - (tileSize_Width >> 1);
-		mapOffset_x += m_dSpeed;
+		if(position.x >= maxBoundary.x * 1.5f + mapOffset_x)
+			mapOffset_x += m_dSpeed / 0.7;
+		else
+			mapOffset_x += m_dSpeed/2;
 		if (mapOffset_x + theMapReference->getScreenWidth() > theMapReference->GetNumOfTiles_Width() * theMapReference->GetTileSize_Width())
 			mapOffset_x = theMapReference->GetNumOfTiles_Width() * theMapReference->GetTileSize_Width() - theMapReference->getScreenWidth();
 	}
@@ -675,7 +678,10 @@ void CPlayerInfo2D::Constrain(void)
 	if (position.x <= minBoundary.x + mapOffset_x)
 	{
 		//position.x = minBoundary.x;
-		mapOffset_x -= m_dSpeed;
+		if (position.x <= minBoundary.x * 0.5f + mapOffset_x)
+			mapOffset_x -= m_dSpeed / 0.7;
+		else
+			mapOffset_x -= m_dSpeed/2;
 		if (mapOffset_x < 0)
 			mapOffset_x = 0;
 	}
