@@ -36,7 +36,7 @@ private:
 	static bool IsKeyPressed(unsigned short key);
 
 	// Just change this when you want to change screen size
-	const static int m_window_width = 320;
+	const static int m_window_width = 360;
 	const static int m_window_height = 240;
 
 	//Declare a window object
