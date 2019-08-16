@@ -99,9 +99,6 @@
     <ClCompile Include="Source\SoundEngine.cpp">
       <Filter>SoundEngine</Filter>
     </ClCompile>
-    <ClCompile Include="Source\SpriteAnimation.cpp">
-      <Filter>Scene2D</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Scene2D\Enemy.cpp">
       <Filter>Scene2D\IDK..Entities%3f</Filter>
     </ClCompile>
@@ -116,6 +113,12 @@
     </ClCompile>
     <ClCompile Include="Source\Scene2D\Strategy_Kill.cpp">
       <Filter>Scene2D\IDK..Entities%3f</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene2D\TreasureChest.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\UserInterface.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -179,9 +182,6 @@
     <ClInclude Include="Source\SoundEngine.h">
       <Filter>SoundEngine</Filter>
     </ClInclude>
-    <ClInclude Include="Source\SpriteAnimation.h">
-      <Filter>Scene2D</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Scene2D\GoodiesFactory.h">
       <Filter>Scene2D\IDK..Entities%3f</Filter>
     </ClInclude>
@@ -196,6 +196,12 @@
     </ClInclude>
     <ClInclude Include="Source\Scene2D\Strategy.h">
       <Filter>Scene2D\IDK..Entities%3f</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\Strategy_Kill.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\UserInterface.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
