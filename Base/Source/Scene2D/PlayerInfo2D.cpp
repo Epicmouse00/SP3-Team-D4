@@ -334,6 +334,7 @@ void CPlayerInfo2D::UpdateFreeFall(double dt)
 
 	// Update the free fall
 	position.y -= m_dFallSpeed;
+	if (m_dFallSpeed <= 6)
 	m_dFallSpeed += 0.5;
 
 	// Check if the player is still in mid air...
