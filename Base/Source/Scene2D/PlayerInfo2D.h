@@ -83,6 +83,8 @@ public:
 	double GetFallAcceleration(void) const;
 	// Get Tile Offset for x-axis
 	int GetTileOffset_x(void) const;
+
+	int GetMapOffset_x(void) const;
 	// Get Max Boundary
 	Vector3 GetMaxBoundary() const;
 	// Get Min Boundary

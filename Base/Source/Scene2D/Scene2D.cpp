@@ -181,7 +181,8 @@ void CScene2D::Init()
 	thePlayerInfo->Init();
 	thePlayerInfo->SetPos(Vector3(50.0f + kiHalfTileWidth, 100.0f + kiHalfTileHeight));
 	//thePlayerInfo->SetBoundary(Vector3(210.f, 230.0f, 0.0f), Vector3(10.0f, 10.0f, 0.0f));
-	thePlayerInfo->SetBoundary(Vector3(m_cMap->getScreenWidth(), m_cMap->getScreenHeight(), 0.0f), Vector3(0, 0, 0.0f));
+	thePlayerInfo->SetBoundary(Vector3(m_cMap->getScreenWidth()/2, m_cMap->getScreenHeight(), 0.0f)
+		, Vector3(m_cMap->getScreenWidth() / 2, 0, 0.0f));
 	thePlayerInfo->SetTileSize(m_cMap->GetTileSize_Width(), m_cMap->GetTileSize_Height());
 	thePlayerInfo->SetMap(m_cMap);
 	thePlayerInfo->SetRearMap(m_cRearMap);
@@ -413,9 +414,12 @@ void CScene2D::Render()
 	//EntityManager::GetInstance()->Render();
 
 	// Setup 2D pipeline then render 2D
-	GraphicsManager::GetInstance()->SetOrthographicProjection(0, Application::GetInstance().GetWindowWidth(),
-															  0, Application::GetInstance().GetWindowHeight() - 16,
+	GraphicsManager::GetInstance()->SetOrthographicProjection(0, 360,//temp
+															  0, 240 - 16,
 															  -10, 10);
+	//GraphicsManager::GetInstance()->SetOrthographicProjection(0, Application::GetInstance().GetWindowWidth(),
+	//														  0, Application::GetInstance().GetWindowHeight() - 16,
+	//														  -10, 10);
 	GraphicsManager::GetInstance()->DetachCamera();
 
 	if (ui->GetScreenStatus()) {
@@ -555,7 +559,7 @@ void CScene2D::RenderPlayer()
 	//	Scene2D_Hero->RenderUI();
 
 	// Display the player
-	Scene2D_Hero_Animated[thePlayerInfo->GetFrameState()]->SetPosition(thePlayerInfo->GetPos());
+	Scene2D_Hero_Animated[thePlayerInfo->GetFrameState()]->SetPosition(Vector3(thePlayerInfo->GetPos().x-thePlayerInfo->GetMapOffset_x(), thePlayerInfo->GetPos().y,0));
 	Scene2D_Hero_Animated[thePlayerInfo->GetFrameState()]->RenderUI();
 }
 
