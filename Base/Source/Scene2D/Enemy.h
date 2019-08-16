@@ -52,4 +52,6 @@ private:
 	Vector3 theDestination;
 
 	CStrategy* theStrategy;
+
+	CMap* theMapReference;
 };
