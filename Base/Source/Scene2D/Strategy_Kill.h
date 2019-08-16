@@ -26,8 +26,8 @@ public:
 	};
 	enum AI_STATE_RANGE
 	{
-		AI_STATE_REPEL = 25,
-		AI_STATE_ATTACK = 125,
+		AI_STATE_REPEL = 32,
+		AI_STATE_ATTACK = 128,
 		NUM_AI_STATE_RANGE,
 	};
 	CStrategy_Kill::CURRENT_STATE GetState(void);

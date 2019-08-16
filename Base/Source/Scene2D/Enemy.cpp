@@ -137,6 +137,11 @@ void CEnemy::Update(void)
 	if (theStrategy != NULL)
 	{
 		theStrategy->Update(theDestination, theENEMYPosition);
+		if (dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::IDLE ||
+			dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::REPEL)
+			SetAnimationStatus(C_IDLE_1);
+		else if (dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::ATTACK)
+			SetAnimationStatus(C_ATTACK_1);
 		UpdateAnimationIndex(0.2f);
 	}
 }
