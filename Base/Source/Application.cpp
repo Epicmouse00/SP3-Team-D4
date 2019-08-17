@@ -74,7 +74,7 @@ void Application::Init()
 	int m_Height = 240 * 3;
 
 	//Create a window and create its OpenGL context
-	m_window = glfwCreateWindow(m_Width, m_Height, "NYP Framework", NULL, NULL);
+	m_window = glfwCreateWindow(m_window_width*4, m_window_height*4, "NYP Framework", NULL, NULL);
 
 	glfwWindowHint(GLFW_DECORATED, false);
 
