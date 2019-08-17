@@ -412,7 +412,7 @@ void CScene2D::Init()
 
 void CScene2D::Update(double dt)
 {
-	if (ui->Update())
+	if (ui->Update(dt))
 	{
 		// Update our entities
 		EntityManager::GetInstance()->Update(dt);
@@ -533,14 +533,14 @@ void CScene2D::RenderTileMap()
 														0.0f));
 				Scene2D_TileGround->RenderUI();
 			}
-			else if (m_cMap->theScreenMap[i][m] == 2)
-			{
-				Scene2D_TileTree->SetPosition(Vector3(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth 
-															- thePlayerInfo->GetMapFineOffset_x(),
-													  224 - i*m_cMap->GetTileSize_Height() + kiHalfTileHeight,
-													  0.0f));
-				Scene2D_TileTree->RenderUI();
-			}
+			//else if (m_cMap->theScreenMap[i][m] == 2)
+			//{
+			//	Scene2D_TileTree->SetPosition(Vector3(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth 
+			//												- thePlayerInfo->GetMapFineOffset_x(),
+			//										  224 - i*m_cMap->GetTileSize_Height() + kiHalfTileHeight,
+			//										  0.0f));
+			//	Scene2D_TileTree->RenderUI();
+			//}
 			else if (m_cMap->theScreenMap[i][m] == 3)
 			{
 				Scene2D_TileDoor->SetPosition(Vector3(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth

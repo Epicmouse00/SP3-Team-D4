@@ -2,6 +2,7 @@
 #include "SpriteEntity.h"
 #include "TextEntity.h"
 #include "Scene2D/PlayerInfo2D.h"
+#include "../../Base/Source/Scene2D/Hearts.h"
 
 class UserInterface
 {
@@ -14,7 +15,7 @@ public:
 	};
 	UserInterface();
 	~UserInterface();
-	bool Update();
+	bool Update(double dt);
 	bool GetScreenStatus();
 	void Render();
 
@@ -26,6 +27,8 @@ private:
 	SpriteEntity* scene2DQuad;
 	SpriteEntity* scene2DQuad2;
 	TextEntity* textObj[3];
+	SpriteEntity** heartEntity;
 	CPlayerInfo2D* thePlayerInfo;
+	Hearts* theHeartInfo;
 };
 

@@ -42,9 +42,7 @@ private:
 
 	// Scene2D images
 	SpriteEntity* Scene2D_Background;
-	SpriteEntity* Scene2D_Hero;
 	SpriteEntity* Scene2D_TileGround;
-	SpriteEntity* Scene2D_TileTree;
 	SpriteEntity* Scene2D_TileDoor;
 	SpriteEntity* Scene2D_RearStructure;
 	SpriteEntity** Scene2D_Hero_Animated;

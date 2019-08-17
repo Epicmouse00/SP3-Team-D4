@@ -132,6 +132,12 @@
     <ClCompile Include="Source\Scene2D\Slash.cpp">
       <Filter>Scene2D</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Scene2D\AnimationHearts.cpp">
+      <Filter>Scene2D</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene2D\Hearts.cpp">
+      <Filter>Scene2D</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h">
@@ -225,6 +231,12 @@
       <Filter>Scene2D</Filter>
     </ClInclude>
     <ClInclude Include="Source\Scene2D\Slash.h">
+      <Filter>Scene2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\AnimationHearts.h">
+      <Filter>Scene2D</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene2D\Hearts.h">
       <Filter>Scene2D</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,6 +1,10 @@
 #include "UserInterface.h"
 #include "KeyboardController.h"
 #include "MeshBuilder.h"
+#include "Application.h"
+#include "GL\glew.h"
+#include "LoadTGA.h"
+#include "Mesh.h"
 // Currently able to select choices on main & pause screen, it does not render anything rn tho (req: Taga files &/ just some simple quads and text entities)
 // Able to swap screens
 using namespace std;
@@ -8,13 +12,47 @@ UserInterface::UserInterface()
 	: choice(0)
 	, maxChoices(3)
 	, screen(SC_MAIN)
+	, theHeartInfo(NULL)
 {
+	theHeartInfo = Hearts::GetInstance();
+	theHeartInfo->Init();
+
 	scene2DQuad = Create::Sprite2DObject("UI_BOX",
 		Vector3(120, 120, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
 	scene2DQuad2 = Create::Sprite2DObject("UI_BOX2",
 		Vector3(120, 120, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
+
+	{
+		float halfWindowWidth = Application::GetInstance().GetWindowWidth() / 2.0f;
+		float halfWindowHeight = Application::GetInstance().GetWindowHeight() / 2.0f;
+		// Hearts
+		{
+			MeshBuilder::GetInstance()->GenerateQuad("Heart_1", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Heart_1")->textureID = LoadTGA("Image//Sprites//Heart_1.tga");
+			MeshBuilder::GetInstance()->GenerateQuad("Heart_2", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Heart_2")->textureID = LoadTGA("Image//Sprites//Heart_2.tga");
+			MeshBuilder::GetInstance()->GenerateQuad("Heart_3", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Heart_3")->textureID = LoadTGA("Image//Sprites//Heart_3.tga");
+			MeshBuilder::GetInstance()->GenerateQuad("Heart_4", Color(1, 1, 1), 1.f);
+			MeshBuilder::GetInstance()->GetMesh("Heart_4")->textureID = LoadTGA("Image//Sprites//Heart_4.tga");
+		}
+		heartEntity = new SpriteEntity*[theHeartInfo->GetFrameTotal()];
+		heartEntity[0] = Create::Sprite2DObject("Heart_1",
+			Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+			Vector3(16.0f, 16.0f, 0.0f));
+		heartEntity[1] = Create::Sprite2DObject("Heart_2",
+			Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+			Vector3(16.0f, 16.0f, 0.0f));
+		heartEntity[2] = Create::Sprite2DObject("Heart_3",
+			Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+			Vector3(16.0f, 16.0f, 0.0f));
+		heartEntity[3] = Create::Sprite2DObject("Heart_4",
+			Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+			Vector3(16.0f, 16.0f, 0.0f));
+	}
+
 	thePlayerInfo = CPlayerInfo2D::GetInstance();
 
 	float fontSize = 16.0f;
@@ -37,17 +75,21 @@ UserInterface::~UserInterface()
 	scene2DQuad = NULL;
 	delete scene2DQuad2;
 	scene2DQuad2 = NULL;
+
+	for (int i = 0; i < theHeartInfo->GetFrameTotal(); ++i)
+	{
+		delete heartEntity[i];
+		heartEntity[i] = NULL;
+	}
+	delete heartEntity;
+	heartEntity = NULL;
 }
 
-bool UserInterface::Update()
+bool UserInterface::Update(double dt)
 {
 	switch (screen) {
 	case SC_MAIN: // This is the starting screen
 	{
-
-
-
-
 		textObj[2]->SetText("Play");
 
 		textObj[1]->SetText("Load");
@@ -120,7 +162,8 @@ bool UserInterface::Update()
 	}
 	case SC_PLAY: // This just checks for changes in UI* stuff while in play
 	{
-
+		// Heart update
+		theHeartInfo->Update(dt);
 
 		std::ostringstream ss;
 		ss.precision(5);
@@ -183,8 +226,8 @@ void UserInterface::Render()// this is at the back since it needs to be on top? 
 		break;
 	case SC_PLAY:
 		for (int i = 0; i < thePlayerInfo->GetHp(); ++i) {
-			scene2DQuad->SetPosition(Vector3(30*(i+1), 210, 0));
-			scene2DQuad->RenderUI();
+			heartEntity[theHeartInfo->GetFrameState()]->SetPosition(Vector3(30 * (i + 1), 210, 0));
+			heartEntity[theHeartInfo->GetFrameState()]->RenderUI();
 		}
 		textObj[0]->RenderUI();
 		textObj[1]->RenderUI();
