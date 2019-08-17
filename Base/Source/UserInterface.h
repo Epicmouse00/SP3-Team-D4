@@ -27,8 +27,6 @@ private:
 
 	SpriteEntity** heartEntity;
 	UIButton* buttonObj[3];
-	SpriteEntity* scene2DCorruption;
-	Vector3 CorruptionPosition;
 	SpriteEntity* scene2DHp;
 	TextEntity* textObj[2];
 

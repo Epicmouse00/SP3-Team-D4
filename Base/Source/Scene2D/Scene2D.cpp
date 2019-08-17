@@ -825,7 +825,5 @@ void CScene2D::LoadMeshes(void)
 	{
 		MeshBuilder::GetInstance()->GenerateQuad("UI_BOX", Color(1, 0, 1), 1.f);
 		MeshBuilder::GetInstance()->GenerateQuad("UI_BOX2", Color(0, 0, 1), 1.f);
-		MeshBuilder::GetInstance()->GenerateQuad("UI_HP", Color(1, 1, 1), 1.f);
-		MeshBuilder::GetInstance()->GetMesh("UI_HP")->textureID = LoadTGA("Image//Heart.tga");//yup.. probs gonna ask jovan for this
 	}
 }

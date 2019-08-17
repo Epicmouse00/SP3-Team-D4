@@ -7,8 +7,6 @@
 #include "LoadTGA.h"
 #include "Mesh.h"
 
-// Currently able to select choices on main & pause screen, it does not render anything rn tho (req: Taga files &/ just some simple quads and text entities)
-// Able to swap screens
 using namespace std;
 UserInterface::UserInterface()
 	: choice(2)
@@ -49,12 +47,6 @@ UserInterface::UserInterface()
 	}
 
 	thePlayerInfo = CPlayerInfo2D::GetInstance();
-	CorruptionPosition(0,180.f,0)
-	thePlayerInfo = CPlayerInfo2D::GetInstance();
-	scene2DCorruption = Create::Sprite2DObject("UI_BOX",
-		Vector3(0.f, 180.f, 0.0f),
-		Vector3(2.0f, 360.f, 0.0f));
-
 	float fontSize = 16.0f;
 	float halfFontSize = fontSize / 2.0f;
 	for (int i = 0; i < 2; ++i)
@@ -86,8 +78,6 @@ UserInterface::~UserInterface()
 	}
 	delete heartEntity;
 	heartEntity = NULL;
-	delete scene2DCorruption;
-	scene2DCorruption = NULL;
 	for (int i = 0; i < 3; ++i)
 	{
 		delete buttonObj[i];
@@ -171,8 +161,6 @@ bool UserInterface::Update(double dt)
 		// Heart update
 		theHeartInfo->Update(dt);
 
-		CorruptionPosition.x += 0.1f;//moves by corruption speed * dt
-		scene2DCorruption->SetPosition(Vector3(CorruptionPosition.x - thePlayerInfo->GetMapOffset_x(), CorruptionPosition.y,0.f));
 		std::ostringstream ss;
 		ss.precision(5);
 		ss << "CP: " << thePlayerInfo->checkPosition_X << ", " << thePlayerInfo->checkPosition_Y << endl
@@ -248,7 +236,6 @@ void UserInterface::Render()// this is at the back since it needs to be on top? 
 		buttonObj[2]->RenderUI();
 		break;
 	case SC_PLAY:
-		scene2DCorruption->RenderUI();
 		for (int i = 0; i < thePlayerInfo->GetHp(); ++i)
 		{
 			heartEntity[theHeartInfo->GetFrameState()]->SetPosition(Vector3(30 * (i + 1), 210, 0));
