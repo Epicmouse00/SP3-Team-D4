@@ -181,7 +181,7 @@ void CScene2D::Init()
 	thePlayerInfo->Init();
 	thePlayerInfo->SetPos(Vector3(50.0f + kiHalfTileWidth, 100.0f + kiHalfTileHeight));
 	//thePlayerInfo->SetBoundary(Vector3(210.f, 230.0f, 0.0f), Vector3(10.0f, 10.0f, 0.0f));
-	thePlayerInfo->SetBoundary(Vector3(m_cMap->getScreenWidth()/2, m_cMap->getScreenHeight(), 0.0f)
+	thePlayerInfo->SetBoundary(Vector3(m_cMap->getScreenWidth() / 2, m_cMap->getScreenHeight(), 0.0f)
 		, Vector3(m_cMap->getScreenWidth() / 2, 0, 0.0f));
 	thePlayerInfo->SetTileSize(m_cMap->GetTileSize_Width(), m_cMap->GetTileSize_Height());
 	thePlayerInfo->SetMap(m_cMap);
@@ -196,7 +196,7 @@ void CScene2D::Init()
 	// Create the background image
 	Scene2D_Background = Create::Sprite2DObject("SCENE2D_BKGROUND",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(320.0f, 240.0f, 0.0f), true);
+		Vector3(360.0f, 240.0f, 0.0f), true);
 	Scene2D_TileGround = Create::Sprite2DObject("Tile_1111",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
@@ -328,20 +328,6 @@ void CScene2D::Init()
 	//Scene2D_Enemy = Create::Sprite2DObject("SCENE2D_TILE_ENEMY",
 	//	Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 	//	Vector3(25.0f, 25.0f, 0.0f));
-		
-	// Create a text object
-	float fontSize = 16.0f;
-	float halfFontSize = fontSize / 2.0f;
-	for (int i = 0; i < 3; ++i)
-	{
-		textObj[i] = Create::Text2DObject("text", 
-										  Vector3(5, 5 + fontSize*i + halfFontSize, 0.0f), 
-										  "", 
-										  Vector3(fontSize, fontSize, fontSize), Color(1.0f, 0.0f, 0.0f));
-	}
-	textObj[0]->SetText("<First Row>");
-	textObj[1]->SetText("<Second Row>");
-	textObj[2]->SetText("<Third Row>");
 }
 
 void CScene2D::Update(double dt)
@@ -434,10 +420,6 @@ void CScene2D::Render()
 		RenderEnemy();
 		// Render the player
 		RenderPlayer();
-
-		textObj[0]->RenderUI();
-		textObj[1]->RenderUI();
-		textObj[2]->RenderUI();
 	}
 	ui->Render();
 }
@@ -496,26 +478,6 @@ void CScene2D::RenderTileMap()
 			}
 		}
 	}
-
-	std::ostringstream ss;
-	ss.precision(5);
-	ss << "CP: " << thePlayerInfo->checkPosition_X << ", " << thePlayerInfo->checkPosition_Y << endl
-		<< "P: " << thePlayerInfo->position << endl;
-	textObj[1]->SetText(ss.str());
-
-	ss.str("");
-	ss.clear();
-	ss << "mapOffset_x: " << thePlayerInfo->mapOffset_x << endl;
-	textObj[0]->SetText(ss.str());
-
-	ss.str("");
-	ss.clear();
-	ss << "Enemies: ";
-	for (int i = 0; i < m_iNumEnemy; ++i)
-	{
-		ss << theEnemy[i]->GetPos_x() << "(" << theEnemy[i]->GetPos_x() - thePlayerInfo->mapOffset_x << ")" << ", ";
-	}
-	textObj[2]->SetText(ss.str());
 }
 
 // Render the rear tile map

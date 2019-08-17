@@ -58,6 +58,8 @@ public:
 	void SetTarget(const Vector3& target);
 	// Set Up
 	void SetUp(const Vector3& up);
+	// Set Hp
+	void SetHp(const int hp);
 	// Set m_dJumpSpeed of the player
 	void SetJumpSpeed(const double m_dJumpSpeed);
 	// Set m_dJumpAcceleration of the player
@@ -73,6 +75,8 @@ public:
 	Vector3 GetTarget(void) const;
 	// Get Up
 	Vector3 GetUp(void) const;
+	// Get Hp
+	int GetHp(void) const;
 	// Get Jump Speed of the player
 	double GetJumpSpeed(void) const;
 	// Get Jump Acceleration of the player
@@ -149,8 +153,9 @@ private:
 	Vector3 target, up;
 	Vector3 maxBoundary, minBoundary;
 	int tileSize_Width, tileSize_Height;
+	int hp;
 
-	double m_dSpeed;
+	double m_dSpeed, m_dMoveSpeed, m_dRollSpeed;
 	double m_dAcceleration;
 
 	bool m_bJumpUpwards;
