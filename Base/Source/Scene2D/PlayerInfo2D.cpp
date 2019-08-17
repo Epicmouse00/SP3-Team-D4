@@ -204,7 +204,8 @@ void CPlayerInfo2D::SetFallAcceleration(const double m_dFallAcceleration)
 void CPlayerInfo2D::StopVerticalMovement(void)
 {
 	m_bJumpUpwards = false;
-	m_bFallDownwards = false;
+	m_bFallDownwards = false; 
+	StepSound();
 }
 
 // Reset this player instance to default
