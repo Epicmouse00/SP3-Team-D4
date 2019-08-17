@@ -166,10 +166,6 @@ void CScene2D::Init()
 	//MeshBuilder::GetInstance()->GenerateSpriteAnimation("sprite", 16, 16);
 	//MeshBuilder::GetInstance()->GetMesh("sprite")->textureID = LoadTGA("Image//spritesheet.tga");
 
-	MeshBuilder::GetInstance()->GenerateQuad("UI_BOX", Color(1, 0, 1), 1.f);
-	MeshBuilder::GetInstance()->GenerateQuad("UI_BOX2", Color(0, 1, 1), 1.f);
-
-
 	// Create entities into the scene
 	Create::Entity("reference", Vector3(0.0f, 0.0f, 0.0f)); // Reference
 	Create::Sprite2DObject("crosshair", Vector3(0.0f, 0.0f, 0.0f), Vector3(10.0f, 10.0f, 10.0f));
@@ -824,5 +820,12 @@ void CScene2D::LoadMeshes(void)
 		MeshBuilder::GetInstance()->GetMesh("Crystal_Projectile_1")->textureID = LoadTGA("Image//Sprites//Crystal_Projectile_1.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Crystal_Projectile_2", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Crystal_Projectile_2")->textureID = LoadTGA("Image//Sprites//Crystal_Projectile_2.tga");
+	}
+	// UI
+	{
+		MeshBuilder::GetInstance()->GenerateQuad("UI_BOX", Color(1, 0, 1), 1.f);
+		MeshBuilder::GetInstance()->GenerateQuad("UI_BOX2", Color(0, 0, 1), 1.f);
+		MeshBuilder::GetInstance()->GenerateQuad("UI_HP", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("UI_HP")->textureID = LoadTGA("Image//Heart.tga");//yup.. probs gonna ask jovan for this
 	}
 }
