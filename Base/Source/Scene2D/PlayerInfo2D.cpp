@@ -729,7 +729,13 @@ void CPlayerInfo2D::Constrain(void)
 	{
 		//position.x = maxBoundary.x - (tileSize_Width >> 1);
 		// 0.325 ~ 0.675 = 0.25 of screen
-		mapOffset_x += m_dSpeed * (m_dMoveSpeed + ((position.x - maxBoundary.x - mapOffset_x) / (maxBoundary.x * 0.25f) * (rollSpeed - m_dMoveSpeed)));
+		//mapOffset_x += m_dSpeed * (m_dMoveSpeed + ((position.x - maxBoundary.x - mapOffset_x) / (maxBoundary.x * 0.25f) * (rollSpeed - m_dMoveSpeed)));
+		float slowerSpeed = rollSpeed < m_dMoveSpeed ? rollSpeed : m_dMoveSpeed;
+		if (position.x >= maxBoundary.x * 1.25f + mapOffset_x)
+			mapOffset_x += m_dSpeed * rollSpeed;
+		else
+			mapOffset_x += m_dSpeed * slowerSpeed;
+
 		if (mapOffset_x + theMapReference->getScreenWidth() > theMapReference->GetNumOfTiles_Width() * theMapReference->GetTileSize_Width())
 			mapOffset_x = theMapReference->GetNumOfTiles_Width() * theMapReference->GetTileSize_Width() - theMapReference->getScreenWidth();
 	}
@@ -740,11 +746,11 @@ void CPlayerInfo2D::Constrain(void)
 	if (position.x <= minBoundary.x + mapOffset_x)
 	{
 		//position.x = minBoundary.x;
-
+		float slowerSpeed = rollSpeed < m_dMoveSpeed ? rollSpeed : m_dMoveSpeed;
 		if (position.x <= minBoundary.x * 0.75f + mapOffset_x)
 			mapOffset_x -= m_dSpeed * (rollSpeed - 0.1f);
 		else
-			mapOffset_x -= m_dSpeed * (m_dMoveSpeed - 0.1f);
+			mapOffset_x -= m_dSpeed * (slowerSpeed - 0.1f);
 
 		if (mapOffset_x < 0)
 			mapOffset_x = 0;
