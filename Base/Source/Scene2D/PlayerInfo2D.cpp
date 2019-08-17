@@ -14,6 +14,7 @@ CPlayerInfo2D *CPlayerInfo2D::s_instance = 0;
 
 CPlayerInfo2D::CPlayerInfo2D(void)
 	: m_dSpeed(4.0)
+	, m_dMoveSpeed(0.6)
 	, m_dAcceleration(8.0)
 	, m_bJumpUpwards(false)
 	, m_bJumped(false)
@@ -26,6 +27,7 @@ CPlayerInfo2D::CPlayerInfo2D(void)
 	, m_dFallSpeed(0.0)
 	, m_dFallAcceleration(-4.0)
 	, m_dElapsedTime(0.0)
+	, hp(3)
 	, mapOffset_x(0)
 	, mapOffset_y(0)
 	, tileOffset_x(0)
@@ -190,6 +192,11 @@ void CPlayerInfo2D::SetUp(const Vector3& up)
 	this->up = up;
 }
 
+void CPlayerInfo2D::SetHp(const int hp)
+{
+	this->hp = hp;
+}
+
 // Set m_dJumpAcceleration of the player
 void CPlayerInfo2D::SetJumpAcceleration(const double m_dJumpAcceleration)
 {
@@ -238,6 +245,11 @@ Vector3 CPlayerInfo2D::GetUp(void) const
 	return up;
 }
 
+int CPlayerInfo2D::GetHp(void) const
+{
+	return hp;
+}
+
 // Get m_dJumpAcceleration of the player
 double CPlayerInfo2D::GetJumpAcceleration(void) const
 {
@@ -283,7 +295,7 @@ void CPlayerInfo2D::UpdateJumpUpwards(double dt)
 
 	// If the player has jumped out of the screen, 
 	// then start free fall and lock loaction
-	if (position.y + tileSize_Height > theMapReference->GetNumOfTiles_Height()*theMapReference->GetTileSize_Height()) // Note : use this method for locking height...
+	if (position.y + tileSize_Height > theMapReference->GetNumOfTiles_Height()*theMapReference->GetTileSize_Height())
 	{
 		SetOnFreeFall(true);
 		position.y = theMapReference->GetNumOfTiles_Height()*theMapReference->GetTileSize_Height() - tileSize_Height;
@@ -334,7 +346,12 @@ void CPlayerInfo2D::UpdateFreeFall(double dt)
 	position.y -= m_dFallSpeed;
 	if (m_dFallSpeed <= 6)
 	m_dFallSpeed += 0.5;
-
+	if (position.y - tileSize_Height < tileSize_Height/2 - 2)
+	{
+		StopVerticalMovement();// Note : Dies/-1 hp
+		position.y = tileSize_Height + tileSize_Height/2;
+		return;
+	}
 	// Check if the player is still in mid air...
 	int checkPosition_X = (int)((position.x - (tileSize_Width >> 1)) / tileSize_Width);
 	int checkPosition_Y = theMapReference->GetNumOfTiles_Height() - 
@@ -388,14 +405,15 @@ void CPlayerInfo2D::Update(double dt)
 	//if (KeyboardController::GetInstance()->IsKeyDown('S'))
 	//	MoveUpDown(false, 1.0f);
 	
+
 	if (KeyboardController::GetInstance()->IsKeyPressed('Q') && rollBounceTime > rollBounceTimeLimit || !isFacingRight() && isRolling()) // Roll Left
 		MoveLeftRight(true, rollSpeed);
 	else if (KeyboardController::GetInstance()->IsKeyPressed('E') && rollBounceTime > rollBounceTimeLimit || isFacingRight() && isRolling()) // Roll Right
 		MoveLeftRight(false, rollSpeed);
 	else if (KeyboardController::GetInstance()->IsKeyDown('A')  && !KeyboardController::GetInstance()->IsKeyPressed('J')) // Move Left
-		MoveLeftRight(true, 0.6f);
+		MoveLeftRight(true, m_dMoveSpeed);
 	else if (KeyboardController::GetInstance()->IsKeyDown('D') && !KeyboardController::GetInstance()->IsKeyPressed('J')) // Move Right
-		MoveLeftRight(false, 0.6f);
+		MoveLeftRight(false, m_dMoveSpeed);
 	else if (KeyboardController::GetInstance()->IsKeyPressed('J') && KeyboardController::GetInstance()->IsKeyDown('W') || KeyboardController::GetInstance()->IsKeyPressed('J') && KeyboardController::GetInstance()->IsKeyDown('S') && !isOnGround())
 	{
 		Attack((!isFacingRight()), 0.5f);
@@ -528,7 +546,6 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 	if (KeyboardController::GetInstance()->IsKeyPressed('Q') || isRolling() && !isFacingRight())
 	{
 	// Find the tile number which the player's left side is on
-
 	checkPosition_X = (int)((position.x - (tileSize_Width >> 1)) / tileSize_Width);
 	if (KeyboardController::GetInstance()->IsKeyPressed('Q') && rollBounceTime > rollBounceTimeLimit)
 	{
@@ -537,13 +554,13 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 		rollBounceTime = 0;
 		if (rollSpeed > 0.4f)
 			rollSpeed -= 0.1;
-	}
 
+	}
 	if (checkPosition_X >= 0)
 	{
 		if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
 		{
-			position.x = (checkPosition_X + 1) * tileSize_Width - mapFineOffset_x + tileSize_Width;
+			position.x = (checkPosition_X + 1) * tileSize_Width + (tileSize_Width >> 1);
 		}
 	}
 	}
@@ -562,11 +579,13 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 
 	if (checkPosition_X < theMapReference->getNumOfTiles_MapWidth())
 	{
+
 		if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
 		{
 			// this part causes the player to be stuck when there is a tile on its right
-			position.x = (checkPosition_X - 1) * tileSize_Width - mapFineOffset_x + tileSize_Width;
+			position.x = (checkPosition_X - 1) * tileSize_Width + (tileSize_Width >> 1);
 		}
+
 	}
 	}
 	// Check if the hero can move sideways
@@ -581,9 +600,10 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 		{
 			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
 			{
-				position.x = (checkPosition_X + 1) * tileSize_Width - mapFineOffset_x + tileSize_Width;
+				position.x = (checkPosition_X + 1) * tileSize_Width + (tileSize_Width >> 1);
 			}
 		}
+
 	}
 	else if (KeyboardController::GetInstance()->IsKeyDown('D'))
 	{
@@ -596,10 +616,10 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 		{
 			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
 			{
-				// this part causes the player to be stuck when there is a tile on its right
-				position.x = (checkPosition_X - 1) * tileSize_Width - mapFineOffset_x + tileSize_Width;
+				position.x = (checkPosition_X - 1) * tileSize_Width + (tileSize_Width >> 1);
 			}
 		}
+
 	}
 }
 
@@ -674,6 +694,11 @@ bool CPlayerInfo2D::isOnAir(void)
 	{
 		if (theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X] == 0)
 		{
+				m_bJumped = true;// Counts as jump when falling?
+			if (!(position.y - tileSize_Height < tileSize_Height))
+			{
+				m_bDoubleJump = false;
+			}
 			return true;
 		}
 	}
@@ -682,10 +707,17 @@ bool CPlayerInfo2D::isOnAir(void)
 		if ((theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X] == 0)
 			&& (theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X + 1] == 0))
 		{
+				m_bJumped = true;
+			if (!(position.y - tileSize_Height < tileSize_Height ))
+			{
+				m_bDoubleJump = false;
+			}
 			return true;
 		}
 	}
-
+	m_bJumped = false;
+	m_bDoubleJump = false;
+	m_bDoubleJumped = false;
 	return false;
 }
 
@@ -696,10 +728,8 @@ void CPlayerInfo2D::Constrain(void)
 	if (position.x >= maxBoundary.x + mapOffset_x - (tileSize_Width >> 1))
 	{
 		//position.x = maxBoundary.x - (tileSize_Width >> 1);
-		if(position.x >= maxBoundary.x * 1.5f + mapOffset_x)
-			mapOffset_x += m_dSpeed / 0.7;
-		else
-			mapOffset_x += m_dSpeed/2;
+		// 0.325 ~ 0.675 = 0.25 of screen
+		mapOffset_x += m_dSpeed * (m_dMoveSpeed + ((position.x - maxBoundary.x - mapOffset_x) / (maxBoundary.x * 0.25f) * (rollSpeed - m_dMoveSpeed)));
 		if (mapOffset_x + theMapReference->getScreenWidth() > theMapReference->GetNumOfTiles_Width() * theMapReference->GetTileSize_Width())
 			mapOffset_x = theMapReference->GetNumOfTiles_Width() * theMapReference->GetTileSize_Width() - theMapReference->getScreenWidth();
 	}
@@ -710,10 +740,12 @@ void CPlayerInfo2D::Constrain(void)
 	if (position.x <= minBoundary.x + mapOffset_x)
 	{
 		//position.x = minBoundary.x;
-		if (position.x <= minBoundary.x * 0.5f + mapOffset_x)
-			mapOffset_x -= m_dSpeed / 0.7;
+
+		if (position.x <= minBoundary.x * 0.75f + mapOffset_x)
+			mapOffset_x -= m_dSpeed * (rollSpeed - 0.1f);
 		else
-			mapOffset_x -= m_dSpeed/2;
+			mapOffset_x -= m_dSpeed * (m_dMoveSpeed - 0.1f);
+
 		if (mapOffset_x < 0)
 			mapOffset_x = 0;
 	}

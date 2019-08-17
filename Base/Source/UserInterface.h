@@ -1,6 +1,8 @@
 #pragma once
 #include "SpriteEntity.h"
 #include "TextEntity.h"
+#include "Scene2D/PlayerInfo2D.h"
+
 class UserInterface
 {
 public:
@@ -24,5 +26,6 @@ private:
 	SpriteEntity* scene2DQuad;
 	SpriteEntity* scene2DQuad2;
 	TextEntity* textObj[3];
+	CPlayerInfo2D* thePlayerInfo;
 };
 
