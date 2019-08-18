@@ -85,6 +85,8 @@ public:
 	double GetFallSpeed(void) const;
 	// Get Fall Acceleration of the player
 	double GetFallAcceleration(void) const;
+	// Get Roll Speed of player
+	float GetRollSpeed(void) const;
 	// Get Tile Offset for x-axis
 	int GetTileOffset_x(void) const;
 

@@ -247,6 +247,11 @@ double CPlayerInfo2D::GetJumpAcceleration(void) const
 	return m_dJumpAcceleration;
 }
 
+float CPlayerInfo2D::GetRollSpeed(void) const
+{
+	return rollSpeed;
+}
+
 // Set Tile Offset for x-axis
 int CPlayerInfo2D::GetTileOffset_x(void) const
 {
@@ -716,42 +721,48 @@ bool CPlayerInfo2D::isOnAir(void)
 void CPlayerInfo2D::Constrain(void)
 {
 	// Constrain player within the boundary
-	if (position.x >= maxBoundary.x + mapOffset_x - (tileSize_Width >> 1))
-	{
-		// 0.325 ~ 0.675 = 0.25 of screen
-		//mapOffset_x += m_dSpeed * (m_dMoveSpeed + ((position.x - maxBoundary.x - mapOffset_x) / (maxBoundary.x * 0.25f) * (rollSpeed - m_dMoveSpeed)));
-		if (position.x >= maxBoundary.x * 1.25f + mapOffset_x)
-			mapOffset_x += m_dSpeed * m_dMoveSpeed;// this part is still a fail-safe
-		else
-		{
-			if (rollBounceTime < rollBounceTimeLimit)
-			{
-				mapOffset_x += m_dSpeed * rollSpeed;// Note : causes problem when rolling in place
-			}
-			else
-				mapOffset_x += m_dSpeed * m_dMoveSpeed;
-		}
-		if (mapOffset_x + theMapReference->getScreenWidth() > theMapReference->GetNumOfTiles_Width() * theMapReference->GetTileSize_Width())
-			mapOffset_x = theMapReference->GetNumOfTiles_Width() * theMapReference->GetTileSize_Width() - theMapReference->getScreenWidth();
-	}
+	//if (position.x >= maxBoundary.x + mapOffset_x - (tileSize_Width >> 1))
+	//{
+	//	// 0.325 ~ 0.675 = 0.25 of screen
+	//	//mapOffset_x += m_dSpeed * (m_dMoveSpeed + ((position.x - maxBoundary.x - mapOffset_x) / (maxBoundary.x * 0.25f) * (rollSpeed - m_dMoveSpeed)));
+	//	if (position.x >= maxBoundary.x * 1.25f + mapOffset_x)
+	//		mapOffset_x += m_dSpeed * m_dMoveSpeed;// this part is still a fail-safe
+	//	else
+	//	{
+	//		if (rollBounceTime < rollBounceTimeLimit)
+	//		{
+	//			mapOffset_x += m_dSpeed * rollSpeed;// Note : causes problem when rolling in place
+	//		}
+	//		else
+	//			mapOffset_x += m_dSpeed * m_dMoveSpeed;
+	//	}
+	//	if (mapOffset_x + theMapReference->getScreenWidth() > theMapReference->GetNumOfTiles_Width() * theMapReference->GetTileSize_Width())
+	//		mapOffset_x = theMapReference->GetNumOfTiles_Width() * theMapReference->GetTileSize_Width() - theMapReference->getScreenWidth();
+	//}
 	if (position.y > maxBoundary.y - tileSize_Height) // for y-scrolling
 	{
 		position.y = maxBoundary.y - (tileSize_Height >> 1);
 	}
-	if (position.x <= minBoundary.x + mapOffset_x)
-	{
-		if (position.x <= minBoundary.x * 0.75f + mapOffset_x)
-			mapOffset_x -= m_dSpeed * (m_dMoveSpeed - 0.1f);
-		else
-		{
-			if (rollBounceTime < rollBounceTimeLimit)
-				mapOffset_x -= m_dSpeed * (rollSpeed - 0.1f);
-			else
-				mapOffset_x -= m_dSpeed * (m_dMoveSpeed - 0.1f);
-		}
-		if (mapOffset_x < 0)
-			mapOffset_x = 0;
-	}
+	//if (position.x <= minBoundary.x + mapOffset_x)
+	//{
+	//	if (position.x <= minBoundary.x * 0.75f + mapOffset_x)
+	//		mapOffset_x -= m_dSpeed * (m_dMoveSpeed - 0.1f);
+	//	else
+	//	{
+	//		if (rollBounceTime < rollBounceTimeLimit)
+	//			mapOffset_x -= m_dSpeed * (rollSpeed - 0.1f);
+	//		else
+	//			mapOffset_x -= m_dSpeed * (m_dMoveSpeed - 0.1f);
+	//	}
+	//	if (mapOffset_x < 0)
+	//		mapOffset_x = 0;
+	//}
+	mapOffset_x = position.x - (tileSize_Width >> 1) - maxBoundary.x;// whatevbs.. idc anymore...
+	if (mapOffset_x + theMapReference->getScreenWidth() > theMapReference->GetNumOfTiles_Width() * theMapReference->GetTileSize_Width())
+			mapOffset_x = theMapReference->GetNumOfTiles_Width() * theMapReference->GetTileSize_Width() - theMapReference->getScreenWidth();
+	if (mapOffset_x < 0)
+		mapOffset_x = 0;
+
 	if (position.y < minBoundary.y)
 	{
 		position.y = minBoundary.y + (tileSize_Height >> 1);
