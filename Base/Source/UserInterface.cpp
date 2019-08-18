@@ -1,28 +1,21 @@
 #include "UserInterface.h"
 #include "KeyboardController.h"
+
 #include "MeshBuilder.h"
 #include "Application.h"
 #include "GL\glew.h"
 #include "LoadTGA.h"
 #include "Mesh.h"
-// Currently able to select choices on main & pause screen, it does not render anything rn tho (req: Taga files &/ just some simple quads and text entities)
-// Able to swap screens
+
 using namespace std;
 UserInterface::UserInterface()
-	: choice(0)
-	, maxChoices(3)
+	: choice(2)
+	, maxChoices(SC_TOTAL)
 	, screen(SC_MAIN)
 	, theHeartInfo(NULL)
 {
 	theHeartInfo = Hearts::GetInstance();
 	theHeartInfo->Init();
-
-	scene2DQuad = Create::Sprite2DObject("UI_BOX",
-		Vector3(120, 120, 0.0f),
-		Vector3(16.0f, 16.0f, 0.0f));
-	scene2DQuad2 = Create::Sprite2DObject("UI_BOX2",
-		Vector3(120, 120, 0.0f),
-		Vector3(16.0f, 16.0f, 0.0f));
 
 	{
 		float halfWindowWidth = Application::GetInstance().GetWindowWidth() / 2.0f;
@@ -55,9 +48,13 @@ UserInterface::UserInterface()
 
 	thePlayerInfo = CPlayerInfo2D::GetInstance();
 
+	staminaBar = Create::Sprite2DObject("UI_BOX",
+		Vector3((thePlayerInfo->GetRollSpeed() - 0.3f) / 2 + 1, 16, 0.0f),// Note : replace 0.5 with stamina????
+		Vector3((thePlayerInfo->GetRollSpeed() - 0.3f), 8.f, 0.0f));
+
 	float fontSize = 16.0f;
 	float halfFontSize = fontSize / 2.0f;
-	for (int i = 0; i < 3; ++i)
+	for (int i = 0; i < 2; ++i)
 	{//pointing at null...
 		textObj[i] = Create::Text2DObject("text",
 			Vector3(5, 5 + fontSize * i + halfFontSize, 0.0f),
@@ -66,16 +63,19 @@ UserInterface::UserInterface()
 	}
 	textObj[0]->SetText("Something");
 	textObj[1]->SetText("Something2");
-	textObj[2]->SetText("Something3");
+
+	for (int i = 0; i < 3; ++i)
+	{
+		buttonObj[i] = new UIButton;
+		buttonObj[i]->SetPosition(Vector3(5, 5 + fontSize * i + halfFontSize, 0.0f));
+	}
+
+	ChangeScreen(screen);
+	buttonObj[choice]->SetSelected(true);
 }
 
 UserInterface::~UserInterface()
 {
-	delete scene2DQuad;
-	scene2DQuad = NULL;
-	delete scene2DQuad2;
-	scene2DQuad2 = NULL;
-
 	for (int i = 0; i < theHeartInfo->GetFrameTotal(); ++i)
 	{
 		delete heartEntity[i];
@@ -83,6 +83,13 @@ UserInterface::~UserInterface()
 	}
 	delete heartEntity;
 	heartEntity = NULL;
+	delete staminaBar;
+	staminaBar = NULL;
+	for (int i = 0; i < 3; ++i)
+	{
+		delete buttonObj[i];
+	}
+
 }
 
 bool UserInterface::Update(double dt)
@@ -90,33 +97,32 @@ bool UserInterface::Update(double dt)
 	switch (screen) {
 	case SC_MAIN: // This is the starting screen
 	{
-		textObj[2]->SetText("Play");
-
-		textObj[1]->SetText("Load");
-
-		textObj[0]->SetText("Exit");
-
-		if (KeyboardController::GetInstance()->IsKeyPressed(VK_UP))
+		if (KeyboardController::GetInstance()->IsKeyPressed(VK_UP) || KeyboardController::GetInstance()->IsKeyPressed('W'))
 		{
+			buttonObj[choice]->SetSelected(false);
 			choice = (choice + 1) % maxChoices;
+			buttonObj[choice]->SetSelected(true);
 		}
-		if (KeyboardController::GetInstance()->IsKeyPressed(VK_DOWN))
+		if (KeyboardController::GetInstance()->IsKeyPressed(VK_DOWN) || KeyboardController::GetInstance()->IsKeyPressed('S'))
 		{
+			buttonObj[choice]->SetSelected(false);
 			if (--choice < 0)
 			{
 				choice = maxChoices - 1;
 			}
+			buttonObj[choice]->SetSelected(true);
 		}
 		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN))
 		{
 			switch (choice) {
-			case 0:
+			case 2:
 				screen = SC_PLAY;
+				ChangeScreen(screen);
 				return true;
 				break;
 			case 1:
 				break;
-			case 2:
+			case 0:
 				break;
 			}
 		}
@@ -125,35 +131,32 @@ bool UserInterface::Update(double dt)
 	}
 	case SC_PAUSE: // This is the pause menu
 	{
-
-
-		textObj[2]->SetText("Continue");
-
-		textObj[1]->SetText("Save");
-
-		textObj[0]->SetText("Load");
-
-		if (KeyboardController::GetInstance()->IsKeyPressed(VK_UP))
+		if (KeyboardController::GetInstance()->IsKeyPressed(VK_UP) || KeyboardController::GetInstance()->IsKeyPressed('W'))
 		{
+			buttonObj[choice]->SetSelected(false);
 			choice = (choice + 1) % maxChoices;
+			buttonObj[choice]->SetSelected(true);
 		}
-		if (KeyboardController::GetInstance()->IsKeyPressed(VK_DOWN))
+		if (KeyboardController::GetInstance()->IsKeyPressed(VK_DOWN) || KeyboardController::GetInstance()->IsKeyPressed('S'))
 		{
+			buttonObj[choice]->SetSelected(false);
 			if (--choice < 0)
 			{
 				choice = maxChoices - 1;
 			}
+			buttonObj[choice]->SetSelected(true);
 		}
 		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN))
 		{
 			switch (choice) {
-			case 0:
+			case 2:
 				screen = SC_PLAY;
+				ChangeScreen(screen);
 				return true;
 				break;
 			case 1:
 				break;
-			case 2:
+			case 0:
 				break;
 			}
 		}
@@ -164,13 +167,11 @@ bool UserInterface::Update(double dt)
 	{
 		// Heart update
 		theHeartInfo->Update(dt);
+		staminaBar->SetScale(Vector3((thePlayerInfo->GetRollSpeed()-0.3f) * 100,staminaBar->GetScale().y,staminaBar->GetScale().z));
+		staminaBar->SetPosition(Vector3(staminaBar->GetScale().x / 2 + 1, staminaBar->GetPosition().y, staminaBar->GetPosition().z));
 
 		std::ostringstream ss;
 		ss.precision(5);
-		textObj[2]->SetText(ss.str());
-
-		ss.str("");
-		ss.clear();
 		ss << "CP: " << thePlayerInfo->checkPosition_X << ", " << thePlayerInfo->checkPosition_Y << endl
 			<< "P: " << thePlayerInfo->position << endl;
 		textObj[1]->SetText(ss.str());
@@ -183,7 +184,8 @@ bool UserInterface::Update(double dt)
 		if (KeyboardController::GetInstance()->IsKeyPressed('P'))
 		{
 			screen = SC_PAUSE;
-			choice = 0;
+			ChangeScreen(screen);
+			choice = 2;
 			maxChoices = 3;
 			return false;
 		}
@@ -192,6 +194,31 @@ bool UserInterface::Update(double dt)
 	}
 	}
 }
+
+void UserInterface::ChangeScreen(SCREEN_TYPE screenType)
+{
+	switch (screenType) {
+	case SC_MAIN:
+		buttonObj[2]->SetText("Play");
+
+		buttonObj[1]->SetText("Load");
+
+		buttonObj[0]->SetText("Exit");
+		break;
+	case SC_PLAY:
+
+		break;
+	case SC_PAUSE:
+		buttonObj[2]->SetText("Continue");
+
+		buttonObj[1]->SetText("Save");
+
+		buttonObj[0]->SetText("Load");
+		break;
+	}
+}
+
+
 
 bool UserInterface::GetScreenStatus()
 {
@@ -213,31 +240,25 @@ void UserInterface::Render()// this is at the back since it needs to be on top? 
 {
 	switch(screen) {
 	case SC_MAIN:
-		scene2DQuad2->SetPosition(Vector3(30, 10, 0));
-		scene2DQuad2->SetScale(Vector3(30, 10, 0));
-		scene2DQuad2->RenderUI();
-		textObj[0]->RenderUI();
-		scene2DQuad2->SetPosition(Vector3(30, 30, 0));
-		scene2DQuad2->RenderUI();
-		textObj[1]->RenderUI();
-		scene2DQuad2->SetPosition(Vector3(30, 50, 0));
-		scene2DQuad2->RenderUI();
-		textObj[2]->RenderUI();
+		buttonObj[0]->RenderUI();
+		buttonObj[1]->RenderUI();
+		buttonObj[2]->RenderUI();
 		break;
 	case SC_PLAY:
-		for (int i = 0; i < thePlayerInfo->GetHp(); ++i) {
+		for (int i = 0; i < thePlayerInfo->GetHp(); ++i)
+		{
 			heartEntity[theHeartInfo->GetFrameState()]->SetPosition(Vector3(30 * (i + 1), 210, 0));
 			heartEntity[theHeartInfo->GetFrameState()]->RenderUI();
 		}
+		staminaBar->RenderUI();
 		textObj[0]->RenderUI();
 		textObj[1]->RenderUI();
-		textObj[2]->RenderUI();
 		return;
 		break;
 	case SC_PAUSE:
-		textObj[0]->RenderUI();
-		textObj[1]->RenderUI();
-		textObj[2]->RenderUI();
+		buttonObj[0]->RenderUI();
+		buttonObj[1]->RenderUI();
+		buttonObj[2]->RenderUI();
 		break;
 	}
 }
