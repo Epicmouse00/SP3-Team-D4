@@ -547,11 +547,7 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 	if (KeyboardController::GetInstance()->IsKeyPressed('Q') && rollBounceTime > rollBounceTimeLimit)
 	{
 		SetAnimationStatus(CAnimation::P_ROLL_L1);
-		CSoundEngine::GetInstance()->PlayASound("roll");
-		rollBounceTime = 0;
-		if (rollSpeed > 0.4f)
-			rollSpeed -= 0.1;
-
+		Roll();
 	}
 	if (checkPosition_X >= 0)
 	{
@@ -568,10 +564,7 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 	if (KeyboardController::GetInstance()->IsKeyPressed('E') && rollBounceTime > rollBounceTimeLimit)
 	{
 		SetAnimationStatus(CAnimation::P_ROLL_R1);
-		CSoundEngine::GetInstance()->PlayASound("roll");
-		rollBounceTime = 0;
-		if (rollSpeed > 0.4f)
-			rollSpeed -= 0.1;
+		Roll();
 	}
 
 	if (checkPosition_X < theMapReference->getNumOfTiles_MapWidth())
@@ -1163,4 +1156,14 @@ void CPlayerInfo2D::InitSound(void) const
 	CSoundEngine::GetInstance()->AddSound("death", "Sound//death.wav");
 
 	CSoundEngine::GetInstance()->PlayBGM("bgmwalk");
+}
+
+void CPlayerInfo2D::Roll()
+{
+	CSoundEngine::GetInstance()->PlayASound("roll");
+	rollBounceTime = 0;
+	if (rollSpeed > 0.4f)
+		rollSpeed -= 0.1f;
+	else
+		rollSpeed = 0.3f;
 }

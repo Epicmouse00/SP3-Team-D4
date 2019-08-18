@@ -48,10 +48,14 @@ UserInterface::UserInterface()
 
 	thePlayerInfo = CPlayerInfo2D::GetInstance();
 
-	staminaBar = Create::Sprite2DObject("UI_BOX",
-		Vector3((thePlayerInfo->GetRollSpeed() - 0.3f) / 2 + 1, 16, 0.0f),// Note : replace 0.5 with stamina????
-		Vector3((thePlayerInfo->GetRollSpeed() - 0.3f), 8.f, 0.0f));
+	staminaBar = Create::Sprite2DObject("Stamina_Green",
+		Vector3((thePlayerInfo->GetRollSpeed() - 0.3f) / 2 + 18, 210.f, 0.0f),// Note : replace 0.5 with stamina????
+		Vector3((thePlayerInfo->GetRollSpeed() - 0.3f), 14.f, 0.0f));
 
+	staminaBattery = Create::Sprite2DObject("Stamina_Bar",
+		Vector3(32.f, 210.f, 0.0f),
+		Vector3(32.0f, 16.0f, 0.0f));
+	staminaBattery;
 	float fontSize = 16.0f;
 	float halfFontSize = fontSize / 2.0f;
 	for (int i = 0; i < 2; ++i)
@@ -85,6 +89,8 @@ UserInterface::~UserInterface()
 	heartEntity = NULL;
 	delete staminaBar;
 	staminaBar = NULL;
+	delete staminaBattery;
+	staminaBattery = NULL;
 	for (int i = 0; i < 3; ++i)
 	{
 		delete buttonObj[i];
@@ -112,7 +118,7 @@ bool UserInterface::Update(double dt)
 			}
 			buttonObj[choice]->SetSelected(true);
 		}
-		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN))
+		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN) || KeyboardController::GetInstance()->IsKeyPressed(VK_SPACE))
 		{
 			switch (choice) {
 			case 2:
@@ -146,7 +152,7 @@ bool UserInterface::Update(double dt)
 			}
 			buttonObj[choice]->SetSelected(true);
 		}
-		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN))
+		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN) || KeyboardController::GetInstance()->IsKeyPressed(VK_SPACE))
 		{
 			switch (choice) {
 			case 2:
@@ -167,8 +173,8 @@ bool UserInterface::Update(double dt)
 	{
 		// Heart update
 		theHeartInfo->Update(dt);
-		staminaBar->SetScale(Vector3((thePlayerInfo->GetRollSpeed()-0.3f) * 100,staminaBar->GetScale().y,staminaBar->GetScale().z));
-		staminaBar->SetPosition(Vector3(staminaBar->GetScale().x / 2 + 1, staminaBar->GetPosition().y, staminaBar->GetPosition().z));
+		staminaBar->SetScale(Vector3((thePlayerInfo->GetRollSpeed()-0.3f) * 50,staminaBar->GetScale().y,staminaBar->GetScale().z));
+		staminaBar->SetPosition(Vector3(staminaBar->GetScale().x / 2 + 18, staminaBar->GetPosition().y, staminaBar->GetPosition().z));
 
 		std::ostringstream ss;
 		ss.precision(5);
@@ -247,10 +253,11 @@ void UserInterface::Render()// this is at the back since it needs to be on top? 
 	case SC_PLAY:
 		for (int i = 0; i < thePlayerInfo->GetHp(); ++i)
 		{
-			heartEntity[theHeartInfo->GetFrameState()]->SetPosition(Vector3(30 * (i + 1), 210, 0));
+			heartEntity[theHeartInfo->GetFrameState()]->SetPosition(Vector3(24 * i + 64, 210, 0));
 			heartEntity[theHeartInfo->GetFrameState()]->RenderUI();
 		}
 		staminaBar->RenderUI();
+		staminaBattery->RenderUI();
 		textObj[0]->RenderUI();
 		textObj[1]->RenderUI();
 		return;

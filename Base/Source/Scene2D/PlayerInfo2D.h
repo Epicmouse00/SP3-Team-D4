@@ -201,6 +201,7 @@ private:
 	double attackBounceTimeLimit;
 	double rollBounceTimeLimit;
 
+	void Roll();
 	// Roll Speed
 	float rollSpeed;
 };

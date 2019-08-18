@@ -28,6 +28,7 @@ private:
 	SpriteEntity** heartEntity;
 	UIButton* buttonObj[3];
 	SpriteEntity* staminaBar;
+	SpriteEntity* staminaBattery;
 	TextEntity* textObj[2];
 
 	CPlayerInfo2D* thePlayerInfo;
