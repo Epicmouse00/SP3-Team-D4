@@ -32,6 +32,7 @@ private:
 	SpriteEntity** staminaBar;
 	int barStatus;
 	SpriteEntity* staminaBattery;
+	SpriteEntity* UI_Bar;
 	TextEntity* textObj[2];
 
 	CPlayerInfo2D* thePlayerInfo;

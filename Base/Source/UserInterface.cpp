@@ -38,17 +38,17 @@ UserInterface::UserInterface()
 
 		staminaBar = new SpriteEntity*[3];
 		staminaBar[0] = Create::Sprite2DObject("Stamina_Green",
-			Vector3((thePlayerInfo->GetRollSpeed() - 0.3f) / 2 + 18, 210.f, 0.0f),// Note : replace 0.5 with stamina????
+			Vector3((thePlayerInfo->GetRollSpeed() - 0.3f) / 2 + 18, 208.f, 0.0f),// Note : replace 0.5 with stamina????
 			Vector3((thePlayerInfo->GetRollSpeed() - 0.3f), 14.f, 0.0f));
 		staminaBar[1] = Create::Sprite2DObject("Stamina_Amber",
-			Vector3((thePlayerInfo->GetRollSpeed() - 0.3f) / 2 + 18, 210.f, 0.0f),
+			Vector3((thePlayerInfo->GetRollSpeed() - 0.3f) / 2 + 18, 208.f, 0.0f),
 			Vector3((thePlayerInfo->GetRollSpeed() - 0.3f), 14.f, 0.0f));
 		staminaBar[2] = Create::Sprite2DObject("Stamina_Red",
-			Vector3((thePlayerInfo->GetRollSpeed() - 0.3f) / 2 + 18, 210.f, 0.0f),
+			Vector3((thePlayerInfo->GetRollSpeed() - 0.3f) / 2 + 18, 208.f, 0.0f),
 			Vector3((thePlayerInfo->GetRollSpeed() - 0.3f), 14.f, 0.0f));
 
 		staminaBattery = Create::Sprite2DObject("Stamina_Bar",
-			Vector3(32.f, 210.f, 0.0f),
+			Vector3(32.f, 208.f, 0.0f),
 			Vector3(32.0f, 16.0f, 0.0f));
 
 		titleScreen = new SpriteEntity*[2];
@@ -58,6 +58,10 @@ UserInterface::UserInterface()
 		titleScreen[1] = Create::Sprite2DObject("Title_Screen2",
 			Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 			Vector3(360.0f, 240.0f, 0.0f));
+
+		UI_Bar = Create::Sprite2DObject("UI_Bar",
+			Vector3(halfWindowWidth, 208.f, 0.0f),
+			Vector3(360.0f, 32.0f, 0.0f));
 	}
 
 	float fontSize = 16.0f;
@@ -111,6 +115,8 @@ UserInterface::~UserInterface()
 	}
 	delete staminaBar;
 	staminaBar = NULL;
+	delete UI_Bar;
+	UI_Bar = NULL;
 
 }
 
@@ -278,9 +284,10 @@ void UserInterface::Render()// this is at the back since it needs to be on top? 
 		buttonObj[2]->RenderUI();
 		break;
 	case SC_PLAY:
+		UI_Bar->RenderUI();
 		for (int i = 0; i < thePlayerInfo->GetHp(); ++i)
 		{
-			heartEntity[theHeartInfo->GetFrameState()]->SetPosition(Vector3(24 * i + 64, 210, 0));
+			heartEntity[theHeartInfo->GetFrameState()]->SetPosition(Vector3(24 * i + 64, 208, 0));
 			heartEntity[theHeartInfo->GetFrameState()]->RenderUI();
 		}
 		staminaBar[barStatus]->RenderUI();

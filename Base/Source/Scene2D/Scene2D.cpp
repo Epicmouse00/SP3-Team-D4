@@ -378,7 +378,7 @@ void CScene2D::Init()
 		}
 	}
 
-	Scene2D_Enemy = new SpriteEntity*[theEnemy[0]->GetFrameTotal()];
+	Scene2D_Enemy = new SpriteEntity*[theEnemy[0]->GetFrameTotal()]; // Enemy stuff
 	Scene2D_Enemy[0] = Create::Sprite2DObject("Crystal_Attack_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
@@ -822,6 +822,8 @@ void CScene2D::LoadMeshes(void)
 	{
 		MeshBuilder::GetInstance()->GenerateQuad("UI_BOX", Color(1, 0, 1), 1.f);
 		MeshBuilder::GetInstance()->GenerateQuad("UI_BOX2", Color(0, 0, 1), 1.f);
+		MeshBuilder::GetInstance()->GenerateQuad("UI_Bar", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("UI_Bar")->textureID = LoadTGA("Image//Sprites//UI_Bar.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Stamina_Green", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Stamina_Green")->textureID = LoadTGA("Image//Sprites//Stamina_Green.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Stamina_Amber", Color(1, 1, 1), 1.f);
