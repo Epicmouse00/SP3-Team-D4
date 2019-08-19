@@ -33,7 +33,6 @@ private:
 
 	ShaderProgram* currProg;
 	FPSCamera camera;
-	TextEntity* textObj[3];
 
 	static CScene2D* sInstance; // The pointer to the object that gets registered
 
@@ -43,9 +42,7 @@ private:
 
 	// Scene2D images
 	SpriteEntity* Scene2D_Background;
-	SpriteEntity* Scene2D_Hero;
 	SpriteEntity* Scene2D_TileGround;
-	SpriteEntity* Scene2D_TileTree;
 	SpriteEntity* Scene2D_TileDoor;
 	SpriteEntity* Scene2D_RearStructure;
 	SpriteEntity** Scene2D_Hero_Animated;
@@ -65,7 +62,7 @@ private:
 	// The enemies
 	CEnemy** theEnemy;
 	int m_iNumEnemy;
-	SpriteEntity* Scene2D_Enemy;
+	SpriteEntity** Scene2D_Enemy;
 
 	// Render the tile map
 	void RenderTileMap(void);

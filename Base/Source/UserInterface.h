@@ -1,6 +1,8 @@
 #pragma once
-#include "SpriteEntity.h"
-#include "TextEntity.h"
+#include "UIButton.h"
+#include "Scene2D/PlayerInfo2D.h"
+#include "../../Base/Source/Scene2D/Hearts.h"
+
 class UserInterface
 {
 public:
@@ -12,17 +14,24 @@ public:
 	};
 	UserInterface();
 	~UserInterface();
-	bool Update();
+	bool Update(double dt);
 	bool GetScreenStatus();
 	void Render();
 
 private:
+	void ChangeScreen(SCREEN_TYPE screenType);
+
 	int choice;
 	int maxChoices;
 	SCREEN_TYPE screen;
 
-	SpriteEntity* scene2DQuad;
-	SpriteEntity* scene2DQuad2;
-	TextEntity* textObj[3];
+	SpriteEntity** heartEntity;
+	UIButton* buttonObj[3];
+	SpriteEntity* staminaBar;
+	SpriteEntity* staminaBattery;
+	TextEntity* textObj[2];
+
+	CPlayerInfo2D* thePlayerInfo;
+	Hearts* theHeartInfo;
 };
 

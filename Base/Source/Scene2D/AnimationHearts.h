@@ -1,27 +1,26 @@
 #pragma once
-class CAnimationCrystal
+class CAnimationHearts
 {
 public:
 	enum framestate
 	{
-		C_ATTACK_1,
-		C_ATTACK_2,
-		C_DIE_1,
-		C_DIE_2,
-		C_IDLE_1,
-		C_IDLE_2,
-		C_TOTAL
+		H_1,
+		H_2,
+		H_3,
+		H_4,
+		H_TOTAL,
 	};
-	CAnimationCrystal();
-	virtual ~CAnimationCrystal();
+	CAnimationHearts();
+	virtual ~CAnimationHearts();
 
+	// Set Animation status; left or right
 	void SetAnimationStatus(int frameState);
+	// Update the Animation Index
 	void UpdateAnimationIndex(double dt);
 
 	int GetFrameState(void) const;
 	int GetFrameTotal(void) const;
 	int GuessNextFrame(int frame) const;
-	bool isAttacking(void) const;
 
 private:
 	int frameState;

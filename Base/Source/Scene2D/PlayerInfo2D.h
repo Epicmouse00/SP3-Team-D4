@@ -58,6 +58,8 @@ public:
 	void SetTarget(const Vector3& target);
 	// Set Up
 	void SetUp(const Vector3& up);
+	// Set Hp
+	void SetHp(const int hp);
 	// Set m_dJumpSpeed of the player
 	void SetJumpSpeed(const double m_dJumpSpeed);
 	// Set m_dJumpAcceleration of the player
@@ -73,6 +75,8 @@ public:
 	Vector3 GetTarget(void) const;
 	// Get Up
 	Vector3 GetUp(void) const;
+	// Get Hp
+	int GetHp(void) const;
 	// Get Jump Speed of the player
 	double GetJumpSpeed(void) const;
 	// Get Jump Acceleration of the player
@@ -81,6 +85,8 @@ public:
 	double GetFallSpeed(void) const;
 	// Get Fall Acceleration of the player
 	double GetFallAcceleration(void) const;
+	// Get Roll Speed of player
+	float GetRollSpeed(void) const;
 	// Get Tile Offset for x-axis
 	int GetTileOffset_x(void) const;
 
@@ -143,14 +149,21 @@ public:
 
 	// Check for collision with CGoodies instances
 	void UpdateGoodies(const int tileIndex_Column, const int tileIndex_Row);
+	// Sound
+	void AttackSound(void) const;
+	void StepSound(void) const;
+	void DoorSound(void) const;
 
 private:
+	void InitSound(void) const;
+
 	Vector3 defaultPosition, defaultTarget, defaultUp;
 	Vector3 target, up;
 	Vector3 maxBoundary, minBoundary;
 	int tileSize_Width, tileSize_Height;
+	int hp;
 
-	double m_dSpeed;
+	double m_dSpeed, m_dMoveSpeed, m_dRollSpeed;
 	double m_dAcceleration;
 
 	bool m_bJumpUpwards;
@@ -161,7 +174,7 @@ private:
 	bool m_bJumpKeyHeld;
 	bool m_bDoubleJump;
 	bool m_bDoubleJumped;
-
+	
 	bool m_bFallDownwards;
 	double m_dFallSpeed;
 	double m_dFallAcceleration;
@@ -179,4 +192,16 @@ private:
 	int rearTileOffset_x, rearTileOffset_y;
 	int rearMapOffset_x, rearMapOffset_y;
 	int rearMapFineOffset_x, rearMapFineOffset_y;
+
+	// BounceTime
+	double attackBounceTime;
+	double rollBounceTime;
+
+	// BounceTime Limit
+	double attackBounceTimeLimit;
+	double rollBounceTimeLimit;
+
+	void Roll();
+	// Roll Speed
+	float rollSpeed;
 };

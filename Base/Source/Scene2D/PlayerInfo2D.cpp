@@ -14,6 +14,7 @@ CPlayerInfo2D *CPlayerInfo2D::s_instance = 0;
 
 CPlayerInfo2D::CPlayerInfo2D(void)
 	: m_dSpeed(4.0)
+	, m_dMoveSpeed(0.6)
 	, m_dAcceleration(8.0)
 	, m_bJumpUpwards(false)
 	, m_bJumped(false)
@@ -26,6 +27,7 @@ CPlayerInfo2D::CPlayerInfo2D(void)
 	, m_dFallSpeed(0.0)
 	, m_dFallAcceleration(-4.0)
 	, m_dElapsedTime(0.0)
+	, hp(3)
 	, mapOffset_x(0)
 	, mapOffset_y(0)
 	, tileOffset_x(0)
@@ -40,6 +42,11 @@ CPlayerInfo2D::CPlayerInfo2D(void)
 	, rearMapOffset_y(0)
 	, rearMapFineOffset_x(0)
 	, rearMapFineOffset_y(0)
+	, attackBounceTime(0)
+	, rollBounceTime(0)
+	, attackBounceTimeLimit(0.5)
+	, rollBounceTimeLimit(0.7)
+	, rollSpeed(0.8f)
 {
 }
 
@@ -68,16 +75,7 @@ void CPlayerInfo2D::Init(void)
 	tileSize_Width = 16;
 	tileSize_Height = 16;
 
-	CSoundEngine::GetInstance()->Init();
-	CSoundEngine::GetInstance()->AddSound("bgm", "Image//bgm.mp3");
-	CSoundEngine::GetInstance()->AddSound("bgmwalk", "Image//bgmwalk.mp3");
-	CSoundEngine::GetInstance()->AddSound("Jump", "Image//jump.wav");
-	CSoundEngine::GetInstance()->AddSound("walk", "Image//walk.wav");
-	CSoundEngine::GetInstance()->AddSound("attack", "Image//attack.wav");
-	CSoundEngine::GetInstance()->AddSound("roll", "Image//roll.wav");
-
-
-	CSoundEngine::GetInstance()->PlayBGM("bgmwalk");
+	InitSound();
 }
 
 // Set the boundary for the player info
@@ -135,25 +133,18 @@ void CPlayerInfo2D::SetOnFreeFall(bool isOnFreeFall)
 		m_bJumpUpwards = false;
 		m_bFallDownwards = true;
 		m_dFallSpeed = 0.0;
-		if (!isRolling()) // Air roll?
-		{
-			 if (KeyboardController::GetInstance()->IsKeyDown('K'))
-			{
-				if (isFacingRight())
-					SetAnimationStatus(CAnimation::P_POGO_R1);
-				else
-					SetAnimationStatus(CAnimation::P_POGO_L1);
-			}
-			 else
-			 {
-				 if (isFacingRight())
-					 SetAnimationStatus(CAnimation::P_FALL_R1);
-				 else
-					 SetAnimationStatus(CAnimation::P_FALL_L1);
-			 }
-			}
-		UpdateAnimationIndex(1.5f);
 	}
+	if (!isRolling()) // Air roll?
+	{
+		if (!isPogo())
+		{
+			if (isFacingRight())
+				SetAnimationStatus(CAnimation::P_FALL_R1);
+			else
+				SetAnimationStatus(CAnimation::P_FALL_L1);
+		}
+	}
+	UpdateAnimationIndex(1.5f);
 }
 
 // Set the player to jumping upwards
@@ -170,7 +161,7 @@ void CPlayerInfo2D::SetToJumpUpwards(bool isOnJumpUpwards)
 		else
 			SetAnimationStatus(CAnimation::P_JUMP_L1);
 		UpdateAnimationIndex(1.f);
-		CSoundEngine::GetInstance()->PlayASound("Jump");
+		CSoundEngine::GetInstance()->PlayASound("jump");
 	}
 }
 
@@ -192,6 +183,11 @@ void CPlayerInfo2D::SetUp(const Vector3& up)
 	this->up = up;
 }
 
+void CPlayerInfo2D::SetHp(const int hp)
+{
+	this->hp = hp;
+}
+
 // Set m_dJumpAcceleration of the player
 void CPlayerInfo2D::SetJumpAcceleration(const double m_dJumpAcceleration)
 {
@@ -208,7 +204,8 @@ void CPlayerInfo2D::SetFallAcceleration(const double m_dFallAcceleration)
 void CPlayerInfo2D::StopVerticalMovement(void)
 {
 	m_bJumpUpwards = false;
-	m_bFallDownwards = false;
+	m_bFallDownwards = false; 
+	StepSound();
 }
 
 // Reset this player instance to default
@@ -240,10 +237,20 @@ Vector3 CPlayerInfo2D::GetUp(void) const
 	return up;
 }
 
+int CPlayerInfo2D::GetHp(void) const
+{
+	return hp;
+}
+
 // Get m_dJumpAcceleration of the player
 double CPlayerInfo2D::GetJumpAcceleration(void) const
 {
 	return m_dJumpAcceleration;
+}
+
+float CPlayerInfo2D::GetRollSpeed(void) const
+{
+	return rollSpeed;
 }
 
 // Set Tile Offset for x-axis
@@ -285,7 +292,7 @@ void CPlayerInfo2D::UpdateJumpUpwards(double dt)
 
 	// If the player has jumped out of the screen, 
 	// then start free fall and lock loaction
-	if (position.y + tileSize_Height > theMapReference->GetNumOfTiles_Height()*theMapReference->GetTileSize_Height()) // Note : use this method for locking height...
+	if (position.y + tileSize_Height > theMapReference->GetNumOfTiles_Height()*theMapReference->GetTileSize_Height())
 	{
 		SetOnFreeFall(true);
 		position.y = theMapReference->GetNumOfTiles_Height()*theMapReference->GetTileSize_Height() - tileSize_Height;
@@ -334,8 +341,14 @@ void CPlayerInfo2D::UpdateFreeFall(double dt)
 
 	// Update the free fall
 	position.y -= m_dFallSpeed;
+	if (m_dFallSpeed <= 6)
 	m_dFallSpeed += 0.5;
-
+	if (position.y - tileSize_Height < tileSize_Height/2 - 2)
+	{
+		StopVerticalMovement();// Note : Dies/-1 hp
+		position.y = tileSize_Height + tileSize_Height/2;
+		return;
+	}
 	// Check if the player is still in mid air...
 	int checkPosition_X = (int)((position.x - (tileSize_Width >> 1)) / tileSize_Width);
 	int checkPosition_Y = theMapReference->GetNumOfTiles_Height() - 
@@ -379,27 +392,32 @@ void CPlayerInfo2D::UpdateFreeFall(double dt)
  ********************************************************************************/
 void CPlayerInfo2D::Update(double dt)
 {
+	if (rollSpeed <= 0.8f)
+		rollSpeed += dt * 0.05;
+	attackBounceTime += dt;
+	rollBounceTime += dt;
 	// Update the player position
 	//if (KeyboardController::GetInstance()->IsKeyDown('W'))
 	//	MoveUpDown(true, 1.0f);
 	//if (KeyboardController::GetInstance()->IsKeyDown('S'))
 	//	MoveUpDown(false, 1.0f);
 	
-	if (KeyboardController::GetInstance()->IsKeyPressed('Q') || !isFacingRight() && isRolling()) // Roll Left
-		MoveLeftRight(true, 0.8f);
-	else if (KeyboardController::GetInstance()->IsKeyPressed('E') || isFacingRight() && isRolling()) // Roll Right
-		MoveLeftRight(false, 0.8f);
+
+	if (KeyboardController::GetInstance()->IsKeyPressed('Q') && rollBounceTime > rollBounceTimeLimit || !isFacingRight() && isRolling()) // Roll Left
+		MoveLeftRight(true, rollSpeed);
+	else if (KeyboardController::GetInstance()->IsKeyPressed('E') && rollBounceTime > rollBounceTimeLimit || isFacingRight() && isRolling()) // Roll Right
+		MoveLeftRight(false, rollSpeed);
 	else if (KeyboardController::GetInstance()->IsKeyDown('A')  && !KeyboardController::GetInstance()->IsKeyPressed('J')) // Move Left
-		MoveLeftRight(true, 0.6f);
+		MoveLeftRight(true, m_dMoveSpeed);
 	else if (KeyboardController::GetInstance()->IsKeyDown('D') && !KeyboardController::GetInstance()->IsKeyPressed('J')) // Move Right
-		MoveLeftRight(false, 0.6f);
+		MoveLeftRight(false, m_dMoveSpeed);
 	else if (KeyboardController::GetInstance()->IsKeyPressed('J') && KeyboardController::GetInstance()->IsKeyDown('W') || KeyboardController::GetInstance()->IsKeyPressed('J') && KeyboardController::GetInstance()->IsKeyDown('S') && !isOnGround())
 	{
 		Attack((!isFacingRight()), 0.5f);
 	}
 	else if (KeyboardController::GetInstance()->IsKeyPressed('J') && KeyboardController::GetInstance()->IsKeyDown('A') && !isAttacking()) // Attack Left
 	{
-		Attack(true, 0.5f);
+			Attack(true, 0.5f);
 	}
 	else if (KeyboardController::GetInstance()->IsKeyPressed('J') && KeyboardController::GetInstance()->IsKeyDown('D') && !isAttacking()) // Attack Right
 	{
@@ -457,7 +475,16 @@ void CPlayerInfo2D::Update(double dt)
 	{
 		// Check if the player has walked off the platform
 		if (isOnAir())
+		{
 			SetOnFreeFall(true);
+		}
+	}
+	if (KeyboardController::GetInstance()->IsKeyPressed('K') && !isOnGround())
+	{
+		if (isFacingRight())
+			SetAnimationStatus(CAnimation::P_POGO_R1);
+		else
+			SetAnimationStatus(CAnimation::P_POGO_L1);
 	}
 
 	// Constrain the position
@@ -515,41 +542,41 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 	// Check if the hero can move sideways
 	if (KeyboardController::GetInstance()->IsKeyPressed('Q') || isRolling() && !isFacingRight())
 	{
-		// Find the tile number which the player's left side is on
-
-		checkPosition_X = (int)((position.x - (tileSize_Width >> 1)) / tileSize_Width);
-		if (KeyboardController::GetInstance()->IsKeyPressed('Q'))
+	// Find the tile number which the player's left side is on
+	checkPosition_X = (int)((position.x - (tileSize_Width >> 1)) / tileSize_Width);
+	if (KeyboardController::GetInstance()->IsKeyPressed('Q') && rollBounceTime > rollBounceTimeLimit)
+	{
+		SetAnimationStatus(CAnimation::P_ROLL_L1);
+		Roll();
+	}
+	if (checkPosition_X >= 0)
+	{
+		if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
 		{
-			SetAnimationStatus(CAnimation::P_ROLL_L1);
-			CSoundEngine::GetInstance()->PlayASound("roll");
+			position.x = (checkPosition_X + 1) * tileSize_Width + (tileSize_Width >> 1);
 		}
-
-		if (checkPosition_X >= 0)
-		{
-			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
-			{
-				position.x = (checkPosition_X + 1 ) * tileSize_Width - mapFineOffset_x + tileSize_Width;
-			}
-		}
+	}
 	}
 	else if (KeyboardController::GetInstance()->IsKeyPressed('E') || isRolling() && isFacingRight())
 	{
-		// Find the tile number which the player's right side is on
-		checkPosition_X = (int)((position.x + (tileSize_Width >> 1)) / tileSize_Width);
-		if (KeyboardController::GetInstance()->IsKeyPressed('E'))
+	// Find the tile number which the player's right side is on
+	checkPosition_X = (int)((position.x + (tileSize_Width >> 1)) / tileSize_Width);
+	if (KeyboardController::GetInstance()->IsKeyPressed('E') && rollBounceTime > rollBounceTimeLimit)
+	{
+		SetAnimationStatus(CAnimation::P_ROLL_R1);
+		Roll();
+	}
+
+	if (checkPosition_X < theMapReference->getNumOfTiles_MapWidth())
+	{
+
+		if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
 		{
-			SetAnimationStatus(CAnimation::P_ROLL_R1);
-			CSoundEngine::GetInstance()->PlayASound("roll");
+			// this part causes the player to be stuck when there is a tile on its right
+			position.x = (checkPosition_X - 1) * tileSize_Width + (tileSize_Width >> 1);
 		}
 
-		if (checkPosition_X < theMapReference->getNumOfTiles_MapWidth())
-		{
-			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
-			{
-				// this part causes the player to be stuck when there is a tile on its right
-				position.x = (checkPosition_X - 1 ) * tileSize_Width - mapFineOffset_x + tileSize_Width;
-			}
-		}
+	}
 	}
 	// Check if the hero can move sideways
 	else if (KeyboardController::GetInstance()->IsKeyDown('A'))
@@ -563,9 +590,10 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 		{
 			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
 			{
-				position.x = (checkPosition_X + 1) * tileSize_Width - mapFineOffset_x + tileSize_Width;
+				position.x = (checkPosition_X + 1) * tileSize_Width + (tileSize_Width >> 1);
 			}
 		}
+
 	}
 	else if (KeyboardController::GetInstance()->IsKeyDown('D'))
 	{
@@ -578,10 +606,10 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 		{
 			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
 			{
-				// this part causes the player to be stuck when there is a tile on its right
-				position.x = (checkPosition_X - 1) * tileSize_Width - mapFineOffset_x + tileSize_Width;
+				position.x = (checkPosition_X - 1) * tileSize_Width + (tileSize_Width >> 1);
 			}
 		}
+
 	}
 }
 
@@ -621,20 +649,24 @@ void CPlayerInfo2D::MoveLeftRight(const bool mode, const float timeDiff)
 
 void CPlayerInfo2D::Attack(const bool mode, const float timeDiff)
 {
-	if (!isAttacking())
+	if (attackBounceTime > attackBounceTimeLimit)
 	{
-		if (mode)
+		if (!isAttacking())
 		{
-			SetAnimationStatus(CAnimation::P_ATTACK_L1);
-			CSoundEngine::GetInstance()->PlayASound("attack");
+			if (mode)
+			{
+				SetAnimationStatus(CAnimation::P_ATTACK_L1);
+				AttackSound();
+			}
+			else
+			{
+				SetAnimationStatus(CAnimation::P_ATTACK_R1);
+				AttackSound();
+			}
 		}
-		else
-		{
-			SetAnimationStatus(CAnimation::P_ATTACK_R1);
-			CSoundEngine::GetInstance()->PlayASound("attack");
-		}
+		UpdateAnimationIndex(timeDiff);
+		attackBounceTime = 0.f;
 	}
-	UpdateAnimationIndex(timeDiff);
 }
 
 // Check if the player is standing on air
@@ -652,6 +684,11 @@ bool CPlayerInfo2D::isOnAir(void)
 	{
 		if (theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X] == 0)
 		{
+				m_bJumped = true;// Counts as jump when falling?
+			if (!(position.y - tileSize_Height < tileSize_Height))
+			{
+				m_bDoubleJump = false;
+			}
 			return true;
 		}
 	}
@@ -660,10 +697,17 @@ bool CPlayerInfo2D::isOnAir(void)
 		if ((theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X] == 0)
 			&& (theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X + 1] == 0))
 		{
+				m_bJumped = true;
+			if (!(position.y - tileSize_Height < tileSize_Height ))
+			{
+				m_bDoubleJump = false;
+			}
 			return true;
 		}
 	}
-
+	m_bJumped = false;
+	m_bDoubleJump = false;
+	m_bDoubleJumped = false;
 	return false;
 }
 
@@ -671,30 +715,48 @@ bool CPlayerInfo2D::isOnAir(void)
 void CPlayerInfo2D::Constrain(void)
 {
 	// Constrain player within the boundary
-	if (position.x >= maxBoundary.x + mapOffset_x - (tileSize_Width >> 1))
-	{
-		//position.x = maxBoundary.x - (tileSize_Width >> 1);
-		if(position.x >= maxBoundary.x * 1.5f + mapOffset_x)
-			mapOffset_x += m_dSpeed / 0.7;
-		else
-			mapOffset_x += m_dSpeed/2;
-		if (mapOffset_x + theMapReference->getScreenWidth() > theMapReference->GetNumOfTiles_Width() * theMapReference->GetTileSize_Width())
-			mapOffset_x = theMapReference->GetNumOfTiles_Width() * theMapReference->GetTileSize_Width() - theMapReference->getScreenWidth();
-	}
+	//if (position.x >= maxBoundary.x + mapOffset_x - (tileSize_Width >> 1))
+	//{
+	//	// 0.325 ~ 0.675 = 0.25 of screen
+	//	//mapOffset_x += m_dSpeed * (m_dMoveSpeed + ((position.x - maxBoundary.x - mapOffset_x) / (maxBoundary.x * 0.25f) * (rollSpeed - m_dMoveSpeed)));
+	//	if (position.x >= maxBoundary.x * 1.25f + mapOffset_x)
+	//		mapOffset_x += m_dSpeed * m_dMoveSpeed;// this part is still a fail-safe
+	//	else
+	//	{
+	//		if (rollBounceTime < rollBounceTimeLimit)
+	//		{
+	//			mapOffset_x += m_dSpeed * rollSpeed;// Note : causes problem when rolling in place
+	//		}
+	//		else
+	//			mapOffset_x += m_dSpeed * m_dMoveSpeed;
+	//	}
+	//	if (mapOffset_x + theMapReference->getScreenWidth() > theMapReference->GetNumOfTiles_Width() * theMapReference->GetTileSize_Width())
+	//		mapOffset_x = theMapReference->GetNumOfTiles_Width() * theMapReference->GetTileSize_Width() - theMapReference->getScreenWidth();
+	//}
 	if (position.y > maxBoundary.y - tileSize_Height) // for y-scrolling
 	{
 		position.y = maxBoundary.y - (tileSize_Height >> 1);
 	}
-	if (position.x <= minBoundary.x + mapOffset_x)
-	{
-		//position.x = minBoundary.x;
-		if (position.x <= minBoundary.x * 0.5f + mapOffset_x)
-			mapOffset_x -= m_dSpeed / 0.7;
-		else
-			mapOffset_x -= m_dSpeed/2;
-		if (mapOffset_x < 0)
-			mapOffset_x = 0;
-	}
+	//if (position.x <= minBoundary.x + mapOffset_x)
+	//{
+	//	if (position.x <= minBoundary.x * 0.75f + mapOffset_x)
+	//		mapOffset_x -= m_dSpeed * (m_dMoveSpeed - 0.1f);
+	//	else
+	//	{
+	//		if (rollBounceTime < rollBounceTimeLimit)
+	//			mapOffset_x -= m_dSpeed * (rollSpeed - 0.1f);
+	//		else
+	//			mapOffset_x -= m_dSpeed * (m_dMoveSpeed - 0.1f);
+	//	}
+	//	if (mapOffset_x < 0)
+	//		mapOffset_x = 0;
+	//}
+	mapOffset_x = position.x - (tileSize_Width >> 1) - maxBoundary.x;// whatevbs.. idc anymore...
+	if (mapOffset_x + theMapReference->getScreenWidth() > theMapReference->GetNumOfTiles_Width() * theMapReference->GetTileSize_Width())
+			mapOffset_x = theMapReference->GetNumOfTiles_Width() * theMapReference->GetTileSize_Width() - theMapReference->getScreenWidth();
+	if (mapOffset_x < 0)
+		mapOffset_x = 0;
+
 	if (position.y < minBoundary.y)
 	{
 		position.y = minBoundary.y + (tileSize_Height >> 1);
@@ -999,4 +1061,109 @@ void CPlayerInfo2D::UpdateGoodies(const int tileIndex_Column, const int tileInde
 			theMapReference->theScreenMap[tileIndex_Row][tileIndex_Column] = 0;
 		}
 	}
+}
+
+void CPlayerInfo2D::AttackSound(void) const
+{
+	switch (rand() % 6)
+	{
+	case 0:
+		CSoundEngine::GetInstance()->PlayASound("slash1");
+		break;
+	case 1:
+		CSoundEngine::GetInstance()->PlayASound("slash2");
+		break;
+	case 2:
+		CSoundEngine::GetInstance()->PlayASound("slash3");
+		break;
+	case 3:
+		CSoundEngine::GetInstance()->PlayASound("slash4");
+		break;
+	case 4:
+		CSoundEngine::GetInstance()->PlayASound("slash5");
+		break;
+	case 5:
+		CSoundEngine::GetInstance()->PlayASound("slash6");
+		break;
+	default:
+		break;
+	}
+}
+
+void CPlayerInfo2D::StepSound(void) const
+{
+	switch (rand() % 4)
+	{
+	case 0:
+		CSoundEngine::GetInstance()->PlayASound("step1");
+		break;
+	case 1:
+		CSoundEngine::GetInstance()->PlayASound("step2");
+		break;
+	case 2:
+		CSoundEngine::GetInstance()->PlayASound("step3");
+		break;
+	case 3:
+		CSoundEngine::GetInstance()->PlayASound("step4");
+		break;
+	default:
+		break;
+	}
+}
+
+void CPlayerInfo2D::DoorSound(void) const
+{
+	switch (rand() % 4)
+	{
+	case 0:
+		CSoundEngine::GetInstance()->PlayASound("door1");
+		break;
+	case 1:
+		CSoundEngine::GetInstance()->PlayASound("door2");
+		break;
+	case 2:
+		CSoundEngine::GetInstance()->PlayASound("door3");
+		break;
+	case 3:
+		CSoundEngine::GetInstance()->PlayASound("door4");
+		break;
+	default:
+		break;
+	}
+}
+
+void CPlayerInfo2D::InitSound(void) const
+{
+	CSoundEngine::GetInstance()->Init();
+	CSoundEngine::GetInstance()->AddSound("bgm", "Sound//bgm.mp3");
+	CSoundEngine::GetInstance()->AddSound("bgmwalk", "Sound//bgmwalk.mp3");
+	CSoundEngine::GetInstance()->AddSound("jump", "Sound//jump.wav");
+	CSoundEngine::GetInstance()->AddSound("step1", "Sound//step1.wav");
+	CSoundEngine::GetInstance()->AddSound("step2", "Sound//step2.wav");
+	CSoundEngine::GetInstance()->AddSound("step3", "Sound//step3.wav");
+	CSoundEngine::GetInstance()->AddSound("step4", "Sound//step4.wav");
+	CSoundEngine::GetInstance()->AddSound("slash1", "Sound//slash1.wav");
+	CSoundEngine::GetInstance()->AddSound("slash2", "Sound//slash2.wav");
+	CSoundEngine::GetInstance()->AddSound("slash3", "Sound//slash3.wav");
+	CSoundEngine::GetInstance()->AddSound("slash4", "Sound//slash4.wav");
+	CSoundEngine::GetInstance()->AddSound("slash5", "Sound//slash5.wav");
+	CSoundEngine::GetInstance()->AddSound("slash6", "Sound//slash6.wav");
+	CSoundEngine::GetInstance()->AddSound("roll", "Sound//roll.wav");
+	CSoundEngine::GetInstance()->AddSound("door1", "Sound//door1.wav");
+	CSoundEngine::GetInstance()->AddSound("door2", "Sound//door2.wav");
+	CSoundEngine::GetInstance()->AddSound("door3", "Sound//door3.wav");
+	CSoundEngine::GetInstance()->AddSound("door4", "Sound//door4.wav");
+	CSoundEngine::GetInstance()->AddSound("death", "Sound//death.wav");
+
+	CSoundEngine::GetInstance()->PlayBGM("bgmwalk");
+}
+
+void CPlayerInfo2D::Roll()
+{
+	CSoundEngine::GetInstance()->PlayASound("roll");
+	rollBounceTime = 0;
+	if (rollSpeed > 0.4f)
+		rollSpeed -= 0.1f;
+	else
+		rollSpeed = 0.3f;
 }

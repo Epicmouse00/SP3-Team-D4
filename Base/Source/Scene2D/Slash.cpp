@@ -6,7 +6,6 @@
 #include "Mtx44.h"
 #include "../Projectile/Projectile.h"
 #include "GoodiesFactory.h"
-#include "../SoundEngine.h"
 
 // Allocating and initializing Slash's static data member.  
 // The pointer is allocated but not the object's constructor.

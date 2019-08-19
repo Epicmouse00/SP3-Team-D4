@@ -24,10 +24,12 @@
     <ClCompile Include="Source\Scene2D\Animation.cpp" />
     <ClCompile Include="Source\Scene2D\AnimationAxe.cpp" />
     <ClCompile Include="Source\Scene2D\AnimationCrystal.cpp" />
+    <ClCompile Include="Source\Scene2D\AnimationHearts.cpp" />
     <ClCompile Include="Source\Scene2D\AnimationSlash.cpp" />
     <ClCompile Include="Source\Scene2D\Enemy.cpp" />
     <ClCompile Include="Source\Scene2D\Goodies.cpp" />
     <ClCompile Include="Source\Scene2D\GoodiesFactory.cpp" />
+    <ClCompile Include="Source\Scene2D\Hearts.cpp" />
     <ClCompile Include="Source\Scene2D\Map.cpp" />
     <ClCompile Include="Source\Scene2D\PlayerInfo2D.cpp" />
     <ClCompile Include="Source\Scene2D\Scene2D.cpp" />
@@ -40,6 +42,7 @@
     <ClCompile Include="Source\SoundEngine.cpp" />
     <ClCompile Include="Source\SpriteEntity.cpp" />
     <ClCompile Include="Source\TextEntity.cpp" />
+    <ClCompile Include="Source\UIButton.cpp" />
     <ClCompile Include="Source\UserInterface.cpp" />
     <ClCompile Include="Source\WeaponInfo\Pistol.cpp" />
     <ClCompile Include="Source\WeaponInfo\WeaponInfo.cpp" />
@@ -57,10 +60,12 @@
     <ClInclude Include="Source\Scene2D\Animation.h" />
     <ClInclude Include="Source\Scene2D\AnimationAxe.h" />
     <ClInclude Include="Source\Scene2D\AnimationCrystal.h" />
+    <ClInclude Include="Source\Scene2D\AnimationHearts.h" />
     <ClInclude Include="Source\Scene2D\AnimationSlash.h" />
     <ClInclude Include="Source\Scene2D\Enemy.h" />
     <ClInclude Include="Source\Scene2D\Goodies.h" />
     <ClInclude Include="Source\Scene2D\GoodiesFactory.h" />
+    <ClInclude Include="Source\Scene2D\Hearts.h" />
     <ClInclude Include="Source\Scene2D\Map.h" />
     <ClInclude Include="Source\Scene2D\PlayerInfo2D.h" />
     <ClInclude Include="Source\Scene2D\Scene2D.h" />
@@ -73,6 +78,7 @@
     <ClInclude Include="Source\SoundEngine.h" />
     <ClInclude Include="Source\SpriteEntity.h" />
     <ClInclude Include="Source\TextEntity.h" />
+    <ClInclude Include="Source\UIButton.h" />
     <ClInclude Include="Source\UserInterface.h" />
     <ClInclude Include="Source\WeaponInfo\Pistol.h" />
     <ClInclude Include="Source\WeaponInfo\WeaponInfo.h" />
@@ -86,7 +92,7 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>Base</RootNamespace>
     <ProjectName>Base</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

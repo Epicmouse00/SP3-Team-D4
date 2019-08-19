@@ -1,5 +1,5 @@
 #include "Animation.h"
-#include "../SoundEngine.h"
+#include "PlayerInfo2D.h"
 
 
 CAnimation::CAnimation()
@@ -34,7 +34,7 @@ void CAnimation::UpdateAnimationIndex(double dt)
 		case P_RUN_L2:
 		case P_RUN_R1:
 		case P_RUN_R2:
-			CSoundEngine::GetInstance()->PlayASound("walk");
+			CPlayerInfo2D::GetInstance()->StepSound();
 			break;
 		default:
 			break;
@@ -145,6 +145,22 @@ bool CAnimation::isAttacking(void) const
 	case P_ATTACK_R2:
 	case P_ATTACK_L1:
 	case P_ATTACK_L2:
+		return true;
+		break;
+	default:
+		return false;
+		break;
+	}
+}
+
+bool CAnimation::isPogo(void) const
+{
+	switch (frameState)
+	{
+	case P_POGO_R1:
+	case P_POGO_R2:
+	case P_POGO_L1:
+	case P_POGO_L2:
 		return true;
 		break;
 	default:

@@ -7,6 +7,7 @@
 CEnemy::CEnemy(void)
 	: theStrategy(NULL)
 	, theENEMYPosition(Vector3(0.0f, 0.0f, 0.0f))
+	, theMapReference(nullptr)
 {
 }
 
@@ -27,6 +28,7 @@ CEnemy::~CEnemy(void)
  ********************************************************************************/
 void CEnemy::Init(CMap* m_cMap)
 {
+	theMapReference = m_cMap;
 	theENEMYPosition.x=0;
 	theENEMYPosition.y=0;
 }
@@ -137,6 +139,12 @@ void CEnemy::Update(void)
 	if (theStrategy != NULL)
 	{
 		theStrategy->Update(theDestination, theENEMYPosition);
+		if (dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::IDLE ||
+			dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::REPEL)
+			SetAnimationStatus(C_IDLE_1);
+		else if (dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::ATTACK)
+			SetAnimationStatus(C_ATTACK_1);
+		UpdateAnimationIndex(0.2f);
 	}
 }
 

@@ -32,7 +32,7 @@ CScene2D::CScene2D()
 	, m_cRearMap(NULL)
 	, thePlayerInfo(NULL)
 	, theSlashInfo(NULL)
-	, m_iNumEnemy(3)
+	, m_iNumEnemy(1)
 {
 }
 
@@ -48,8 +48,8 @@ CScene2D::~CScene2D()
 	// Delete the sprites
 	//delete Scene2D_Goodies_TreasureChest;
 	//Scene2D_Goodies_TreasureChest = NULL;
-	//delete Scene2D_Enemy;
-	//Scene2D_Enemy = NULL;
+	delete Scene2D_Enemy;
+	Scene2D_Enemy = NULL;
 	delete Scene2D_Background;
 	Scene2D_Background = NULL;
 	delete Scene2D_TileGround;
@@ -59,13 +59,13 @@ CScene2D::~CScene2D()
 	delete Scene2D_RearStructure;
 	Scene2D_RearStructure = NULL;
 
-	//for (int i = 0; i < m_iNumEnemy; ++i)
-	//{
-	//	delete theEnemy[i];
-	//	theEnemy[i] = NULL;
-	//}
-	//delete theEnemy;
-	//theEnemy = NULL;
+	for (int i = 0; i < m_iNumEnemy; ++i)
+	{
+		delete theEnemy[i];
+		theEnemy[i] = NULL;
+	}
+	delete theEnemy;
+	theEnemy = NULL;
 
 	for (int i = 0; i < thePlayerInfo->GetFrameTotal(); ++i)
 	{
@@ -111,10 +111,10 @@ CScene2D::~CScene2D()
 
 void CScene2D::Init()
 {
-	currProg = GraphicsManager::GetInstance()->LoadShader("default", 
-														  "Shader//Texture.vertexshader", 
-														  "Shader//Texture.fragmentshader");
-	
+	currProg = GraphicsManager::GetInstance()->LoadShader("default",
+		"Shader//Texture.vertexshader",
+		"Shader//Texture.fragmentshader");
+
 	// Tell the shader program to store these uniform locations
 	currProg->AddUniform("MVP");
 	currProg->AddUniform("MV");
@@ -151,7 +151,7 @@ void CScene2D::Init()
 	currProg->AddUniform("colorTexture");
 	currProg->AddUniform("textEnabled");
 	currProg->AddUniform("textColor");
-	
+
 	// Tell the graphics manager to use the shader we just loaded
 	GraphicsManager::GetInstance()->SetActiveShader("default");
 
@@ -162,13 +162,9 @@ void CScene2D::Init()
 
 	// Load all the meshes
 	LoadMeshes();
-	
+
 	//MeshBuilder::GetInstance()->GenerateSpriteAnimation("sprite", 16, 16);
 	//MeshBuilder::GetInstance()->GetMesh("sprite")->textureID = LoadTGA("Image//spritesheet.tga");
-
-	MeshBuilder::GetInstance()->GenerateQuad("UI_BOX", Color(1, 0, 1), 1.f);
-	MeshBuilder::GetInstance()->GenerateQuad("UI_BOX2", Color(0, 1, 1), 1.f);
-
 
 	// Create entities into the scene
 	Create::Entity("reference", Vector3(0.0f, 0.0f, 0.0f)); // Reference
@@ -191,7 +187,7 @@ void CScene2D::Init()
 	thePlayerInfo->Init();
 	thePlayerInfo->SetPos(Vector3(50.0f + kiHalfTileWidth, 100.0f + kiHalfTileHeight));
 	//thePlayerInfo->SetBoundary(Vector3(210.f, 230.0f, 0.0f), Vector3(10.0f, 10.0f, 0.0f));
-	thePlayerInfo->SetBoundary(Vector3(m_cMap->getScreenWidth()/2, m_cMap->getScreenHeight(), 0.0f)
+	thePlayerInfo->SetBoundary(Vector3(m_cMap->getScreenWidth() / 2, m_cMap->getScreenHeight(), 0.0f)
 		, Vector3(m_cMap->getScreenWidth() / 2, 0, 0.0f));
 	thePlayerInfo->SetTileSize(m_cMap->GetTileSize_Width(), m_cMap->GetTileSize_Height());
 	thePlayerInfo->SetMap(m_cMap);
@@ -208,7 +204,7 @@ void CScene2D::Init()
 	// Create the background image
 	Scene2D_Background = Create::Sprite2DObject("SCENE2D_BKGROUND",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(400.0f, 240.0f, 0.0f), true);
+		Vector3(360.0f, 240.0f, 0.0f), true);
 	Scene2D_TileGround = Create::Sprite2DObject("Tile_1111",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
@@ -218,7 +214,7 @@ void CScene2D::Init()
 	Scene2D_RearStructure = Create::Sprite2DObject("Tile_BG",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	
+
 	Scene2D_Hero_Animated = new SpriteEntity*[thePlayerInfo->GetFrameTotal()];
 	Scene2D_Hero_Animated[0] = Create::Sprite2DObject("Lonin_Right_Idle_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
@@ -360,40 +356,59 @@ void CScene2D::Init()
 	//	Vector3(16.0f, 16.0f, 0.0f));
 
 	// Create the 3 enemies
-	//m_iNumEnemy = 3;
-	//theEnemy = new CEnemy*[m_iNumEnemy];
-	//for (int i = 0; i < m_iNumEnemy; i++)
-	//{
-	//	theEnemy[i] = new CEnemy();
-	//	theEnemy[i]->Init(m_cMap);
-	//	theEnemy[i]->ChangeStrategy(new CStrategy_Kill(), false);
-	//}
-	//theEnemy[0]->SetPos(450 + 12, 100 + 12);
-	//theEnemy[1]->SetPos(700 + 12, 100 + 12);
-	//theEnemy[2]->SetPos(950 + 12, 100 + 12);
-	//
-	//Scene2D_Enemy = Create::Sprite2DObject("SCENE2D_TILE_ENEMY",
-	//	Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-	//	Vector3(25.0f, 25.0f, 0.0f));
-		
-	// Create a text object
-	float fontSize = 8.0f;
-	float halfFontSize = fontSize / 2.0f;
-	for (int i = 0; i < 3; ++i)
+	m_iNumEnemy = m_cMap->getNumberOfEnemies();
+	theEnemy = new CEnemy*[m_iNumEnemy];
+
 	{
-		textObj[i] = Create::Text2DObject("text", 
-										  Vector3(5, 5 + fontSize*i + halfFontSize, 0.0f), 
-										  "", 
-										  Vector3(fontSize, fontSize, fontSize), Color(1.0f, 0.0f, 0.0f));
+		int i=0;
+		bool breakk = false;
+		for (int width = 0; width < m_cMap->getNumOfTiles_MapWidth(); ++width)
+		{
+			for (int height = 0; height < m_cMap->getNumOfTiles_MapHeight(); ++height)
+			{
+				if (m_cMap->theScreenMap[height][width] == 101)
+				{
+					theEnemy[i] = new CEnemy();
+					theEnemy[i]->Init(m_cMap);
+					theEnemy[i]->ChangeStrategy(new CStrategy_Kill(), false);
+					theEnemy[i]->SetPos(width * m_cMap->GetTileSize_Width(), 232 - height * m_cMap->GetTileSize_Height());
+					++i;
+						if (i == m_iNumEnemy)
+						{
+							breakk = true;
+							break;
+						}
+				}
+			}
+			if (breakk)
+				break;
+		}
 	}
-	textObj[0]->SetText("<First Row>");
-	textObj[1]->SetText("<Second Row>");
-	textObj[2]->SetText("<Third Row>");
+
+	Scene2D_Enemy = new SpriteEntity*[theEnemy[0]->GetFrameTotal()];
+	Scene2D_Enemy[0] = Create::Sprite2DObject("Crystal_Attack_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Enemy[1] = Create::Sprite2DObject("Crystal_Attack_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Enemy[2] = Create::Sprite2DObject("Crystal_Die_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Enemy[3] = Create::Sprite2DObject("Crystal_Die_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Enemy[4] = Create::Sprite2DObject("Crystal_Idle_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Enemy[5] = Create::Sprite2DObject("Crystal_Idle_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
 }
 
 void CScene2D::Update(double dt)
 {
-	if (ui->Update())
+	if (ui->Update(dt))
 	{
 		// Update our entities
 		EntityManager::GetInstance()->Update(dt);
@@ -436,9 +451,9 @@ void CScene2D::Update(double dt)
 		theSlashInfo->Update(dt);
 
 		// Update the enemies
-		for (int i = 0; i < m_iNumEnemy; ++i)
+		for (int i = 0; i < m_iNumEnemy; ++i) // This is the AI of the enemies??
 		{
-			theEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x + thePlayerInfo->mapOffset_x,
+			theEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x - thePlayerInfo->mapOffset_x,
 				thePlayerInfo->GetPos().y,
 				0));
 			theEnemy[i]->Update();
@@ -482,10 +497,6 @@ void CScene2D::Render()
 		RenderEnemy();
 		// Render the player
 		RenderPlayer();
-
-		textObj[0]->RenderUI();
-		textObj[1]->RenderUI();
-		textObj[2]->RenderUI();
 	}
 	ui->Render();
 }
@@ -518,14 +529,14 @@ void CScene2D::RenderTileMap()
 														0.0f));
 				Scene2D_TileGround->RenderUI();
 			}
-			else if (m_cMap->theScreenMap[i][m] == 2)
-			{
-				Scene2D_TileTree->SetPosition(Vector3(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth 
-															- thePlayerInfo->GetMapFineOffset_x(),
-													  224 - i*m_cMap->GetTileSize_Height() + kiHalfTileHeight,
-													  0.0f));
-				Scene2D_TileTree->RenderUI();
-			}
+			//else if (m_cMap->theScreenMap[i][m] == 2)
+			//{
+			//	Scene2D_TileTree->SetPosition(Vector3(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth 
+			//												- thePlayerInfo->GetMapFineOffset_x(),
+			//										  224 - i*m_cMap->GetTileSize_Height() + kiHalfTileHeight,
+			//										  0.0f));
+			//	Scene2D_TileTree->RenderUI();
+			//}
 			else if (m_cMap->theScreenMap[i][m] == 3)
 			{
 				Scene2D_TileDoor->SetPosition(Vector3(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
@@ -544,26 +555,6 @@ void CScene2D::RenderTileMap()
 			}
 		}
 	}
-
-	std::ostringstream ss;
-	ss.precision(5);
-	ss << "CP: " << thePlayerInfo->checkPosition_X << ", " << thePlayerInfo->checkPosition_Y << endl
-		<< "P: " << thePlayerInfo->position << endl;
-	textObj[1]->SetText(ss.str());
-
-	ss.str("");
-	ss.clear();
-	ss << "mapOffset_x: " << thePlayerInfo->mapOffset_x << endl;
-	textObj[0]->SetText(ss.str());
-
-	ss.str("");
-	ss.clear();
-	ss << "Enemies: ";
-	for (int i = 0; i < m_iNumEnemy; ++i)
-	{
-		ss << theEnemy[i]->GetPos_x() << "(" << theEnemy[i]->GetPos_x() - thePlayerInfo->mapOffset_x << ")" << ", ";
-	}
-	textObj[2]->SetText(ss.str());
 }
 
 // Render the rear tile map
@@ -625,11 +616,12 @@ void CScene2D::RenderEnemy(void)
 		int theEnemy_x = theEnemy[i]->GetPos_x() - thePlayerInfo->mapOffset_x;
 		int theEnemy_y = theEnemy[i]->GetPos_y();
 
-		if (((theEnemy_x >= thePlayerInfo->GetMinBoundary().x) && (theEnemy_x<thePlayerInfo->GetMaxBoundary().x)) &&
-			((theEnemy_y >= thePlayerInfo->GetMinBoundary().y) && (theEnemy_y<thePlayerInfo->GetMaxBoundary().y)))
+		if (((theEnemy_x >= 0) && (theEnemy_x < m_cMap->GetNumOfTiles_Width()*m_cMap->GetTileSize_Width())) &&
+			((theEnemy_y >= 0) && (theEnemy_y < m_cMap->GetNumOfTiles_Height()*m_cMap->GetTileSize_Height())) &&
+			theEnemy[i]->GetFrameState() != CEnemy::C_TOTAL);
 		{
-			Scene2D_Enemy->SetPosition(Vector3(theEnemy_x, theEnemy_y, 0));
-			Scene2D_Enemy->RenderUI();
+			Scene2D_Enemy[theEnemy[i]->GetFrameState()]->SetPosition(Vector3(theEnemy_x, theEnemy_y, 0));
+			Scene2D_Enemy[theEnemy[i]->GetFrameState()]->RenderUI();
 		}
 	}
 }
@@ -828,5 +820,13 @@ void CScene2D::LoadMeshes(void)
 		MeshBuilder::GetInstance()->GetMesh("Crystal_Projectile_1")->textureID = LoadTGA("Image//Sprites//Crystal_Projectile_1.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Crystal_Projectile_2", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Crystal_Projectile_2")->textureID = LoadTGA("Image//Sprites//Crystal_Projectile_2.tga");
+	}
+	// UI
+	{
+		MeshBuilder::GetInstance()->GenerateQuad("UI_BOX", Color(1, 0, 1), 1.f);
+		MeshBuilder::GetInstance()->GenerateQuad("UI_BOX2", Color(0, 0, 1), 1.f);
+		MeshBuilder::GetInstance()->GenerateQuad("Stamina_Green", Color(0, 1, 0), 1.f);
+		MeshBuilder::GetInstance()->GenerateQuad("Stamina_Bar", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Stamina_Bar")->textureID = LoadTGA("Image//Sprites//Stamina_Bar.tga");
 	}
 }
