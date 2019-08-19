@@ -59,11 +59,6 @@ CScene2D::~CScene2D()
 	delete Scene2D_RearStructure;
 	Scene2D_RearStructure = NULL;
 
-	for (int i = 0; i < m_iNumEnemy; ++i)
-	{
-		delete theEnemy[i];
-		theEnemy[i] = NULL;
-	}
 	delete theEnemy;
 	theEnemy = NULL;
 
@@ -368,10 +363,8 @@ void CScene2D::Init()
 			{
 				if (m_cMap->theScreenMap[height][width] == 101)
 				{
-					theEnemy[i] = new CEnemy();
-					theEnemy[i]->Init(m_cMap);
-					theEnemy[i]->ChangeStrategy(new CStrategy_Kill(), false);
-					theEnemy[i]->SetPos(width * m_cMap->GetTileSize_Width(), 232 - height * m_cMap->GetTileSize_Height());
+					theEnemy[i] = Create::EnemyEntity(m_cMap, new CStrategy_Kill(), false
+						, Vector3(width * m_cMap->GetTileSize_Width(), 232 - height * m_cMap->GetTileSize_Height()));
 					++i;
 						if (i == m_iNumEnemy)
 						{
@@ -453,10 +446,12 @@ void CScene2D::Update(double dt)
 		// Update the enemies
 		for (int i = 0; i < m_iNumEnemy; ++i) // This is the AI of the enemies??
 		{
-			theEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x - thePlayerInfo->mapOffset_x,
-				thePlayerInfo->GetPos().y,
-				0));
-			theEnemy[i]->Update();
+			if (!theEnemy[i]->IsDone()) {
+				theEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x - thePlayerInfo->mapOffset_x,
+					thePlayerInfo->GetPos().y,
+					0));
+				theEnemy[i]->Update();
+			}
 		}
 
 		GraphicsManager::GetInstance()->UpdateLights(dt);
@@ -613,15 +608,17 @@ void CScene2D::RenderEnemy(void)
 	// Render the enemies
 	for (int i = 0; i < m_iNumEnemy; ++i)
 	{
-		int theEnemy_x = theEnemy[i]->GetPos_x() - thePlayerInfo->mapOffset_x;
-		int theEnemy_y = theEnemy[i]->GetPos_y();
+		if (!theEnemy[i]->IsDone()) {
+			int theEnemy_x = theEnemy[i]->GetPos_x() - thePlayerInfo->mapOffset_x;
+			int theEnemy_y = theEnemy[i]->GetPos_y();
 
-		if (((theEnemy_x >= 0) && (theEnemy_x < m_cMap->GetNumOfTiles_Width()*m_cMap->GetTileSize_Width())) &&
-			((theEnemy_y >= 0) && (theEnemy_y < m_cMap->GetNumOfTiles_Height()*m_cMap->GetTileSize_Height())) &&
-			theEnemy[i]->GetFrameState() != CEnemy::C_TOTAL);
-		{
-			Scene2D_Enemy[theEnemy[i]->GetFrameState()]->SetPosition(Vector3(theEnemy_x, theEnemy_y, 0));
-			Scene2D_Enemy[theEnemy[i]->GetFrameState()]->RenderUI();
+			if (((theEnemy_x >= 0) && (theEnemy_x < m_cMap->GetNumOfTiles_Width()*m_cMap->GetTileSize_Width())) &&
+				((theEnemy_y >= 0) && (theEnemy_y < m_cMap->GetNumOfTiles_Height()*m_cMap->GetTileSize_Height())) &&
+				theEnemy[i]->GetFrameState() != CEnemy::C_TOTAL);
+			{
+				Scene2D_Enemy[theEnemy[i]->GetFrameState()]->SetPosition(Vector3(theEnemy_x, theEnemy_y, 0));
+				Scene2D_Enemy[theEnemy[i]->GetFrameState()]->RenderUI();
+			}
 		}
 	}
 }
