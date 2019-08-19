@@ -54,4 +54,6 @@ private:
 	CStrategy* theStrategy;
 
 	CMap* theMapReference;
+
+	void constrain(int a, int b);
 };

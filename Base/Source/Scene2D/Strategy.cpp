@@ -21,3 +21,13 @@ int CStrategy::CalculateDistance(Vector3 theDestination, Vector3 theEnemyPositio
 	return ((theDestination.x - theEnemyPosition.x)*(theDestination.x - theEnemyPosition.x) + 
 			(theDestination.y - theEnemyPosition.y)*(theDestination.y - theEnemyPosition.y));
 }
+
+int CStrategy::GetLR()
+{
+	return n;
+}
+
+int CStrategy::GetUD()
+{
+	return m;
+}

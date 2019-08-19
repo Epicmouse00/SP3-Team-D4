@@ -15,9 +15,16 @@ public:
 	virtual int GetDestination_y(void) = 0;
 	virtual Vector3 GetDestination(void) = 0;
 
+	int GetLR();
+	int GetUD();
+
 protected:
 	int CalculateDistance(Vector3 theDestination, Vector3 theEnemyPosition);
 
 	// The Destination for this Strategy
 	Vector3 theDestination;
+
+	int bounce;
+	int m;
+	int n;
 };

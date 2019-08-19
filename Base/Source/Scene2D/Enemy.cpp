@@ -139,6 +139,7 @@ void CEnemy::Update(void)
 	if (theStrategy != NULL)
 	{
 		theStrategy->Update(theDestination, theENEMYPosition);
+		constrain(theStrategy->GetLR(), theStrategy->GetUD());
 		if (dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::IDLE ||
 			dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::REPEL)
 			SetAnimationStatus(C_IDLE_1);
@@ -163,4 +164,91 @@ void CEnemy::ChangeStrategy(CStrategy* theNewStrategy, bool bDelete)
 	}
 
 	theStrategy = theNewStrategy;
+}
+
+void CEnemy::constrain(int a, int b)
+{
+	int checkPosition_Y = theMapReference->GetNumOfTiles_Height() -
+		(int)ceil(theENEMYPosition.y / theMapReference->GetTileSize_Height());
+
+	// Check if the hero can move sideways
+	if (/*if left*/1)
+	{
+		// Find the tile number which the player's left side is on
+		int checkPosition_X = (int)((theENEMYPosition.x - (theMapReference->GetTileSize_Width() >> 1)) / theMapReference->GetTileSize_Width());
+
+		if (checkPosition_X >= 0)
+		{
+			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
+			{
+				theENEMYPosition.x = (checkPosition_X + 1) * theMapReference->GetTileSize_Width() + (theMapReference->GetTileSize_Width() >> 1);
+			}
+		}
+	}
+	else if (/*right*/1)
+	{
+		// Find the tile number which the player's right side is on
+		int checkPosition_X = (int)((theENEMYPosition.x + (theMapReference->GetTileSize_Width() >> 1)) / theMapReference->GetTileSize_Width());
+		if (checkPosition_X < theMapReference->GetTileSize_Width())
+		{
+			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
+			{
+				theENEMYPosition.x = (checkPosition_X - 1) * theMapReference->GetTileSize_Width() + (theMapReference->GetTileSize_Width() >> 1);
+			}
+		}
+
+	}
+
+
+	if (/*up*/1)
+	{
+		// Check if the player is stopped by obstacles
+		int checkPosition_X = (int)((theENEMYPosition.x - (theMapReference->GetTileSize_Width() >> 1)) / theMapReference->GetTileSize_Width());
+		int checkPosition_Y = theMapReference->GetNumOfTiles_Height() -
+			(int)ceil((float)(theENEMYPosition.y + (theMapReference->GetTileSize_Height() >> 1)) / theMapReference->GetTileSize_Height());
+		if (((int)(theENEMYPosition.x - (theMapReference->GetTileSize_Width() >> 1)) % theMapReference->GetTileSize_Width()) == 0)
+		{
+			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
+			{
+				// Since the new position does not allow the player to move into, then go back to the old position
+				theENEMYPosition.y = (theMapReference->GetNumOfTiles_Height() - checkPosition_Y - 1) * theMapReference->GetTileSize_Height() - (theMapReference->GetTileSize_Height() >> 1);
+				// Set on free fall
+			}
+		}
+		else
+		{
+			if ((theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1) ||
+				(theMapReference->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 1))
+			{
+				// Since the new position does not allow the player to move into, then go back to the old position
+				theENEMYPosition.y = (theMapReference->GetNumOfTiles_Height() - checkPosition_Y - 1) * theMapReference->GetTileSize_Height() - (theMapReference->GetTileSize_Height() >> 1);
+				// Set on free fall
+			}
+		}
+	}
+	else if (/*down*/1)
+	{
+		// Check if the player is still in mid air...
+		int checkPosition_X = (int)((theENEMYPosition.x - (theMapReference->GetTileSize_Width() >> 1)) / theMapReference->GetTileSize_Width());
+		int checkPosition_Y = theMapReference->GetNumOfTiles_Height() -
+			(int)ceil((float)(theENEMYPosition.y) / theMapReference->GetTileSize_Height());
+		if (((int)(theENEMYPosition.x - (theMapReference->GetTileSize_Width() >> 1)) % theMapReference->GetTileSize_Width()) == 0)
+		{
+			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
+			{
+				// Since the new position does not allow the player to move into, then go back to the old position
+				theENEMYPosition.y = (theMapReference->GetNumOfTiles_Height() - checkPosition_Y) * theMapReference->GetTileSize_Height() + (theMapReference->GetTileSize_Height() >> 1);
+			}
+		}
+		else
+		{
+			if ((theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1) ||
+				(theMapReference->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 1))
+			{
+				// Since the new position does not allow the player to move into, then go back to the old position
+				theENEMYPosition.y = (theMapReference->GetNumOfTiles_Height() - checkPosition_Y) * theMapReference->GetTileSize_Height() + (theMapReference->GetTileSize_Height() >> 1);
+			}
+		}
+
+	}
 }

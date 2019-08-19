@@ -1,6 +1,7 @@
 #pragma once
 #include "Strategy.h"
 #include "Vector3.h"
+#include "Map.h"
 
 class CStrategy_Kill
 	: public CStrategy
@@ -36,7 +37,4 @@ public:
 private:
 	// Enemy AI State
 	CStrategy_Kill::CURRENT_STATE CurrentState;
-
-	int bounce;
-	int n;
 };
