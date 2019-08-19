@@ -822,9 +822,29 @@ void CScene2D::LoadMeshes(void)
 	{
 		MeshBuilder::GetInstance()->GenerateQuad("UI_BOX", Color(1, 0, 1), 1.f);
 		MeshBuilder::GetInstance()->GenerateQuad("UI_BOX2", Color(0, 0, 1), 1.f);
-		MeshBuilder::GetInstance()->GenerateQuad("Stamina_Filling", Color(1, 1, 1), 1.f);
-		MeshBuilder::GetInstance()->GetMesh("Stamina_Filling")->textureID = LoadTGA("Image//Sprites//Stamina_Filling.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Stamina_Green", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Stamina_Green")->textureID = LoadTGA("Image//Sprites//Stamina_Green.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Stamina_Amber", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Stamina_Amber")->textureID = LoadTGA("Image//Sprites//Stamina_Amber.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Stamina_Red", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Stamina_Red")->textureID = LoadTGA("Image//Sprites//Stamina_Red.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Stamina_Bar", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Stamina_Bar")->textureID = LoadTGA("Image//Sprites//Stamina_Bar.tga");
+
+		MeshBuilder::GetInstance()->GenerateQuad("Heart_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Heart_1")->textureID = LoadTGA("Image//Sprites//Heart_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Heart_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Heart_2")->textureID = LoadTGA("Image//Sprites//Heart_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Heart_3", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Heart_3")->textureID = LoadTGA("Image//Sprites//Heart_3.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Heart_4", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Heart_4")->textureID = LoadTGA("Image//Sprites//Heart_4.tga");
+	}
+	// Title Screen
+	{
+		MeshBuilder::GetInstance()->GenerateQuad("Title_Screen", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Title_Screen")->textureID = LoadTGA("Image//Title_Screen.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Title_Screen2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Title_Screen2")->textureID = LoadTGA("Image//Title_Screen2.tga");
 	}
 }
