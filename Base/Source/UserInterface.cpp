@@ -48,7 +48,7 @@ UserInterface::UserInterface()
 
 	thePlayerInfo = CPlayerInfo2D::GetInstance();
 
-	staminaBar = Create::Sprite2DObject("Stamina_Green",
+	staminaBar = Create::Sprite2DObject("Stamina_Filling",
 		Vector3((thePlayerInfo->GetRollSpeed() - 0.3f) / 2 + 18, 210.f, 0.0f),// Note : replace 0.5 with stamina????
 		Vector3((thePlayerInfo->GetRollSpeed() - 0.3f), 14.f, 0.0f));
 

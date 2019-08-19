@@ -825,7 +825,8 @@ void CScene2D::LoadMeshes(void)
 	{
 		MeshBuilder::GetInstance()->GenerateQuad("UI_BOX", Color(1, 0, 1), 1.f);
 		MeshBuilder::GetInstance()->GenerateQuad("UI_BOX2", Color(0, 0, 1), 1.f);
-		MeshBuilder::GetInstance()->GenerateQuad("Stamina_Green", Color(0, 1, 0), 1.f);
+		MeshBuilder::GetInstance()->GenerateQuad("Stamina_Filling", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Stamina_Filling")->textureID = LoadTGA("Image//Sprites//Stamina_Filling.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Stamina_Bar", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Stamina_Bar")->textureID = LoadTGA("Image//Sprites//Stamina_Bar.tga");
 	}
