@@ -402,11 +402,18 @@ void CPlayerInfo2D::Update(double dt)
 	//if (KeyboardController::GetInstance()->IsKeyDown('S'))
 	//	MoveUpDown(false, 1.0f);
 	
-
-	if (KeyboardController::GetInstance()->IsKeyPressed('Q') && rollBounceTime > rollBounceTimeLimit || !isFacingRight() && isRolling()) // Roll Left
-		MoveLeftRight(true, rollSpeed);
-	else if (KeyboardController::GetInstance()->IsKeyPressed('E') && rollBounceTime > rollBounceTimeLimit || isFacingRight() && isRolling()) // Roll Right
-		MoveLeftRight(false, rollSpeed);
+	
+	if (isRolling())
+		MoveLeftRight(!isFacingRight(), rollSpeed);
+	else if (KeyboardController::GetInstance()->IsKeyPressed('L') && rollBounceTime > rollBounceTimeLimit && !isAttacking())
+	{
+		bool direction = !isFacingRight();
+		if (KeyboardController::GetInstance()->IsKeyDown('A'))
+			direction = true;
+		else if (KeyboardController::GetInstance()->IsKeyDown('D'))
+			direction = false;
+		MoveLeftRight(direction, rollSpeed);
+	}
 	else if (KeyboardController::GetInstance()->IsKeyDown('A')  && !KeyboardController::GetInstance()->IsKeyPressed('J')) // Move Left
 		MoveLeftRight(true, m_dMoveSpeed);
 	else if (KeyboardController::GetInstance()->IsKeyDown('D') && !KeyboardController::GetInstance()->IsKeyPressed('J')) // Move Right
@@ -540,11 +547,11 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 		(int)ceil(position.y / theMapReference->GetTileSize_Height());
 
 	// Check if the hero can move sideways
-	if (KeyboardController::GetInstance()->IsKeyPressed('Q') || isRolling() && !isFacingRight())
+	if (KeyboardController::GetInstance()->IsKeyPressed('L') && (KeyboardController::GetInstance()->IsKeyDown('A') || !isFacingRight() && !KeyboardController::GetInstance()->IsKeyDown('D')) || isRolling() && !isFacingRight())
 	{
 	// Find the tile number which the player's left side is on
 	checkPosition_X = (int)((position.x - (tileSize_Width >> 1)) / tileSize_Width);
-	if (KeyboardController::GetInstance()->IsKeyPressed('Q') && rollBounceTime > rollBounceTimeLimit)
+	if (KeyboardController::GetInstance()->IsKeyPressed('L') && rollBounceTime > rollBounceTimeLimit)
 	{
 		SetAnimationStatus(CAnimation::P_ROLL_L1);
 		Roll();
@@ -557,11 +564,11 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 		}
 	}
 	}
-	else if (KeyboardController::GetInstance()->IsKeyPressed('E') || isRolling() && isFacingRight())
+	else if (KeyboardController::GetInstance()->IsKeyPressed('L') && (KeyboardController::GetInstance()->IsKeyDown('D') || isFacingRight() && !KeyboardController::GetInstance()->IsKeyDown('A')) || isRolling() && isFacingRight())
 	{
 	// Find the tile number which the player's right side is on
 	checkPosition_X = (int)((position.x + (tileSize_Width >> 1)) / tileSize_Width);
-	if (KeyboardController::GetInstance()->IsKeyPressed('E') && rollBounceTime > rollBounceTimeLimit)
+	if (KeyboardController::GetInstance()->IsKeyPressed('L') && rollBounceTime > rollBounceTimeLimit)
 	{
 		SetAnimationStatus(CAnimation::P_ROLL_R1);
 		Roll();
