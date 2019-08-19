@@ -3,9 +3,6 @@
 
 #include "MeshBuilder.h"
 #include "Application.h"
-#include "GL\glew.h"
-#include "LoadTGA.h"
-#include "Mesh.h"
 
 using namespace std;
 UserInterface::UserInterface()
@@ -13,6 +10,7 @@ UserInterface::UserInterface()
 	, maxChoices(SC_TOTAL)
 	, screen(SC_MAIN)
 	, theHeartInfo(NULL)
+	, barStatus(0)
 {
 	theHeartInfo = Hearts::GetInstance();
 	theHeartInfo->Init();
@@ -20,17 +18,7 @@ UserInterface::UserInterface()
 	{
 		float halfWindowWidth = Application::GetInstance().GetWindowWidth() / 2.0f;
 		float halfWindowHeight = Application::GetInstance().GetWindowHeight() / 2.0f;
-		// Hearts
-		{
-			MeshBuilder::GetInstance()->GenerateQuad("Heart_1", Color(1, 1, 1), 1.f);
-			MeshBuilder::GetInstance()->GetMesh("Heart_1")->textureID = LoadTGA("Image//Sprites//Heart_1.tga");
-			MeshBuilder::GetInstance()->GenerateQuad("Heart_2", Color(1, 1, 1), 1.f);
-			MeshBuilder::GetInstance()->GetMesh("Heart_2")->textureID = LoadTGA("Image//Sprites//Heart_2.tga");
-			MeshBuilder::GetInstance()->GenerateQuad("Heart_3", Color(1, 1, 1), 1.f);
-			MeshBuilder::GetInstance()->GetMesh("Heart_3")->textureID = LoadTGA("Image//Sprites//Heart_3.tga");
-			MeshBuilder::GetInstance()->GenerateQuad("Heart_4", Color(1, 1, 1), 1.f);
-			MeshBuilder::GetInstance()->GetMesh("Heart_4")->textureID = LoadTGA("Image//Sprites//Heart_4.tga");
-		}
+
 		heartEntity = new SpriteEntity*[theHeartInfo->GetFrameTotal()];
 		heartEntity[0] = Create::Sprite2DObject("Heart_1",
 			Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
@@ -44,18 +32,34 @@ UserInterface::UserInterface()
 		heartEntity[3] = Create::Sprite2DObject("Heart_4",
 			Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 			Vector3(16.0f, 16.0f, 0.0f));
+
+
+		thePlayerInfo = CPlayerInfo2D::GetInstance();
+
+		staminaBar = new SpriteEntity*[3];
+		staminaBar[0] = Create::Sprite2DObject("Stamina_Green",
+			Vector3((thePlayerInfo->GetRollSpeed() - 0.3f) / 2 + 18, 210.f, 0.0f),// Note : replace 0.5 with stamina????
+			Vector3((thePlayerInfo->GetRollSpeed() - 0.3f), 14.f, 0.0f));
+		staminaBar[1] = Create::Sprite2DObject("Stamina_Amber",
+			Vector3((thePlayerInfo->GetRollSpeed() - 0.3f) / 2 + 18, 210.f, 0.0f),
+			Vector3((thePlayerInfo->GetRollSpeed() - 0.3f), 14.f, 0.0f));
+		staminaBar[2] = Create::Sprite2DObject("Stamina_Red",
+			Vector3((thePlayerInfo->GetRollSpeed() - 0.3f) / 2 + 18, 210.f, 0.0f),
+			Vector3((thePlayerInfo->GetRollSpeed() - 0.3f), 14.f, 0.0f));
+
+		staminaBattery = Create::Sprite2DObject("Stamina_Bar",
+			Vector3(32.f, 210.f, 0.0f),
+			Vector3(32.0f, 16.0f, 0.0f));
+
+		titleScreen = new SpriteEntity*[2];
+		titleScreen[0] = Create::Sprite2DObject("Title_Screen",
+			Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+			Vector3(360.0f, 240.0f, 0.0f));
+		titleScreen[1] = Create::Sprite2DObject("Title_Screen2",
+			Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+			Vector3(360.0f, 240.0f, 0.0f));
 	}
 
-	thePlayerInfo = CPlayerInfo2D::GetInstance();
-
-	staminaBar = Create::Sprite2DObject("Stamina_Filling",
-		Vector3((thePlayerInfo->GetRollSpeed() - 0.3f) / 2 + 18, 210.f, 0.0f),// Note : replace 0.5 with stamina????
-		Vector3((thePlayerInfo->GetRollSpeed() - 0.3f), 14.f, 0.0f));
-
-	staminaBattery = Create::Sprite2DObject("Stamina_Bar",
-		Vector3(32.f, 210.f, 0.0f),
-		Vector3(32.0f, 16.0f, 0.0f));
-	staminaBattery;
 	float fontSize = 16.0f;
 	float halfFontSize = fontSize / 2.0f;
 	for (int i = 0; i < 2; ++i)
@@ -87,14 +91,26 @@ UserInterface::~UserInterface()
 	}
 	delete heartEntity;
 	heartEntity = NULL;
-	delete staminaBar;
-	staminaBar = NULL;
 	delete staminaBattery;
 	staminaBattery = NULL;
 	for (int i = 0; i < 3; ++i)
 	{
 		delete buttonObj[i];
 	}
+	for (int i = 0; i < 2; ++i)
+	{
+		delete titleScreen[i];
+		titleScreen[i] = NULL;
+	}
+	delete titleScreen;
+	titleScreen = NULL;
+	for (int i = 0; i < 3; ++i)
+	{
+		delete staminaBar[i];
+		staminaBar[i] = NULL;
+	}
+	delete staminaBar;
+	staminaBar = NULL;
 
 }
 
@@ -173,8 +189,15 @@ bool UserInterface::Update(double dt)
 	{
 		// Heart update
 		theHeartInfo->Update(dt);
-		staminaBar->SetScale(Vector3((thePlayerInfo->GetRollSpeed()-0.3f) * 50,staminaBar->GetScale().y,staminaBar->GetScale().z));
-		staminaBar->SetPosition(Vector3(staminaBar->GetScale().x / 2 + 18, staminaBar->GetPosition().y, staminaBar->GetPosition().z));
+		barStatus = 0;
+		if (thePlayerInfo->GetRollSpeed() < 0.65f)
+		{
+			barStatus = 1;
+			if (thePlayerInfo->GetRollSpeed() < 0.5f)
+				barStatus = 2;
+		}
+		staminaBar[barStatus]->SetScale(Vector3((thePlayerInfo->GetRollSpeed()-0.3f) * 50,staminaBar[barStatus]->GetScale().y,staminaBar[barStatus]->GetScale().z));
+		staminaBar[barStatus]->SetPosition(Vector3(staminaBar[barStatus]->GetScale().x / 2 + 18, staminaBar[barStatus]->GetPosition().y, staminaBar[barStatus]->GetPosition().z));
 
 		std::ostringstream ss;
 		ss.precision(5);
@@ -246,6 +269,10 @@ void UserInterface::Render()// this is at the back since it needs to be on top? 
 {
 	switch(screen) {
 	case SC_MAIN:
+		if (KeyboardController::GetInstance()->IsKeyDown('F'))
+			titleScreen[1]->RenderUI();
+		else
+			titleScreen[0]->RenderUI();
 		buttonObj[0]->RenderUI();
 		buttonObj[1]->RenderUI();
 		buttonObj[2]->RenderUI();
@@ -256,7 +283,7 @@ void UserInterface::Render()// this is at the back since it needs to be on top? 
 			heartEntity[theHeartInfo->GetFrameState()]->SetPosition(Vector3(24 * i + 64, 210, 0));
 			heartEntity[theHeartInfo->GetFrameState()]->RenderUI();
 		}
-		staminaBar->RenderUI();
+		staminaBar[barStatus]->RenderUI();
 		staminaBattery->RenderUI();
 		textObj[0]->RenderUI();
 		textObj[1]->RenderUI();

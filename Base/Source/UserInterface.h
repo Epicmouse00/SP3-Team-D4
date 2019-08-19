@@ -25,9 +25,12 @@ private:
 	int maxChoices;
 	SCREEN_TYPE screen;
 
+	SpriteEntity** titleScreen;
+
 	SpriteEntity** heartEntity;
 	UIButton* buttonObj[3];
-	SpriteEntity* staminaBar;
+	SpriteEntity** staminaBar;
+	int barStatus;
 	SpriteEntity* staminaBattery;
 	TextEntity* textObj[2];
 
