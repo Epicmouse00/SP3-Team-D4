@@ -36,6 +36,7 @@
     <ClCompile Include="Source\Scene2D\Slash.cpp" />
     <ClCompile Include="Source\Scene2D\Strategy.cpp" />
     <ClCompile Include="Source\Scene2D\Strategy_Kill.cpp" />
+    <ClCompile Include="Source\Scene2D\Strategy_Shoot.cpp" />
     <ClCompile Include="Source\Scene2D\TreasureChest.cpp" />
     <ClCompile Include="Source\SceneText.cpp" />
     <ClCompile Include="Source\SkyBox\SkyBoxEntity.cpp" />
@@ -72,6 +73,7 @@
     <ClInclude Include="Source\Scene2D\Slash.h" />
     <ClInclude Include="Source\Scene2D\Strategy.h" />
     <ClInclude Include="Source\Scene2D\Strategy_Kill.h" />
+    <ClInclude Include="Source\Scene2D\Strategy_Shoot.h" />
     <ClInclude Include="Source\Scene2D\TreasureChest.h" />
     <ClInclude Include="Source\SceneText.h" />
     <ClInclude Include="Source\SkyBox\SkyBoxEntity.h" />

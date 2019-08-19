@@ -36,6 +36,7 @@
     <ClCompile Include="Source\UserInterface.cpp" />
     <ClCompile Include="Source\WeaponInfo\Pistol.cpp" />
     <ClCompile Include="Source\WeaponInfo\WeaponInfo.cpp" />
+    <ClCompile Include="Source\Scene2D\Strategy_Shoot.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h" />
@@ -72,6 +73,7 @@
     <ClInclude Include="Source\UserInterface.h" />
     <ClInclude Include="Source\WeaponInfo\Pistol.h" />
     <ClInclude Include="Source\WeaponInfo\WeaponInfo.h" />
+    <ClInclude Include="Source\Scene2D\Strategy_Shoot.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\Texture.fragmentshader" />

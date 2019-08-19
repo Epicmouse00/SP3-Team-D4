@@ -1,4 +1,4 @@
-#include "Strategy_Kill.h"
+#include "Strategy_Shoot.h"
 #include <iostream>
 
 using namespace std;
@@ -6,48 +6,44 @@ using namespace std;
 /********************************************************************************
 Constructor
 ********************************************************************************/
-CStrategy_Kill::CStrategy_Kill()
+CStrategy_Shoot::CStrategy_Shoot()
 {
-	bounce = 0;
 }
 
 /********************************************************************************
 Destructor
 ********************************************************************************/
-CStrategy_Kill::~CStrategy_Kill()
+CStrategy_Shoot::~CStrategy_Shoot()
 {
 }
 
 /********************************************************************************
  Update method
 ********************************************************************************/
-void CStrategy_Kill::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition)
+void CStrategy_Shoot::Update(Vector3& theDestination, Vector3& theEnemyPosition)
 {
 	// Decide which state to change to
-	int distanceHeroToEnemy = CalculateDistance(PlayerPosition, theEnemyPosition);
+	int distanceHeroToEnemy = CalculateDistance(theDestination, theEnemyPosition);
 	if (distanceHeroToEnemy < AI_STATE_ATTACK*AI_STATE_ATTACK)
 	{		
-		CurrentState = ATTACK;
+		if (distanceHeroToEnemy < AI_STATE_REPEL*AI_STATE_REPEL)
+			CurrentState = REPEL;
+		else
+			CurrentState = ATTACK;
 	}
 	else
-		CurrentState = PATROL;
-
-	++bounce;
-	if (bounce > 60)
-	{
-		bounce = 0;
-		n = Math::RandIntMinMax(0, 1);
-	}
+		CurrentState = IDLE;
 
 	// Based on the current state, determine enemy behaviour
 	switch(CurrentState)
 	{
-	case PATROL:
-		if (bounce < 17)
-			theEnemyPosition.x = theEnemyPosition.x + (n ? 1 : -1);
-		break;
 	case ATTACK:
-		theEnemyPosition.x = theEnemyPosition.x + (PlayerPosition.x - theEnemyPosition.x > 0 ? 2 : -2);
+		//theEnemyPosition.x = theEnemyPosition.x + (theDestination.x - theEnemyPosition.x > 0 ? 1 : -1);
+
+		
+		break;
+	case REPEL:
+		theEnemyPosition.x = theEnemyPosition.x + (theDestination.x - theEnemyPosition.x > 0 ? -1 : 1 );
 		break;
 	default:
 		// Do nothing if idling
@@ -58,7 +54,7 @@ void CStrategy_Kill::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition)
 /********************************************************************************
  Set the destination for this strategy
  ********************************************************************************/
-void CStrategy_Kill::SetDestination(const float x, const float y)
+void CStrategy_Shoot::SetDestination(const float x, const float y)
 {
 	theDestination.x = x;
 	theDestination.y = y;
@@ -67,7 +63,7 @@ void CStrategy_Kill::SetDestination(const float x, const float y)
 /********************************************************************************
  Get the destination for this strategy
  ********************************************************************************/
-int CStrategy_Kill::GetDestination_x(void)
+int CStrategy_Shoot::GetDestination_x(void)
 {
 	return theDestination.x;
 }
@@ -75,7 +71,7 @@ int CStrategy_Kill::GetDestination_x(void)
 /********************************************************************************
  Get the destination for this strategy
  ********************************************************************************/
-int CStrategy_Kill::GetDestination_y(void)
+int CStrategy_Shoot::GetDestination_y(void)
 {
 	return theDestination.y;
 }
@@ -83,7 +79,7 @@ int CStrategy_Kill::GetDestination_y(void)
 /********************************************************************************
  Get the destination for this strategy
  ********************************************************************************/
-Vector3 CStrategy_Kill::GetDestination(void)
+Vector3 CStrategy_Shoot::GetDestination(void)
 {
 	return theDestination;
 }
@@ -91,7 +87,7 @@ Vector3 CStrategy_Kill::GetDestination(void)
 /********************************************************************************
  Get the FSM state for this strategy
  ********************************************************************************/
-CStrategy_Kill::CURRENT_STATE CStrategy_Kill::GetState(void)
+CStrategy_Shoot::CURRENT_STATE CStrategy_Shoot::GetState(void)
 {
 	return CurrentState;
 }
@@ -99,7 +95,7 @@ CStrategy_Kill::CURRENT_STATE CStrategy_Kill::GetState(void)
 /********************************************************************************
  Set the FSM state for this strategy
  ********************************************************************************/
-void CStrategy_Kill::SetState(CStrategy_Kill::CURRENT_STATE theEnemyState)
+void CStrategy_Shoot::SetState(CStrategy_Shoot::CURRENT_STATE theEnemyState)
 {
 	CurrentState = theEnemyState;
 }

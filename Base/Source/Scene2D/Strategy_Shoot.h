@@ -2,14 +2,14 @@
 #include "Strategy.h"
 #include "Vector3.h"
 
-class CStrategy_Kill
+class CStrategy_Shoot
 	: public CStrategy
 {
 public:
-	CStrategy_Kill(void);
-	~CStrategy_Kill(void);
+	CStrategy_Shoot(void);
+	~CStrategy_Shoot(void);
 
-	void Update(Vector3& PlayerPosition, Vector3& theEnemyPosition);
+	void Update(Vector3& theDestination, Vector3& theEnemyPosition);
 	void SetDestination(const float x, const float y);
 
 	int GetDestination_x(void);
@@ -20,23 +20,20 @@ public:
 	enum CURRENT_STATE
 	{
 		IDLE,
-		PATROL,
 		REPEL,
 		ATTACK,
 		NUM_ENEMY_STATE,
 	};
 	enum AI_STATE_RANGE
 	{
-		AI_STATE_ATTACK = 80,
+		AI_STATE_REPEL = 64,
+		AI_STATE_ATTACK = 96,
 		NUM_AI_STATE_RANGE,
 	};
-	CStrategy_Kill::CURRENT_STATE GetState(void);
-	void SetState(CStrategy_Kill::CURRENT_STATE);
+	CStrategy_Shoot::CURRENT_STATE GetState(void);
+	void SetState(CStrategy_Shoot::CURRENT_STATE);
 
 private:
 	// Enemy AI State
-	CStrategy_Kill::CURRENT_STATE CurrentState;
-
-	int bounce;
-	int n;
+	CStrategy_Shoot::CURRENT_STATE CurrentState;
 };
