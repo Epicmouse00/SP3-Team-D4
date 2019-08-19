@@ -148,7 +148,8 @@ bool EntityManager::CheckForCollision(void)
 				if (CheckCircleCollision(thisEntity, player) == true)// can use multiple of this based on thePlayerInfoState
 				{//we probably are not calling the function checkCircleCollision.. since it needs hard code
 					thisEntity->SetIsDone(true);
-					thePlayerInfo->SetHp(thePlayerInfo->GetHp()-1);
+					if(thePlayerInfo->GetHp()!=0) // Note : temporary placeholder
+						thePlayerInfo->SetHp(thePlayerInfo->GetHp()-1);
 				}
 			}
 			else {//this just checks between enemies and player projectiles, Because anything that does not hurt player probably hurts enemies?
