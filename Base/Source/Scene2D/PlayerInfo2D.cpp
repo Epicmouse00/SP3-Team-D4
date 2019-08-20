@@ -44,15 +44,16 @@ CPlayerInfo2D::CPlayerInfo2D(void)
 	, rearMapOffset_y(0)
 	, rearMapFineOffset_x(0)
 	, rearMapFineOffset_y(0)
-	, attackBounceTime(0)
-	, rollBounceTime(0)
-	, dashBounceTime(0)
+	, attackBounceTime(1)
+	, rollBounceTime(1)
+	, dashBounceTime(1)
 	, attackBounceTimeLimit(0.5)
 	, rollBounceTimeLimit(0.7)
 	, dashBounceTimeLimit(0.9)
 	, stamina(1.f)
 	, secondAttack(false)
 	, dashPower(0.f)
+	, chargeAttack(0.f)
 {
 }
 
@@ -291,7 +292,7 @@ void CPlayerInfo2D::UpdateJumpUpwards(double dt)
 	int currentPosition_Y = theMapReference->GetNumOfTiles_Height() - (int)ceil((float)position.y / tileSize_Height);
 
 	// Update the jump
-	position.y += m_dJumpSpeed;
+	position.y += static_cast<float>(m_dJumpSpeed);
 	m_dJumpSpeed -= 0.5f;
 	if (m_dJumpSpeed <= 0)
 		SetOnFreeFall(true);
@@ -301,7 +302,7 @@ void CPlayerInfo2D::UpdateJumpUpwards(double dt)
 	if (position.y + tileSize_Height > theMapReference->GetNumOfTiles_Height()*theMapReference->GetTileSize_Height())
 	{
 		SetOnFreeFall(true);
-		position.y = theMapReference->GetNumOfTiles_Height()*theMapReference->GetTileSize_Height() - tileSize_Height;
+		position.y = static_cast<float>(theMapReference->GetNumOfTiles_Height()*theMapReference->GetTileSize_Height() - tileSize_Height);
 		return;
 	}
 	// Check if the player is stopped by obstacles
@@ -315,7 +316,7 @@ void CPlayerInfo2D::UpdateJumpUpwards(double dt)
 			if (theMapReference->theScreenMap[i][checkPosition_X] == 1)
 			{
 				// Since the new position does not allow the player to move into, then go back to the old position
-				position.y = (theMapReference->GetNumOfTiles_Height() - i - 1) * tileSize_Height - (tileSize_Height >> 1);
+				position.y = static_cast<float>((theMapReference->GetNumOfTiles_Height() - i - 1) * tileSize_Height - (tileSize_Height >> 1));
 				// Set on free fall
 				SetOnFreeFall(true);
 				break;
@@ -327,7 +328,7 @@ void CPlayerInfo2D::UpdateJumpUpwards(double dt)
 				(theMapReference->theScreenMap[i][checkPosition_X + 1] == 1))
 			{
 				// Since the new position does not allow the player to move into, then go back to the old position
-				position.y = (theMapReference->GetNumOfTiles_Height() - i - 1) * tileSize_Height - (tileSize_Height >> 1);
+				position.y = static_cast<float>((theMapReference->GetNumOfTiles_Height() - i - 1) * tileSize_Height - (tileSize_Height >> 1));
 				// Set on free fall
 				SetOnFreeFall(true);
 				break;
@@ -346,13 +347,13 @@ void CPlayerInfo2D::UpdateFreeFall(double dt)
 	int currentPosition_Y = theMapReference->GetNumOfTiles_Height() - (int)ceil((float)position.y / tileSize_Height);
 
 	// Update the free fall
-	position.y -= m_dFallSpeed;
+	position.y -= static_cast<float>(m_dFallSpeed);
 	if (m_dFallSpeed <= 6)
 	m_dFallSpeed += 0.5;
 	if (position.y - tileSize_Height < tileSize_Height/2 - 2)
 	{
 		StopVerticalMovement();// Note : Dies/-1 hp
-		position.y = tileSize_Height + tileSize_Height/2;
+		position.y = static_cast<float>(tileSize_Height + tileSize_Height/2);
 		return;
 	}
 	// Check if the player is still in mid air...
@@ -366,7 +367,7 @@ void CPlayerInfo2D::UpdateFreeFall(double dt)
 			if (theMapReference->theScreenMap[i][checkPosition_X] == 1)
 			{
 				// Since the new position does not allow the player to move into, then go back to the old position
-				position.y = (theMapReference->GetNumOfTiles_Height() - i) * tileSize_Height + (tileSize_Height >> 1);
+				position.y = static_cast<float>((theMapReference->GetNumOfTiles_Height() - i) * tileSize_Height + (tileSize_Height >> 1));
 				// Stop all vertical movement
 				StopVerticalMovement();
 				m_bJumped = false;
@@ -381,7 +382,7 @@ void CPlayerInfo2D::UpdateFreeFall(double dt)
 				(theMapReference->theScreenMap[i][checkPosition_X + 1] == 1))
 			{
 				// Since the new position does not allow the player to move into, then go back to the old position
-				position.y = (theMapReference->GetNumOfTiles_Height() - i) * tileSize_Height + (tileSize_Height >> 1);
+				position.y = static_cast<float>((theMapReference->GetNumOfTiles_Height() - i) * tileSize_Height + (tileSize_Height >> 1));
 				// Stop all vertical movement
 				StopVerticalMovement();
 				m_bJumped = false;
@@ -409,7 +410,7 @@ void CPlayerInfo2D::Update(double dt)
 	if (dashPower && !KeyboardController::GetInstance()->IsKeyDown('K'))
 	{
 		MoveLeftRight(!isFacingRight(), 3.f);
-		dashPower -= dt * 10.0f;
+		dashPower -= static_cast<float>(dt * 10.0f);
 		if (dashPower <= 0.f)
 		{
 			dashPower = 0.f;
@@ -504,9 +505,9 @@ void CPlayerInfo2D::Update(double dt)
 		dashBounceTime = 0.f;
 
 	if (position.x + (tileSize_Width >> 1) > theMapReference->getNumOfTiles_MapWidth() * theMapReference->GetTileSize_Width())
-		position.x = theMapReference->getNumOfTiles_MapWidth() * theMapReference->GetTileSize_Width() - (tileSize_Width>>1);
+		position.x = static_cast<float>(theMapReference->getNumOfTiles_MapWidth() * theMapReference->GetTileSize_Width() - (tileSize_Width>>1));
 	if (position.x - (tileSize_Width >> 1) < 0)
-		position.x = 0 + tileSize_Width>>1;
+		position.x = static_cast<float>(0 + tileSize_Width>>1);
 
 	if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumped && isOnAir() && !m_bDoubleJump && isRolling() && !isAttacking())
 	{
@@ -616,7 +617,7 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 		{
 			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
 			{
-				position.x = (checkPosition_X + 1) * tileSize_Width + (tileSize_Width >> 1);
+				position.x = static_cast<float>((checkPosition_X + 1) * tileSize_Width + (tileSize_Width >> 1));
 			}
 		}
 	}
@@ -636,7 +637,7 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
 			{
 				// this part causes the player to be stuck when there is a tile on its right
-				position.x = (checkPosition_X - 1) * tileSize_Width + (tileSize_Width >> 1);
+				position.x = static_cast<float>((checkPosition_X - 1) * tileSize_Width + (tileSize_Width >> 1));
 			}
 
 		}
@@ -652,7 +653,7 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 		{
 			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
 			{
-				position.x = (checkPosition_X + 1) * tileSize_Width + (tileSize_Width >> 1);
+				position.x = static_cast<float>((checkPosition_X + 1) * tileSize_Width + (tileSize_Width >> 1));
 			}
 		}
 	}
@@ -667,7 +668,7 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 		{
 			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
 			{
-				position.x = (checkPosition_X - 1) * tileSize_Width + (tileSize_Width >> 1);
+				position.x = static_cast<float>((checkPosition_X - 1) * tileSize_Width + (tileSize_Width >> 1));
 			}
 		}
 	}
@@ -822,7 +823,7 @@ void CPlayerInfo2D::Constrain(void)
 	//	if (mapOffset_x < 0)
 	//		mapOffset_x = 0;
 	//}
-	mapOffset_x = position.x - (tileSize_Width >> 1) - maxBoundary.x;// whatevbs.. idc anymore...
+	mapOffset_x = static_cast<int>(position.x - (tileSize_Width >> 1) - maxBoundary.x);// whatevbs.. idc anymore...
 	if (mapOffset_x + theMapReference->getScreenWidth() > theMapReference->GetNumOfTiles_Width() * theMapReference->GetTileSize_Width())
 			mapOffset_x = theMapReference->GetNumOfTiles_Width() * theMapReference->GetTileSize_Width() - theMapReference->getScreenWidth();
 	if (mapOffset_x < 0)
@@ -893,11 +894,11 @@ Vector3 CPlayerInfo2D::Token2Vector(string token)
 	std::istringstream ss(token);
 	std::string aToken = "";
 	std::getline(ss, aToken, ',');
-	tempVector.x = Token2Double(aToken);
+	tempVector.x = static_cast<float>(Token2Double(aToken));
 	std::getline(ss, aToken, ',');
-	tempVector.y = Token2Double(aToken);
+	tempVector.y = static_cast<float>(Token2Double(aToken));
 	std::getline(ss, aToken, ',');
-	tempVector.z = Token2Double(aToken);
+	tempVector.z = static_cast<float>(Token2Double(aToken));
 
 	return tempVector;
 }
@@ -1260,7 +1261,7 @@ bool CPlayerInfo2D::StaminaDecrease(float decrease)
 
 void CPlayerInfo2D::StaminaRegen(float regen, double dt)
 {
-	stamina += dt * regen;
+	stamina += static_cast<float>(dt * regen);
 	if (stamina > 1.f)
 		stamina = 1.f;
 }

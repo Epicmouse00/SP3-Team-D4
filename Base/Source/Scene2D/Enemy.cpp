@@ -38,7 +38,7 @@ void CEnemy::Init(CMap* m_cMap)
  ********************************************************************************/
 void CEnemy::SetPos_x(int pos_x)
 {
-	position.x = pos_x;
+	position.x = static_cast<float>(pos_x);
 }
 
 /********************************************************************************
@@ -46,7 +46,7 @@ void CEnemy::SetPos_x(int pos_x)
  ********************************************************************************/
 void CEnemy::SetPos_y(int pos_y)
 {
-	position.y = pos_y;
+	position.y = static_cast<float>(pos_y);
 }
 
 /********************************************************************************
@@ -54,8 +54,8 @@ void CEnemy::SetPos_y(int pos_y)
  ********************************************************************************/
 void CEnemy::SetPos(const int pos_x, const int pos_y)
 {
-	position.x = pos_x;
-	position.y = pos_y;
+	position.x = static_cast<float>(pos_x);
+	position.y = static_cast<float>(pos_y);
 }
 
 /********************************************************************************
@@ -63,8 +63,8 @@ void CEnemy::SetPos(const int pos_x, const int pos_y)
  ********************************************************************************/
 void CEnemy::SetDestination(const int pos_x, const int pos_y)
 {
-	theDestination.x = pos_x;
-	theDestination.y = pos_y;
+	theDestination.x = static_cast<float>(pos_x);
+	theDestination.y = static_cast<float>(pos_y);
 	if (theStrategy != NULL)
 	{
 		theStrategy->SetDestination(theDestination.x, theDestination.y);
@@ -88,7 +88,7 @@ void CEnemy::SetDestination(Vector3 pos)
  ********************************************************************************/
 int CEnemy::GetPos_x(void) const
 {
-	return position.x;
+	return static_cast<int>(position.x);
 }
 
 /********************************************************************************
@@ -96,7 +96,7 @@ int CEnemy::GetPos_x(void) const
  ********************************************************************************/
 int CEnemy::GetPos_y(void) const
 {
-	return position.y;
+	return static_cast<int>(position.y);
 }
 
 /********************************************************************************
@@ -112,7 +112,7 @@ Vector3 CEnemy::GetPos(void) const
  ********************************************************************************/
 int CEnemy::GetDestination_x(void) const
 {
-	return theDestination.x;
+	return static_cast<int>(theDestination.x);
 }
 
 /********************************************************************************
@@ -120,7 +120,7 @@ int CEnemy::GetDestination_x(void) const
  ********************************************************************************/
 int CEnemy::GetDestination_y(void) const
 {
-	return theDestination.y;
+	return static_cast<int>(theDestination.y);
 }
 
 /********************************************************************************
@@ -180,7 +180,7 @@ void CEnemy::constrain()
 		{
 			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
 			{
-				position.x = (checkPosition_X + 1) * theMapReference->GetTileSize_Width() + (theMapReference->GetTileSize_Width() >> 1);
+				position.x = static_cast<float>((checkPosition_X + 1) * theMapReference->GetTileSize_Width() + (theMapReference->GetTileSize_Width() >> 1));
 			}
 		}
 	}
@@ -192,7 +192,7 @@ void CEnemy::constrain()
 		{
 			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
 			{
-				position.x = (checkPosition_X - 1) * theMapReference->GetTileSize_Width() + (theMapReference->GetTileSize_Width() >> 1);
+				position.x = static_cast<float>((checkPosition_X - 1) * theMapReference->GetTileSize_Width() + (theMapReference->GetTileSize_Width() >> 1));
 			}
 		}
 
@@ -208,7 +208,7 @@ void CEnemy::constrain()
 		{
 			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
 			{
-				position.y = (theMapReference->GetNumOfTiles_Height() - checkPosition_Y - 1) * theMapReference->GetTileSize_Height() - (theMapReference->GetTileSize_Height() >> 1);
+				position.y = static_cast<float>((theMapReference->GetNumOfTiles_Height() - checkPosition_Y - 1) * theMapReference->GetTileSize_Height() - (theMapReference->GetTileSize_Height() >> 1));
 			}
 		}
 		else
@@ -216,7 +216,7 @@ void CEnemy::constrain()
 			if ((theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1) ||
 				(theMapReference->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 1))
 			{
-				position.y = (theMapReference->GetNumOfTiles_Height() - checkPosition_Y - 1) * theMapReference->GetTileSize_Height() - (theMapReference->GetTileSize_Height() >> 1);
+				position.y = static_cast<float>((theMapReference->GetNumOfTiles_Height() - checkPosition_Y - 1) * theMapReference->GetTileSize_Height() - (theMapReference->GetTileSize_Height() >> 1));
 			}
 		}
 	}
@@ -230,7 +230,7 @@ void CEnemy::constrain()
 		{
 			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
 			{
-				position.y = (theMapReference->GetNumOfTiles_Height() - checkPosition_Y) * theMapReference->GetTileSize_Height() + (theMapReference->GetTileSize_Height() >> 1);
+				position.y = static_cast<float>((theMapReference->GetNumOfTiles_Height() - checkPosition_Y) * theMapReference->GetTileSize_Height() + (theMapReference->GetTileSize_Height() >> 1));
 			}
 		}
 		else
@@ -238,7 +238,7 @@ void CEnemy::constrain()
 			if ((theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1) ||
 				(theMapReference->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 1))
 			{
-				position.y = (theMapReference->GetNumOfTiles_Height() - checkPosition_Y) * theMapReference->GetTileSize_Height() + (theMapReference->GetTileSize_Height() >> 1);
+				position.y = static_cast<float>((theMapReference->GetNumOfTiles_Height() - checkPosition_Y) * theMapReference->GetTileSize_Height() + (theMapReference->GetTileSize_Height() >> 1));
 			}
 		}
 	}

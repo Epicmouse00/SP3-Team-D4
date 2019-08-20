@@ -206,11 +206,14 @@ private:
 	double dashBounceTimeLimit;
 
 	bool Roll();
-	// Roll Speed & Dash attack
+
 	float stamina;
 	bool StaminaDecrease(float decrease);
 	void StaminaRegen(float regen, double dt);
+
 	float dashPower;
+
+	float chargeAttack;
 
 	// Second Attack
 	bool secondAttack;

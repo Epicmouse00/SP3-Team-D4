@@ -182,8 +182,8 @@ void CScene2D::Init()
 	thePlayerInfo->Init();
 	thePlayerInfo->SetPos(Vector3(50.0f + kiHalfTileWidth, 100.0f + kiHalfTileHeight));
 	//thePlayerInfo->SetBoundary(Vector3(210.f, 230.0f, 0.0f), Vector3(10.0f, 10.0f, 0.0f));
-	thePlayerInfo->SetBoundary(Vector3(m_cMap->getScreenWidth() / 2, m_cMap->getScreenHeight(), 0.0f)
-		, Vector3(m_cMap->getScreenWidth() / 2, 0, 0.0f));
+	thePlayerInfo->SetBoundary(Vector3(static_cast<float>(m_cMap->getScreenWidth()) / 2, static_cast<float>(m_cMap->getScreenHeight()), 0.0f)
+		, Vector3(static_cast<float>(m_cMap->getScreenWidth()) / 2, 0, 0.0f));
 	thePlayerInfo->SetTileSize(m_cMap->GetTileSize_Width(), m_cMap->GetTileSize_Height());
 	thePlayerInfo->SetMap(m_cMap);
 	thePlayerInfo->SetRearMap(m_cRearMap);
@@ -376,7 +376,7 @@ void CScene2D::Init()
 				if (m_cMap->theScreenMap[height][width] == 101)
 				{
 					theEnemy[i] = Create::EnemyEntity(m_cMap, new CStrategy_Kill(), false
-						, Vector3(width * m_cMap->GetTileSize_Width(), 232 - height * m_cMap->GetTileSize_Height()));
+						, Vector3(static_cast<float>(width * m_cMap->GetTileSize_Width()), static_cast<float>(232 - height * m_cMap->GetTileSize_Height())));
 					++i;
 						if (i == m_iNumEnemy)
 						{
@@ -389,8 +389,8 @@ void CScene2D::Init()
 				break;
 		}
 	}
-	temporop = Create::Projectile("Corrupt_temp", Vector3(-m_cMap->getScreenWidth() / 2, m_cMap->getScreenHeight() / 2, 0)
-		, Vector3(m_cMap->getScreenWidth(), m_cMap->getScreenHeight(), 0), Vector3(1, 0, 0)
+	temporop = Create::Projectile("Corrupt_temp", Vector3(static_cast<float>(-m_cMap->getScreenWidth()) / 2, static_cast<float>(m_cMap->getScreenHeight()) / 2, 0)
+		, Vector3(static_cast<float>(m_cMap->getScreenWidth()), static_cast<float>(m_cMap->getScreenHeight()), 0), Vector3(1, 0, 0)
 		, 1.f, 20.f, EntityBase::ENTITY_TYPE::E_CORRUPTION);
 
 	Scene2D_Enemy = new SpriteEntity*[theEnemy[0]->GetFrameTotal()]; // Enemy stuff
@@ -534,10 +534,10 @@ void CScene2D::RenderTileMap()
 
 			if (m_cMap->theScreenMap[i][m] == 1)
 			{
-				Scene2D_TileGround->SetPosition(Vector3(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-															- thePlayerInfo->GetMapFineOffset_x(), 
-														224 - i*m_cMap->GetTileSize_Height() + kiHalfTileHeight, 
-														0.0f));
+				Scene2D_TileGround->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
+															- thePlayerInfo->GetMapFineOffset_x()), 
+														static_cast<float>(224 - i*m_cMap->GetTileSize_Height() + kiHalfTileHeight),
+															0.0f));
 				Scene2D_TileGround->RenderUI();
 			}
 			//else if (m_cMap->theScreenMap[i][m] == 2)
@@ -550,17 +550,17 @@ void CScene2D::RenderTileMap()
 			//}
 			else if (m_cMap->theScreenMap[i][m] == 3)
 			{
-				Scene2D_TileDoor->SetPosition(Vector3(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-					- thePlayerInfo->GetMapFineOffset_x(),
-					224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight,
+				Scene2D_TileDoor->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
+					- thePlayerInfo->GetMapFineOffset_x()),
+					static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
 					0.0f));
 				Scene2D_TileDoor->RenderUI();
 			}
 			else if (m_cMap->theScreenMap[i][m] == 10)
 			{
-				Scene2D_Goodies_TreasureChest->SetPosition(Vector3(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-					- thePlayerInfo->GetMapFineOffset_x(),
-					224 - i*m_cMap->GetTileSize_Height() + kiHalfTileHeight,
+				Scene2D_Goodies_TreasureChest->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
+					- thePlayerInfo->GetMapFineOffset_x()),
+					static_cast<float>(224 - i*m_cMap->GetTileSize_Height() + kiHalfTileHeight),
 					0.0f));
 				Scene2D_Goodies_TreasureChest->RenderUI();
 			}
@@ -585,17 +585,17 @@ void CScene2D::RenderRearTileMap(void)
 
 			if (m_cRearMap->theScreenMap[i][m] == 1)
 			{
-				Scene2D_RearStructure->SetPosition(Vector3(k*m_cRearMap->GetTileSize_Width() + kiHalfTileWidth
-					- thePlayerInfo->GetRearMapFineOffset_x(),
-					224 - i*m_cRearMap->GetTileSize_Height() + kiHalfTileHeight,
+				Scene2D_RearStructure->SetPosition(Vector3(static_cast<float>(k*m_cRearMap->GetTileSize_Width() + kiHalfTileWidth
+					- thePlayerInfo->GetRearMapFineOffset_x()),
+					static_cast<float>(224 - i*m_cRearMap->GetTileSize_Height() + kiHalfTileHeight),
 					0.0f));
 				Scene2D_RearStructure->RenderUI();
 			}
 			else if (m_cRearMap->theScreenMap[i][m] == 2)
 			{
-				Scene2D_RearStructure->SetPosition(Vector3(k*m_cRearMap->GetTileSize_Width() + kiHalfTileWidth
-					- thePlayerInfo->GetRearMapFineOffset_x(),
-					224 - i*m_cRearMap->GetTileSize_Height() + kiHalfTileHeight,
+				Scene2D_RearStructure->SetPosition(Vector3(static_cast<float>(k*m_cRearMap->GetTileSize_Width() + kiHalfTileWidth
+					- thePlayerInfo->GetRearMapFineOffset_x()),
+					static_cast<float>(224 - i*m_cRearMap->GetTileSize_Height() + kiHalfTileHeight),
 					0.0f));
 				Scene2D_RearStructure->RenderUI();
 			}
@@ -630,9 +630,9 @@ void CScene2D::RenderEnemy(void)
 
 			if (((theEnemy_x >= 0) && (theEnemy_x < m_cMap->GetNumOfTiles_Width()*m_cMap->GetTileSize_Width())) &&
 				((theEnemy_y >= 0) && (theEnemy_y < m_cMap->GetNumOfTiles_Height()*m_cMap->GetTileSize_Height())) &&
-				theEnemy[i]->GetFrameState() != CEnemy::C_TOTAL);
+				theEnemy[i]->GetFrameState() != CEnemy::C_TOTAL)
 			{
-				Scene2D_Enemy[theEnemy[i]->GetFrameState()]->SetPosition(Vector3(theEnemy_x, theEnemy_y, 0));
+				Scene2D_Enemy[theEnemy[i]->GetFrameState()]->SetPosition(Vector3(static_cast<float>(theEnemy_x), static_cast<float>(theEnemy_y), 0));
 				Scene2D_Enemy[theEnemy[i]->GetFrameState()]->RenderUI();
 			}
 		}
