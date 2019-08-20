@@ -3,6 +3,7 @@
 
 #include "MeshBuilder.h"
 #include "Application.h"
+#include "SoundEngine.h"
 
 using namespace std;
 UserInterface::UserInterface()
@@ -12,6 +13,7 @@ UserInterface::UserInterface()
 	, theHeartInfo(NULL)
 	, barStatus(0)
 {
+	CSoundEngine::GetInstance()->PlayBGM("bgmrroll");
 	theHeartInfo = Hearts::GetInstance();
 	theHeartInfo->Init();
 
@@ -145,6 +147,7 @@ bool UserInterface::Update(double dt)
 			switch (choice) {
 			case 2:
 				screen = SC_PLAY;
+				CSoundEngine::GetInstance()->PlayBGM("bgm");
 				ChangeScreen(screen);
 				return true;
 				break;

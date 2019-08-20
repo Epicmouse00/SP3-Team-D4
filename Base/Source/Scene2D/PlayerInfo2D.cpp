@@ -1271,8 +1271,6 @@ void CPlayerInfo2D::InitSound(void) const
 	CSoundEngine::GetInstance()->AddSound("door3", "Sound//door3.wav");
 	CSoundEngine::GetInstance()->AddSound("door4", "Sound//door4.wav");
 	CSoundEngine::GetInstance()->AddSound("death", "Sound//death.wav");
-
-	CSoundEngine::GetInstance()->PlayBGM("bgmrroll"); // Where do I change music?
 }
 
 bool CPlayerInfo2D::Roll()
