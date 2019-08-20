@@ -164,6 +164,11 @@ bool EntityManager::CheckForCollision(void)
 						{
 							if ((thisEntity->GetPosition() - theSlashInfo->position).Length() < thisEntity->GetScale().x / 2 + 16 / 2)
 							{
+								if (thisEntity->GetType() == thisEntity->E_ENEMY_PROJECTILES)
+								{
+									//thisEntity->SetType(thisEntity->E_PLAYER_PROJECTILES);
+									//thisEntity->
+								}
 								thisEntity->SetIsDone(true);
 								break;
 							}
@@ -182,6 +187,7 @@ bool EntityManager::CheckForCollision(void)
 							thisEntity->SetIsDone(true);
 							if (thePlayerInfo->GetHp() != 0) // Note : temporary placeholder
 								thePlayerInfo->SetHp(thePlayerInfo->GetHp() - 1);
+							break;
 						}
 					}
 				}
