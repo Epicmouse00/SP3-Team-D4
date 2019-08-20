@@ -7,7 +7,7 @@
 using namespace std;
 UserInterface::UserInterface()
 	: choice(2)
-	, maxChoices(SC_TOTAL)
+	, maxChoices(3)
 	, screen(SC_MAIN)
 	, theHeartInfo(NULL)
 	, barStatus(0)
@@ -38,14 +38,14 @@ UserInterface::UserInterface()
 
 		staminaBar = new SpriteEntity*[3];
 		staminaBar[0] = Create::Sprite2DObject("Stamina_Green",
-			Vector3((thePlayerInfo->GetRollSpeed() - 0.3f) / 2 + 18, 208.f, 0.0f),// Note : replace 0.5 with stamina????
-			Vector3((thePlayerInfo->GetRollSpeed() - 0.3f), 14.f, 0.0f));
+			Vector3(thePlayerInfo->GetStamina() / 2 + 18, 208.f, 0.0f),// Note : replace 0.5 with stamina????
+			Vector3(thePlayerInfo->GetStamina(), 14.f, 0.0f));
 		staminaBar[1] = Create::Sprite2DObject("Stamina_Amber",
-			Vector3((thePlayerInfo->GetRollSpeed() - 0.3f) / 2 + 18, 208.f, 0.0f),
-			Vector3((thePlayerInfo->GetRollSpeed() - 0.3f), 14.f, 0.0f));
+			Vector3(thePlayerInfo->GetStamina() / 2 + 18, 208.f, 0.0f),
+			Vector3(thePlayerInfo->GetStamina(), 14.f, 0.0f));
 		staminaBar[2] = Create::Sprite2DObject("Stamina_Red",
-			Vector3((thePlayerInfo->GetRollSpeed() - 0.3f) / 2 + 18, 208.f, 0.0f),
-			Vector3((thePlayerInfo->GetRollSpeed() - 0.3f), 14.f, 0.0f));
+			Vector3(thePlayerInfo->GetStamina() / 2 + 18, 208.f, 0.0f),
+			Vector3(thePlayerInfo->GetStamina(), 14.f, 0.0f));
 
 		staminaBattery = Create::Sprite2DObject("Stamina_Bar",
 			Vector3(32.f, 208.f, 0.0f),
@@ -174,6 +174,18 @@ bool UserInterface::Update(double dt)
 			}
 			buttonObj[choice]->SetSelected(true);
 		}
+		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RIGHT) || KeyboardController::GetInstance()->IsKeyPressed('D'))
+		{
+			screen = SC_SKILL_TREE;
+			ChangeScreen(screen);
+			return false;
+		}
+		if (KeyboardController::GetInstance()->IsKeyPressed(VK_LEFT) || KeyboardController::GetInstance()->IsKeyPressed('A'))
+		{
+			screen = SC_MENU2;
+			ChangeScreen(screen);
+			return false;
+		}
 		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN) || KeyboardController::GetInstance()->IsKeyPressed(VK_SPACE))
 		{
 			switch (choice) {
@@ -191,18 +203,50 @@ bool UserInterface::Update(double dt)
 		return false;
 		break;
 	}
+	case SC_SKILL_TREE:
+	{
+		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RIGHT) || KeyboardController::GetInstance()->IsKeyPressed('D'))
+		{
+			screen = SC_MENU2;
+			ChangeScreen(screen);
+			return false;
+		}
+		if (KeyboardController::GetInstance()->IsKeyPressed(VK_LEFT) || KeyboardController::GetInstance()->IsKeyPressed('A'))
+		{
+			screen = SC_PAUSE;
+			ChangeScreen(screen);
+			return false;
+		}
+		break;
+	}
+	case SC_MENU2:
+	{
+		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RIGHT) || KeyboardController::GetInstance()->IsKeyPressed('D'))
+		{
+			screen = SC_PAUSE;
+			ChangeScreen(screen);
+			return false;
+		}
+		if (KeyboardController::GetInstance()->IsKeyPressed(VK_LEFT) || KeyboardController::GetInstance()->IsKeyPressed('A'))
+		{
+			screen = SC_SKILL_TREE;
+			ChangeScreen(screen);
+			return false;
+		}
+		break;
+	}
 	case SC_PLAY: // This just checks for changes in UI* stuff while in play
 	{
 		// Heart update
 		theHeartInfo->Update(dt);
 		barStatus = 0;
-		if (thePlayerInfo->GetRollSpeed() < 0.65f)
+		if (thePlayerInfo->GetStamina() < 0.7f)
 		{
 			barStatus = 1;
-			if (thePlayerInfo->GetRollSpeed() < 0.5f)
+			if (thePlayerInfo->GetStamina() < 0.4f)
 				barStatus = 2;
 		}
-		staminaBar[barStatus]->SetScale(Vector3((thePlayerInfo->GetRollSpeed()-0.3f) * 50,staminaBar[barStatus]->GetScale().y,staminaBar[barStatus]->GetScale().z));
+		staminaBar[barStatus]->SetScale(Vector3((thePlayerInfo->GetStamina()) * 25, staminaBar[barStatus]->GetScale().y, staminaBar[barStatus]->GetScale().z));
 		staminaBar[barStatus]->SetPosition(Vector3(staminaBar[barStatus]->GetScale().x / 2 + 18, staminaBar[barStatus]->GetPosition().y, staminaBar[barStatus]->GetPosition().z));
 
 		std::ostringstream ss;
@@ -250,6 +294,20 @@ void UserInterface::ChangeScreen(SCREEN_TYPE screenType)
 
 		buttonObj[0]->SetText("Load");
 		break;
+	case SC_SKILL_TREE:
+		buttonObj[2]->SetText("Some skill tree choising stuff...");
+
+		buttonObj[1]->SetText("");
+
+		buttonObj[0]->SetText("");
+		break;
+	case SC_MENU2:
+		buttonObj[2]->SetText("");
+
+		buttonObj[1]->SetText("");
+
+		buttonObj[0]->SetText("");
+		break;
 	}
 }
 
@@ -265,6 +323,12 @@ bool UserInterface::GetScreenStatus()
 		return true;
 		break;
 	case SC_PAUSE:
+		return true;
+		break;
+	case SC_SKILL_TREE:
+		return true;
+		break;
+	case SC_MENU2:
 		return true;
 		break;
 	}
@@ -297,6 +361,16 @@ void UserInterface::Render()// this is at the back since it needs to be on top? 
 		return;
 		break;
 	case SC_PAUSE:
+		buttonObj[0]->RenderUI();
+		buttonObj[1]->RenderUI();
+		buttonObj[2]->RenderUI();
+		break;
+	case SC_SKILL_TREE:
+		buttonObj[0]->RenderUI();
+		buttonObj[1]->RenderUI();
+		buttonObj[2]->RenderUI();
+		break;
+	case SC_MENU2:
 		buttonObj[0]->RenderUI();
 		buttonObj[1]->RenderUI();
 		buttonObj[2]->RenderUI();

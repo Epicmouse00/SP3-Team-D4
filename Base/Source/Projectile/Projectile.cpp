@@ -4,6 +4,7 @@
 #include "../EntityManager.h"
 #include "GraphicsManager.h"
 #include "RenderHelper.h"
+#include "../Scene2D/PlayerInfo2D.h"
 
 CProjectile::CProjectile(void)
 	: modelMesh(NULL)
@@ -11,7 +12,6 @@ CProjectile::CProjectile(void)
 	, theDirection(0, 0, 0)
 	, m_fLifetime(-1.0f)
 	, m_fSpeed(10.0f)
-	, theSource(NULL)
 {
 }
 
@@ -21,14 +21,12 @@ CProjectile::CProjectile(Mesh* _modelMesh)
 	, theDirection(0, 0, 0)
 	, m_fLifetime(-1)
 	, m_fSpeed(10.0f)
-	, theSource(NULL)
 {
 }
 
 CProjectile::~CProjectile(void)
 {
 	modelMesh = NULL;
-	theSource = NULL;
 }
 
 // Activate the projectile. true == active, false == inactive
@@ -90,18 +88,6 @@ void CProjectile::SetSpeed(const float m_fSpeed)
 	this->m_fSpeed = m_fSpeed;
 }
 
-// Set the source of the projectile
-void CProjectile::SetSource(CPlayerInfo* _source)
-{
-	theSource = _source;
-}
-
-// Get the source of the projectile
-CPlayerInfo* CProjectile::GetSource(void) const
-{
-	return theSource;
-}
-
 // Update the status of this projectile
 void CProjectile::Update(double dt)
 {
@@ -109,7 +95,9 @@ void CProjectile::Update(double dt)
 		return;
 
 	// Update TimeLife of projectile. Set to inactive if too long
-	m_fLifetime -= (float)dt;
+	if(!type==ENTITY_TYPE::E_CORRUPTION)
+		m_fLifetime -= (float)dt;
+
 	if (m_fLifetime < 0.0f)
 	{
 		SetStatus(false);
@@ -125,7 +113,7 @@ void CProjectile::Update(double dt)
 
 
 // Render this projectile
-void CProjectile::Render(void)
+void CProjectile::RenderUI(void)
 {
 	if (m_bStatus == false)
 		return;
@@ -133,10 +121,12 @@ void CProjectile::Render(void)
 	if (m_fLifetime < 0.0f)
 		return;
 
+	CPlayerInfo2D* thePlayerInfo = CPlayerInfo2D::GetInstance();
+
 	MS& modelStack = GraphicsManager::GetInstance()->GetModelStack();
 	modelStack.PushMatrix();
-	modelStack.Translate(position.x, position.y, position.z);
-	//modelStack.Scale(scale.x, scale.y, scale.z);
+	modelStack.Translate(position.x-thePlayerInfo->GetMapOffset_x(), position.y, position.z);
+	modelStack.Scale(scale.x, scale.y, scale.z);
 	RenderHelper::RenderMesh(modelMesh);
 	modelStack.PopMatrix();
 }
@@ -144,10 +134,11 @@ void CProjectile::Render(void)
 // Create a projectile and add it into EntityManager
 CProjectile* Create::Projectile(const std::string& _meshName, 
 								const Vector3& _position, 
+								const Vector3& _scale, 
 								const Vector3& _direction, 
 								const float m_fLifetime, 
 								const float m_fSpeed,
-								CPlayerInfo* _source)
+								EntityBase::ENTITY_TYPE _type)
 {
 	Mesh* modelMesh = MeshBuilder::GetInstance()->GetMesh(_meshName);
 	if (modelMesh == nullptr)
@@ -155,9 +146,10 @@ CProjectile* Create::Projectile(const std::string& _meshName,
 
 	CProjectile* result = new CProjectile(modelMesh);
 	result->Set(_position, _direction, m_fLifetime, m_fSpeed);
+	result->SetType(_type);
+	result->SetScale(_scale);
 	result->SetStatus(true);
 	result->SetCollider(true);
-	result->SetSource(_source);
 	EntityManager::GetInstance()->AddEntity(result);
 
 	return result;

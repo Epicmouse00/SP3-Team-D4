@@ -87,6 +87,7 @@ bool EntityManager::RemoveEntity(EntityBase* _existingEntity)
 EntityManager::EntityManager()
 {
 	thePlayerInfo = CPlayerInfo2D::GetInstance();
+	theSlashInfo = Slash::GetInstance();
 }
 
 // Destructor
@@ -110,7 +111,7 @@ bool EntityManager::CheckSphereCollision(EntityBase *ThisEntity, EntityBase *Tha
 bool EntityManager::CheckCircleCollision(EntityBase *ThisEntity, EntityBase *ThatEntity)
 {
 	Vector3 dist = ThisEntity->GetPosition() - ThatEntity->GetPosition();
-	if (dist.Length() < ThisEntity->GetScale().x + ThatEntity->GetScale().x)
+	if (dist.Length() < ThisEntity->GetScale().x/2 + ThatEntity->GetScale().x/2)
 	{
 		return true;
 	}
@@ -127,11 +128,6 @@ bool EntityManager::CheckAABBCollision(EntityBase *ThisEntity, EntityBase *ThatE
 // Check if any Collider is colliding with another Collider
 bool EntityManager::CheckForCollision(void)
 {
-	EntityBase* player = new EntityBase;
-	player->SetType(player->E_PLAYER);
-	player->SetPosition(thePlayerInfo->GetPos());
-	player->SetScale(Vector3(1, 1, 1));
-	player->SetCollider(true);
 
 	// Check for Collision
 	std::list<EntityBase*>::iterator colliderThis, colliderThisEnd;
@@ -144,34 +140,53 @@ bool EntityManager::CheckForCollision(void)
 		{
 			EntityBase *thisEntity = dynamic_cast<EntityBase*>(*colliderThis);
 
-			if (thisEntity->GetType() != thisEntity->E_PLAYER) {// set based on what can hit the player(specifically the player)
-				if (CheckCircleCollision(thisEntity, player) == true)// can use multiple of this based on thePlayerInfoState
-				{//we probably are not calling the function checkCircleCollision.. since it needs hard code
-					thisEntity->SetIsDone(true);
-					if(thePlayerInfo->GetHp()!=0) // Note : temporary placeholder
-						thePlayerInfo->SetHp(thePlayerInfo->GetHp()-1);
+			if (thisEntity->GetType() == thisEntity->E_CORRUPTION)
+			{// set based on what can hit the player(specifically the player)
+				if (thePlayerInfo->position.x < thisEntity->GetPosition().x + thisEntity->GetScale().x / 2)
+				{
+					if (thePlayerInfo->GetHp() != 0) // Note : temporary placeholder
+						thePlayerInfo->SetHp(thePlayerInfo->GetHp() - 1);
 				}
 			}
-			else {//this just checks between enemies and player projectiles, Because anything that does not hurt player probably hurts enemies?
-				colliderThatEnd = entityList.end();
-				for (colliderThat = colliderThis; colliderThat != colliderThatEnd; ++colliderThat)
+
+			colliderThatEnd = entityList.end();
+			for (colliderThat = colliderThis; colliderThat != colliderThatEnd; ++colliderThat)
+			{
+				if (colliderThat == colliderThis)
+					continue;
+				if ((*colliderThat)->HasCollider())
 				{
-					if (colliderThat == colliderThis)
-						continue;
-					if ((*colliderThat)->HasCollider())
+					EntityBase *thatEntity = dynamic_cast<EntityBase*>(*colliderThat);
+
+					if (thisEntity->GetType() == thisEntity->E_ENEMY || thisEntity->GetType() == thisEntity->E_ENEMY_PROJECTILES)
 					{
-						EntityBase *thatEntity = dynamic_cast<EntityBase*>(*colliderThat);
-						if (CheckCircleCollision(thisEntity, thatEntity) == true)
+						if (theSlashInfo->GetFrameState() != Slash::S_NOPE)
 						{
+							if ((thisEntity->GetPosition() - theSlashInfo->position).Length() < thisEntity->GetScale().x / 2 + 16 / 2)
+							{
+								thisEntity->SetIsDone(true);
+								break;
+							}
+						}
+						if (thatEntity->GetType() == thatEntity->E_PLAYER_PROJECTILES)
+						{
+							if (CheckCircleCollision(thisEntity, thatEntity) == true)
+							{
+								thisEntity->SetIsDone(true);
+								thatEntity->SetIsDone(true);
+								break; // break cuz that enemy is already dead.. no need to check against player
+							}
+						}
+						if ((thisEntity->GetPosition() - thePlayerInfo->position).Length() < thisEntity->GetScale().x / 2 + 16 / 2)// can use multiple of this based on thePlayerInfoState
+						{//we probably are not calling the function checkCircleCollision.. since it needs hard code
 							thisEntity->SetIsDone(true);
-							thatEntity->SetIsDone(true);
+							if (thePlayerInfo->GetHp() != 0) // Note : temporary placeholder
+								thePlayerInfo->SetHp(thePlayerInfo->GetHp() - 1);
 						}
 					}
 				}
 			}
 		}
 	}
-	delete player;
-	player = NULL;
 	return false;
 }

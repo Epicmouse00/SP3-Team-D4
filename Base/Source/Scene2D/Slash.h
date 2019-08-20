@@ -51,6 +51,10 @@ private:
 		DOWN,
 		LEFT,
 		RIGHT,
+		LEFT2,
+		RIGHT2,
+		LEFT3,
+		RIGHT3,
 		NOPE
 	};
 	Vector3 defaultPosition;
