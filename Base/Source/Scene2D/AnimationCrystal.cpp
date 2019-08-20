@@ -49,6 +49,7 @@ int CAnimationCrystal::GuessNextFrame(int frame) const
 		return C_IDLE_1;
 		break;
 	case C_DIE_2:
+	case C_TOTAL:
 		return C_TOTAL;
 		break;
 	default:

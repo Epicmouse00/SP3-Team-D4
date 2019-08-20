@@ -461,7 +461,7 @@ void CScene2D::Update(double dt)
 		// Update the enemies
 		for (int i = 0; i < m_iNumEnemy; ++i) // This is the AI of the enemies??
 		{
-			if (!theEnemy[i]->IsDone()) {
+			if (!theEnemy[i]->IsDead()) {
 				theEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x - thePlayerInfo->mapOffset_x,
 					thePlayerInfo->GetPos().y,
 					0));
@@ -624,7 +624,7 @@ void CScene2D::RenderEnemy(void)
 	// Render the enemies
 	for (int i = 0; i < m_iNumEnemy; ++i)
 	{
-		if (!theEnemy[i]->IsDone()) {
+		if (!theEnemy[i]->IsDead()) {
 			int theEnemy_x = theEnemy[i]->GetPos_x() - thePlayerInfo->mapOffset_x;
 			int theEnemy_y = theEnemy[i]->GetPos_y();
 

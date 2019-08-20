@@ -22,7 +22,7 @@ void EntityManager::Update(double _dt)
 	it = entityList.begin();
 	while (it != end)
 	{
-		if ((*it)->IsDone())
+		if ((*it)->IsDead())
 		{
 			// Delete if done
 			delete *it;

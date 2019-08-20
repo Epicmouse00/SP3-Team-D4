@@ -31,7 +31,9 @@ public:
 	inline ENTITY_TYPE GetType(){ return type; };
 
 	bool IsDone();
+	bool IsDead();
 	void SetIsDone(const bool _value);
+	void SetIsDead(const bool _value);
 
 	// Check if this entity has a collider class parent
 	virtual bool HasCollider(void) const;
@@ -44,6 +46,7 @@ protected:
 	Vector3 scale;
 
 	bool isDone;
+	bool isDead;
 	bool m_bCollider;
 };
 

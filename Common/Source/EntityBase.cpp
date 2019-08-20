@@ -5,6 +5,7 @@ EntityBase::EntityBase(ENTITY_TYPE typeValue)
 	, position(0.0f, 0.0f, 0.0f)
 	, scale(1.0f, 1.0f, 1.0f)
 	, isDone(false)
+	, isDead(false)
 	, m_bCollider(false)
 {
 }
@@ -25,6 +26,15 @@ void EntityBase::RenderUI()
 {
 }
 
+bool EntityBase::IsDead()
+{
+	return isDead;
+}
+
+void EntityBase::SetIsDead(bool _value)
+{
+	isDead = _value;
+}
 bool EntityBase::IsDone()
 {
 	return isDone;
