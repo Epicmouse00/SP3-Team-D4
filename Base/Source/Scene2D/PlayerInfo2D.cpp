@@ -54,6 +54,7 @@ CPlayerInfo2D::CPlayerInfo2D(void)
 	, secondAttack(false)
 	, dashPower(0.f)
 	, chargeAttack(0.f)
+	, chargeTime(5.f)
 {
 }
 
@@ -417,6 +418,11 @@ void CPlayerInfo2D::Update(double dt)
 			Attack(!isFacingRight(), 0.5f);
 		}
 	}
+	else if (chargeAttack > chargeTime && !KeyboardController::GetInstance()->IsKeyDown('K'))
+	{
+		chargeAttack = 0.f;
+		Attack(!isFacingRight(), 0.5f);
+	}
 	else if (isRolling())
 		MoveLeftRight(!isFacingRight(), m_dRollSpeed);
 	else if (KeyboardController::GetInstance()->IsKeyPressed('L')
@@ -433,7 +439,6 @@ void CPlayerInfo2D::Update(double dt)
 	else if (KeyboardController::GetInstance()->IsKeyDown('A')
 		&& !KeyboardController::GetInstance()->IsKeyDown('D')
 		&& !KeyboardController::GetInstance()->IsKeyPressed('J')
-		&& !KeyboardController::GetInstance()->IsKeyDown('K')
 		&& !isPogo()) // Move Left
 	{
 		MoveLeftRight(true, m_dMoveSpeed);
@@ -442,7 +447,6 @@ void CPlayerInfo2D::Update(double dt)
 	else if (KeyboardController::GetInstance()->IsKeyDown('D')
 		&& !KeyboardController::GetInstance()->IsKeyDown('A')
 		&& !KeyboardController::GetInstance()->IsKeyPressed('J')
-		&& !KeyboardController::GetInstance()->IsKeyDown('K')
 		&& !isPogo()) // Move Right
 	{
 		MoveLeftRight(false, m_dMoveSpeed);
@@ -477,16 +481,6 @@ void CPlayerInfo2D::Update(double dt)
 	}
 	else if (isOnGround()) // Idle
 	{
-		if (KeyboardController::GetInstance()->IsKeyDown('K'))
-		{
-			if (dashBounceTime > dashBounceTimeLimit
-				&& !dashPower)
-			{
-				if (StaminaDecrease(0.4))
-					dashPower = 0.7f;
-			}
-		}
-
 		if (isFacingRight())
 			SetAnimationStatus(CAnimation::P_IDLE_R1);
 		else
@@ -499,6 +493,22 @@ void CPlayerInfo2D::Update(double dt)
 	else
 	{
 		UpdateAnimationIndex(1.f);
+	}
+
+	if (KeyboardController::GetInstance()->IsKeyDown('K') && isOnGround())
+	{
+		chargeAttack += static_cast<float>(10 * dt);
+		if (chargeAttack > chargeTime)
+		{
+			dashPower = 0.f;
+		}
+		else if (!dashPower
+			&& dashBounceTime > dashBounceTimeLimit
+			&& chargeAttack <= chargeTime)
+		{
+			if (StaminaDecrease(0.4))
+				dashPower = 0.7f;
+		}
 	}
 
 	if (dashPower && !KeyboardController::GetInstance()->IsKeyDown('K'))
