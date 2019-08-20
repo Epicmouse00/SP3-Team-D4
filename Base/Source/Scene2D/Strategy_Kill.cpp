@@ -23,6 +23,8 @@ CStrategy_Kill::~CStrategy_Kill()
 ********************************************************************************/
 void CStrategy_Kill::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition)
 {
+	++bounce;
+
 	// Decide which state to change to
 	int distanceHeroToEnemy = CalculateDistance(PlayerPosition, theEnemyPosition);
 	if (distanceHeroToEnemy < AI_STATE_ATTACK*AI_STATE_ATTACK)
@@ -32,7 +34,6 @@ void CStrategy_Kill::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition)
 	else
 		CurrentState = PATROL;
 
-	++bounce;
 	if (bounce > 60)
 	{
 		bounce = 0;
