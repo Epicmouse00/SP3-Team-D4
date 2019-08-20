@@ -54,7 +54,7 @@ private:
 
 	CMap* theMapReference;
 
-	void constrain(int a, int b);
+	void constrain();
 };
 
 namespace Create

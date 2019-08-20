@@ -43,11 +43,11 @@ void CStrategy_Kill::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition)
 	switch(CurrentState)
 	{
 	case PATROL:
-		if (bounce < 17)
+		if (bounce < 16)
 			theEnemyPosition.x = theEnemyPosition.x + (n ? 1 : -1);
 		break;
 	case ATTACK:
-		theEnemyPosition.x = theEnemyPosition.x + (PlayerPosition.x - theEnemyPosition.x > 0 ? 2 : -2);
+		theEnemyPosition.x = theEnemyPosition.x + (PlayerPosition.x - theEnemyPosition.x > 0 ? 1.5 : -1.5);
 		break;
 	default:
 		// Do nothing if idling
