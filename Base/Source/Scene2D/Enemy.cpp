@@ -142,9 +142,11 @@ void CEnemy::Update(void)
 			isDead = true;
 		else
 		{
-			theStrategy->Update(theDestination, position);
-			constrain();
-
+			if (!isDone)
+			{
+				theStrategy->Update(theDestination, position);
+				constrain();
+			}
 			if (isDone)
 				SetAnimationStatus(C_DIE_1);
 			else if (dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::IDLE ||
