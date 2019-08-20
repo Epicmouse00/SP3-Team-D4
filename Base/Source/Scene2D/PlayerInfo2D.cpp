@@ -410,8 +410,11 @@ void CPlayerInfo2D::Update(double dt)
 	{
 		MoveLeftRight(!isFacingRight(), 3.f);
 		dashPower -= dt * 10.0f;
-		if (dashPower < 0.f)
+		if (dashPower <= 0.f)
+		{
 			dashPower = 0.f;
+			Attack(!isFacingRight(), 0.5f);
+		}
 	}
 	else if (isRolling())
 		MoveLeftRight(!isFacingRight(), m_dRollSpeed);
@@ -479,7 +482,7 @@ void CPlayerInfo2D::Update(double dt)
 				&& !dashPower)
 			{
 				if (StaminaDecrease(0.4))
-					dashPower = 1.f;
+					dashPower = 0.7f;
 			}
 		}
 
