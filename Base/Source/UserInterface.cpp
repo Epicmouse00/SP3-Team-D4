@@ -298,6 +298,7 @@ void UserInterface::ChangeScreen(SCREEN_TYPE screenType)
 		buttonObj[0]->SetText("Load");
 		break;
 	case SC_SKILL_TREE:
+		CSoundEngine::GetInstance()->PlayBGM("bgmmii");
 		buttonObj[2]->SetText("Some skill tree choising stuff...");
 
 		buttonObj[1]->SetText("");

@@ -1254,6 +1254,7 @@ void CPlayerInfo2D::InitSound(void) const
 	CSoundEngine::GetInstance()->AddSound("bgm", "Sound//bgm.mp3");
 	CSoundEngine::GetInstance()->AddSound("bgmwalk", "Sound//bgmwalk.mp3");
 	CSoundEngine::GetInstance()->AddSound("bgmrroll", "Sound//rroll.mp3");
+	CSoundEngine::GetInstance()->AddSound("bgmmii", "Sound//bgmmii.mp3");
 	CSoundEngine::GetInstance()->AddSound("jump", "Sound//jump.wav");
 	CSoundEngine::GetInstance()->AddSound("step1", "Sound//step1.wav");
 	CSoundEngine::GetInstance()->AddSound("step2", "Sound//step2.wav");
