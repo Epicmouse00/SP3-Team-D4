@@ -170,10 +170,9 @@ void CEnemy::ChangeStrategy(CStrategy* theNewStrategy, bool bDelete)
 
 void CEnemy::constrain()
 {
-	int checkPosition_Y = theMapReference->GetNumOfTiles_Height() -
-		(int)ceil(position.y / theMapReference->GetTileSize_Height());
+	int checkPosition_Y = theMapReference->GetNumOfTiles_Height() - (int)ceil(position.y / theMapReference->GetTileSize_Height());
 
-	if (!theStrategy->GetLR()) // Left
+	if (theStrategy->GetLR() < 0) // Left
 	{
 		int checkPosition_X = (int)((position.x - (theMapReference->GetTileSize_Width() >> 1)) / theMapReference->GetTileSize_Width());
 
@@ -185,11 +184,11 @@ void CEnemy::constrain()
 			}
 		}
 	}
-	else if (theStrategy->GetLR()) // Right
+	else if (theStrategy->GetLR() > 0) // Right
 	{
 		int checkPosition_X = (int)((position.x + (theMapReference->GetTileSize_Width() >> 1)) / theMapReference->GetTileSize_Width());
 
-		if (checkPosition_X < theMapReference->GetTileSize_Width())
+		if (checkPosition_X < theMapReference->GetNumOfTiles_Width())
 		{
 			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
 			{
@@ -199,7 +198,7 @@ void CEnemy::constrain()
 
 	}
 
-	if (theStrategy->GetUD()) // Up
+	if (theStrategy->GetUD() > 0) // Up
 	{
 		int checkPosition_X = (int)((position.x - (theMapReference->GetTileSize_Width() >> 1)) / theMapReference->GetTileSize_Width());
 		int checkPosition_Y = theMapReference->GetNumOfTiles_Height() -
@@ -221,7 +220,7 @@ void CEnemy::constrain()
 			}
 		}
 	}
-	else if (!theStrategy->GetUD()) // Down
+	else if (!theStrategy->GetUD() < 0) // Down
 	{
 		int checkPosition_X = (int)((position.x - (theMapReference->GetTileSize_Width() >> 1)) / theMapReference->GetTileSize_Width());
 		int checkPosition_Y = theMapReference->GetNumOfTiles_Height() -
