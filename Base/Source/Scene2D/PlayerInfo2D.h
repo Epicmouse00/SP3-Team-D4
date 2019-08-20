@@ -85,8 +85,8 @@ public:
 	double GetFallSpeed(void) const;
 	// Get Fall Acceleration of the player
 	double GetFallAcceleration(void) const;
-	// Get Roll Speed of player
-	float GetRollSpeed(void) const;
+	// Get Roll Speed & Dash Attack of player
+	float GetStaminaSpeed(void) const;
 	// Get Tile Offset for x-axis
 	int GetTileOffset_x(void) const;
 
@@ -154,6 +154,8 @@ public:
 	void StepSound(void) const;
 	void DoorSound(void) const;
 
+	bool getSecondAttack(void) const;
+
 private:
 	void InitSound(void) const;
 
@@ -202,6 +204,11 @@ private:
 	double rollBounceTimeLimit;
 
 	void Roll();
-	// Roll Speed
-	float rollSpeed;
+	// Roll Speed & Dash attack
+	float staminaSpeed;
+	void StaminaDecrease(float decrease);
+	float dashPower;
+
+	// Second Attack
+	bool secondAttack;
 };

@@ -333,16 +333,28 @@ void CScene2D::Init()
 	Scene2D_Slash_Animated[7] = Create::Sprite2DObject("Slash_Left_2_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Slash_Animated[8] = Create::Sprite2DObject("Slash_Right_1_1",
+	Scene2D_Slash_Animated[8] = Create::Sprite2DObject("Slash_Left_3_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Slash_Animated[9] = Create::Sprite2DObject("Slash_Right_1_2",
+	Scene2D_Slash_Animated[9] = Create::Sprite2DObject("Slash_Left_3_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Slash_Animated[10] = Create::Sprite2DObject("Slash_Right_2_1",
+	Scene2D_Slash_Animated[10] = Create::Sprite2DObject("Slash_Right_1_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Slash_Animated[11] = Create::Sprite2DObject("Slash_Right_2_2",
+	Scene2D_Slash_Animated[11] = Create::Sprite2DObject("Slash_Right_1_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Slash_Animated[12] = Create::Sprite2DObject("Slash_Right_2_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Slash_Animated[13] = Create::Sprite2DObject("Slash_Right_2_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Slash_Animated[14] = Create::Sprite2DObject("Slash_Right_3_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Slash_Animated[15] = Create::Sprite2DObject("Slash_Right_3_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
 
@@ -766,6 +778,10 @@ void CScene2D::LoadMeshes(void)
 		MeshBuilder::GetInstance()->GetMesh("Slash_Left_2_1")->textureID = LoadTGA("Image//Sprites//Slash_Left_2_1.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Slash_Left_2_2", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Slash_Left_2_2")->textureID = LoadTGA("Image//Sprites//Slash_Left_2_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Slash_Left_3_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Slash_Left_3_1")->textureID = LoadTGA("Image//Sprites//Slash_Left_3_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Slash_Left_3_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Slash_Left_3_2")->textureID = LoadTGA("Image//Sprites//Slash_Left_3_2.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Slash_Right_1_1", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Slash_Right_1_1")->textureID = LoadTGA("Image//Sprites//Slash_Right_1_1.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Slash_Right_1_2", Color(1, 1, 1), 1.f);
@@ -774,6 +790,10 @@ void CScene2D::LoadMeshes(void)
 		MeshBuilder::GetInstance()->GetMesh("Slash_Right_2_1")->textureID = LoadTGA("Image//Sprites//Slash_Right_2_1.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Slash_Right_2_2", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Slash_Right_2_2")->textureID = LoadTGA("Image//Sprites//Slash_Right_2_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Slash_Right_3_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Slash_Right_3_1")->textureID = LoadTGA("Image//Sprites//Slash_Right_3_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Slash_Right_3_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Slash_Right_3_2")->textureID = LoadTGA("Image//Sprites//Slash_Right_3_2.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Slash_Up_1", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Slash_Up_1")->textureID = LoadTGA("Image//Sprites//Slash_Up_1.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Slash_Up_2", Color(1, 1, 1), 1.f);
