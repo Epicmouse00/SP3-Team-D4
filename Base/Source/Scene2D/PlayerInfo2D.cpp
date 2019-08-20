@@ -427,17 +427,23 @@ void CPlayerInfo2D::Update(double dt)
 		MoveLeftRight(direction, m_dRollSpeed);
 	}
 	else if (KeyboardController::GetInstance()->IsKeyDown('A')
-			&& !KeyboardController::GetInstance()->IsKeyDown('D')
-			&& !KeyboardController::GetInstance()->IsKeyPressed('J')
-			&& !KeyboardController::GetInstance()->IsKeyDown('K')
-			&& !isPogo()) // Move Left
+		&& !KeyboardController::GetInstance()->IsKeyDown('D')
+		&& !KeyboardController::GetInstance()->IsKeyPressed('J')
+		&& !KeyboardController::GetInstance()->IsKeyDown('K')
+		&& !isPogo()) // Move Left
+	{
 		MoveLeftRight(true, m_dMoveSpeed);
+		StaminaRegen(0.1, dt);
+	}
 	else if (KeyboardController::GetInstance()->IsKeyDown('D')
-			&& !KeyboardController::GetInstance()->IsKeyDown('A')
-			&& !KeyboardController::GetInstance()->IsKeyPressed('J')
-			&& !KeyboardController::GetInstance()->IsKeyDown('K')
-			&& !isPogo()) // Move Right
+		&& !KeyboardController::GetInstance()->IsKeyDown('A')
+		&& !KeyboardController::GetInstance()->IsKeyPressed('J')
+		&& !KeyboardController::GetInstance()->IsKeyDown('K')
+		&& !isPogo()) // Move Right
+	{
 		MoveLeftRight(false, m_dMoveSpeed);
+		StaminaRegen(0.1, dt);
+	}
 	else if (KeyboardController::GetInstance()->IsKeyPressed('J')
 			&& KeyboardController::GetInstance()->IsKeyDown('W') || KeyboardController::GetInstance()->IsKeyPressed('J')
 			&& KeyboardController::GetInstance()->IsKeyDown('S')
@@ -467,12 +473,14 @@ void CPlayerInfo2D::Update(double dt)
 	}
 	else if (isOnGround()) // Idle
 	{
-		if (dashBounceTime > dashBounceTimeLimit
-			&& KeyboardController::GetInstance()->IsKeyDown('K')
-			&& stamina && dashPower < 1.f)
+		if (KeyboardController::GetInstance()->IsKeyDown('K'))
 		{
-			if (StaminaDecrease(0.03))
-				dashPower += 0.05f;
+			if (dashBounceTime > dashBounceTimeLimit
+				&& !dashPower)
+			{
+				if (StaminaDecrease(0.4))
+					dashPower = 1.f;
+			}
 		}
 
 		if (isFacingRight())
@@ -480,9 +488,7 @@ void CPlayerInfo2D::Update(double dt)
 		else
 			SetAnimationStatus(CAnimation::P_IDLE_L1);
 
-		stamina += dt * 0.3;
-		if (stamina > 1.f)
-			stamina = 1.f;
+		StaminaRegen(0.3, dt);
 
 		UpdateAnimationIndex(0.1f);
 	}
@@ -1247,4 +1253,11 @@ bool CPlayerInfo2D::StaminaDecrease(float decrease)
 	}
 	else
 		return false;
+}
+
+void CPlayerInfo2D::StaminaRegen(float regen, double dt)
+{
+	stamina += dt * regen;
+	if (stamina > 1.f)
+		stamina = 1.f;
 }
