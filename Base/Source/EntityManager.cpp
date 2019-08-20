@@ -160,7 +160,7 @@ bool EntityManager::CheckForCollision(void)
 
 					if (thisEntity->GetType() == thisEntity->E_ENEMY || thisEntity->GetType() == thisEntity->E_ENEMY_PROJECTILES)
 					{
-						if (theSlashInfo->GetFrameState() != Slash::S_NOPE)
+						if (theSlashInfo->GetFrameState() != Slash::S_TOTAL)
 						{
 							if ((thisEntity->GetPosition() - theSlashInfo->position).Length() < thisEntity->GetScale().x / 2 + 16 / 2 * 3 / 2)//hitbox X 1.5
 							{

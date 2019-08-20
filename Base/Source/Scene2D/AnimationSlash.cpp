@@ -4,7 +4,7 @@
 
 CAnimationSlash::CAnimationSlash()
 	: time(0)
-	, frameState(S_NOPE)
+	, frameState(S_TOTAL)
 {
 }
 
@@ -48,10 +48,12 @@ int CAnimationSlash::GuessNextFrame(int frame) const
 	case S_D2:
 	case S_L1_2:
 	case S_L2_2:
+	case S_L3_3:
 	case S_R1_2:
 	case S_R2_2:
-	case S_NOPE:
-		return S_NOPE;
+	case S_R3_3:
+	case S_TOTAL:
+		return S_TOTAL;
 		break;
 	default:
 		return frame + 1;
@@ -59,14 +61,16 @@ int CAnimationSlash::GuessNextFrame(int frame) const
 	}
 }
 
-bool CAnimationSlash::isDash(void) const
+bool CAnimationSlash::isCharge(void) const
 {
-	switch (frameState)
+	switch (frameState) // delet dis
 	{
 	case S_L3_1:
 	case S_L3_2:
+	case S_L3_3:
 	case S_R3_1:
 	case S_R3_2:
+	case S_R3_3:
 		return true;
 		break;
 	default:

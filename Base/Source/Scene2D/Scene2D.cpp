@@ -217,94 +217,118 @@ void CScene2D::Init()
 	Scene2D_Hero_Animated[1] = Create::Sprite2DObject("Lonin_Right_Idle_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[2] = Create::Sprite2DObject("Lonin_Left_Idle_1",
+	Scene2D_Hero_Animated[2] = Create::Sprite2DObject("Lonin_Right_Charge",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[3] = Create::Sprite2DObject("Lonin_Left_Idle_2",
+	Scene2D_Hero_Animated[3] = Create::Sprite2DObject("Lonin_Left_Idle_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[4] = Create::Sprite2DObject("Lonin_Right_Run_1",
+	Scene2D_Hero_Animated[4] = Create::Sprite2DObject("Lonin_Left_Idle_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[5] = Create::Sprite2DObject("Lonin_Right_Run_2",
+	Scene2D_Hero_Animated[5] = Create::Sprite2DObject("Lonin_Left_Charge",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[6] = Create::Sprite2DObject("Lonin_Left_Run_1",
+	Scene2D_Hero_Animated[6] = Create::Sprite2DObject("Lonin_Right_Run_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[7] = Create::Sprite2DObject("Lonin_Left_Run_2",
+	Scene2D_Hero_Animated[7] = Create::Sprite2DObject("Lonin_Right_Run_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[8] = Create::Sprite2DObject("Lonin_Right_Attack_1",
+	Scene2D_Hero_Animated[8] = Create::Sprite2DObject("Lonin_Left_Run_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[9] = Create::Sprite2DObject("Lonin_Right_Attack_2",
+	Scene2D_Hero_Animated[9] = Create::Sprite2DObject("Lonin_Left_Run_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[10] = Create::Sprite2DObject("Lonin_Left_Attack_1",
+	Scene2D_Hero_Animated[10] = Create::Sprite2DObject("Lonin_Right_Attack_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[11] = Create::Sprite2DObject("Lonin_Left_Attack_2",
+	Scene2D_Hero_Animated[11] = Create::Sprite2DObject("Lonin_Right_Attack_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[12] = Create::Sprite2DObject("Lonin_Right_Jump_1",
+	Scene2D_Hero_Animated[12] = Create::Sprite2DObject("Lonin_Left_Attack_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[13] = Create::Sprite2DObject("Lonin_Right_Jump_2",
+	Scene2D_Hero_Animated[13] = Create::Sprite2DObject("Lonin_Left_Attack_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[14] = Create::Sprite2DObject("Lonin_Left_Jump_1",
+	Scene2D_Hero_Animated[14] = Create::Sprite2DObject("Lonin_Right_Charged_Attack_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[15] = Create::Sprite2DObject("Lonin_Left_Jump_2",
+	Scene2D_Hero_Animated[15] = Create::Sprite2DObject("Lonin_Right_Charged_Attack_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[16] = Create::Sprite2DObject("Lonin_Right_Fall_1",
+	Scene2D_Hero_Animated[16] = Create::Sprite2DObject("Lonin_Right_Charged_Attack_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[17] = Create::Sprite2DObject("Lonin_Right_Fall_2",
+	Scene2D_Hero_Animated[17] = Create::Sprite2DObject("Lonin_Left_Charged_Attack_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[18] = Create::Sprite2DObject("Lonin_Left_Fall_1",
+	Scene2D_Hero_Animated[18] = Create::Sprite2DObject("Lonin_Left_Charged_Attack_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[19] = Create::Sprite2DObject("Lonin_Left_Fall_2",
+	Scene2D_Hero_Animated[19] = Create::Sprite2DObject("Lonin_Left_Charged_Attack_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[20] = Create::Sprite2DObject("Lonin_Right_Pogo_1",
+	Scene2D_Hero_Animated[20] = Create::Sprite2DObject("Lonin_Right_Jump_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[21] = Create::Sprite2DObject("Lonin_Right_Pogo_2",
+	Scene2D_Hero_Animated[21] = Create::Sprite2DObject("Lonin_Right_Jump_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[22] = Create::Sprite2DObject("Lonin_Left_Pogo_1",
+	Scene2D_Hero_Animated[22] = Create::Sprite2DObject("Lonin_Left_Jump_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[23] = Create::Sprite2DObject("Lonin_Left_Pogo_2",
+	Scene2D_Hero_Animated[23] = Create::Sprite2DObject("Lonin_Left_Jump_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[24] = Create::Sprite2DObject("Lonin_Right_Roll_1",
+	Scene2D_Hero_Animated[24] = Create::Sprite2DObject("Lonin_Right_Fall_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[25] = Create::Sprite2DObject("Lonin_Right_Roll_2",
+	Scene2D_Hero_Animated[25] = Create::Sprite2DObject("Lonin_Right_Fall_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[26] = Create::Sprite2DObject("Lonin_Right_Roll_3",
+	Scene2D_Hero_Animated[26] = Create::Sprite2DObject("Lonin_Left_Fall_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[27] = Create::Sprite2DObject("Lonin_Right_Roll_4",
+	Scene2D_Hero_Animated[27] = Create::Sprite2DObject("Lonin_Left_Fall_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[28] = Create::Sprite2DObject("Lonin_Left_Roll_1",
+	Scene2D_Hero_Animated[28] = Create::Sprite2DObject("Lonin_Right_Pogo_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[29] = Create::Sprite2DObject("Lonin_Left_Roll_2",
+	Scene2D_Hero_Animated[29] = Create::Sprite2DObject("Lonin_Right_Pogo_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[30] = Create::Sprite2DObject("Lonin_Left_Roll_3",
+	Scene2D_Hero_Animated[30] = Create::Sprite2DObject("Lonin_Left_Pogo_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Hero_Animated[31] = Create::Sprite2DObject("Lonin_Left_Roll_4",
+	Scene2D_Hero_Animated[31] = Create::Sprite2DObject("Lonin_Left_Pogo_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[32] = Create::Sprite2DObject("Lonin_Right_Roll_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[33] = Create::Sprite2DObject("Lonin_Right_Roll_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[34] = Create::Sprite2DObject("Lonin_Right_Roll_3",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[35] = Create::Sprite2DObject("Lonin_Right_Roll_4",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[36] = Create::Sprite2DObject("Lonin_Left_Roll_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[37] = Create::Sprite2DObject("Lonin_Left_Roll_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[38] = Create::Sprite2DObject("Lonin_Left_Roll_3",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[39] = Create::Sprite2DObject("Lonin_Left_Roll_4",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
 
@@ -339,22 +363,28 @@ void CScene2D::Init()
 	Scene2D_Slash_Animated[9] = Create::Sprite2DObject("Slash_Left_3_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Slash_Animated[10] = Create::Sprite2DObject("Slash_Right_1_1",
+	Scene2D_Slash_Animated[10] = Create::Sprite2DObject("Slash_Left_3_3",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Slash_Animated[11] = Create::Sprite2DObject("Slash_Right_1_2",
+	Scene2D_Slash_Animated[11] = Create::Sprite2DObject("Slash_Right_1_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Slash_Animated[12] = Create::Sprite2DObject("Slash_Right_2_1",
+	Scene2D_Slash_Animated[12] = Create::Sprite2DObject("Slash_Right_1_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Slash_Animated[13] = Create::Sprite2DObject("Slash_Right_2_2",
+	Scene2D_Slash_Animated[13] = Create::Sprite2DObject("Slash_Right_2_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Slash_Animated[14] = Create::Sprite2DObject("Slash_Right_3_1",
+	Scene2D_Slash_Animated[14] = Create::Sprite2DObject("Slash_Right_2_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Slash_Animated[15] = Create::Sprite2DObject("Slash_Right_3_2",
+	Scene2D_Slash_Animated[15] = Create::Sprite2DObject("Slash_Right_3_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Slash_Animated[16] = Create::Sprite2DObject("Slash_Right_3_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Slash_Animated[17] = Create::Sprite2DObject("Slash_Right_3_3",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
 
@@ -611,7 +641,7 @@ void CScene2D::RenderPlayer()
 	// Display the player
 	Scene2D_Hero_Animated[thePlayerInfo->GetFrameState()]->SetPosition(Vector3(thePlayerInfo->GetPos().x-thePlayerInfo->GetMapOffset_x(), thePlayerInfo->GetPos().y,0));
 	Scene2D_Hero_Animated[thePlayerInfo->GetFrameState()]->RenderUI();
-	if (theSlashInfo->GetFrameState() != Slash::S_NOPE)
+	if (theSlashInfo->GetFrameState() != Slash::S_TOTAL)
 	{
 		Scene2D_Slash_Animated[theSlashInfo->GetFrameState()]->SetPosition(Vector3(theSlashInfo->GetPos().x - thePlayerInfo->GetMapOffset_x(), theSlashInfo->GetPos().y, theSlashInfo->GetPos().z));
 		Scene2D_Slash_Animated[theSlashInfo->GetFrameState()]->RenderUI();
@@ -707,6 +737,10 @@ void CScene2D::LoadMeshes(void)
 		MeshBuilder::GetInstance()->GetMesh("Lonin_Left_Attack_1")->textureID = LoadTGA("Image//Sprites//Lonin_Left_Attack_1.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Left_Attack_2", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Lonin_Left_Attack_2")->textureID = LoadTGA("Image//Sprites//Lonin_Left_Attack_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Left_Charged_Attack_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Left_Charged_Attack_1")->textureID = LoadTGA("Image//Sprites//Lonin_Left_Charged_Attack_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Left_Charged_Attack_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Left_Charged_Attack_2")->textureID = LoadTGA("Image//Sprites//Lonin_Left_Charged_Attack_2.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Left_Fall_1", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Lonin_Left_Fall_1")->textureID = LoadTGA("Image//Sprites//Lonin_Left_Fall_1.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Left_Fall_2", Color(1, 1, 1), 1.f);
@@ -715,6 +749,8 @@ void CScene2D::LoadMeshes(void)
 		MeshBuilder::GetInstance()->GetMesh("Lonin_Left_Idle_1")->textureID = LoadTGA("Image//Sprites//Lonin_Left_Idle_1.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Left_Idle_2", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Lonin_Left_Idle_2")->textureID = LoadTGA("Image//Sprites//Lonin_Left_Idle_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Left_Charge", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Left_Charge")->textureID = LoadTGA("Image//Sprites//Lonin_Left_Charge.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Left_Jump_1", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Lonin_Left_Jump_1")->textureID = LoadTGA("Image//Sprites//Lonin_Left_Jump_1.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Left_Jump_2", Color(1, 1, 1), 1.f);
@@ -739,6 +775,10 @@ void CScene2D::LoadMeshes(void)
 		MeshBuilder::GetInstance()->GetMesh("Lonin_Right_Attack_1")->textureID = LoadTGA("Image//Sprites//Lonin_Right_Attack_1.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Right_Attack_2", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Lonin_Right_Attack_2")->textureID = LoadTGA("Image//Sprites//Lonin_Right_Attack_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Right_Charged_Attack_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Right_Charged_Attack_1")->textureID = LoadTGA("Image//Sprites//Lonin_Right_Charged_Attack_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Right_Charged_Attack_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Right_Charged_Attack_2")->textureID = LoadTGA("Image//Sprites//Lonin_Right_Charged_Attack_2.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Right_Fall_1", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Lonin_Right_Fall_1")->textureID = LoadTGA("Image//Sprites//Lonin_Right_Fall_1.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Right_Fall_2", Color(1, 1, 1), 1.f);
@@ -747,6 +787,8 @@ void CScene2D::LoadMeshes(void)
 		MeshBuilder::GetInstance()->GetMesh("Lonin_Right_Idle_1")->textureID = LoadTGA("Image//Sprites//Lonin_Right_Idle_1.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Right_Idle_2", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Lonin_Right_Idle_2")->textureID = LoadTGA("Image//Sprites//Lonin_Right_Idle_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Right_Charge", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Lonin_Right_Charge")->textureID = LoadTGA("Image//Sprites//Lonin_Right_Charge.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Right_Jump_1", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Lonin_Right_Jump_1")->textureID = LoadTGA("Image//Sprites//Lonin_Right_Jump_1.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Lonin_Right_Jump_2", Color(1, 1, 1), 1.f);
@@ -783,9 +825,11 @@ void CScene2D::LoadMeshes(void)
 		MeshBuilder::GetInstance()->GenerateQuad("Slash_Left_2_2", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Slash_Left_2_2")->textureID = LoadTGA("Image//Sprites//Slash_Left_2_2.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Slash_Left_3_1", Color(1, 1, 1), 1.f);
-		MeshBuilder::GetInstance()->GetMesh("Slash_Left_3_1")->textureID = LoadTGA("Image//Sprites//Slash_Left_3_1.tga");
+		MeshBuilder::GetInstance()->GetMesh("Slash_Left_3_1")->textureID = LoadTGA("Image//Sprites//Charged_Left_Slash_1.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Slash_Left_3_2", Color(1, 1, 1), 1.f);
-		MeshBuilder::GetInstance()->GetMesh("Slash_Left_3_2")->textureID = LoadTGA("Image//Sprites//Slash_Left_3_2.tga");
+		MeshBuilder::GetInstance()->GetMesh("Slash_Left_3_2")->textureID = LoadTGA("Image//Sprites//Charged_Left_Slash_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Slash_Left_3_3", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Slash_Left_3_3")->textureID = LoadTGA("Image//Sprites//Charged_Left_Slash_3.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Slash_Right_1_1", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Slash_Right_1_1")->textureID = LoadTGA("Image//Sprites//Slash_Right_1_1.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Slash_Right_1_2", Color(1, 1, 1), 1.f);
@@ -795,9 +839,11 @@ void CScene2D::LoadMeshes(void)
 		MeshBuilder::GetInstance()->GenerateQuad("Slash_Right_2_2", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Slash_Right_2_2")->textureID = LoadTGA("Image//Sprites//Slash_Right_2_2.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Slash_Right_3_1", Color(1, 1, 1), 1.f);
-		MeshBuilder::GetInstance()->GetMesh("Slash_Right_3_1")->textureID = LoadTGA("Image//Sprites//Slash_Right_3_1.tga");
+		MeshBuilder::GetInstance()->GetMesh("Slash_Right_3_1")->textureID = LoadTGA("Image//Sprites//Charged_Right_Slash_1.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Slash_Right_3_2", Color(1, 1, 1), 1.f);
-		MeshBuilder::GetInstance()->GetMesh("Slash_Right_3_2")->textureID = LoadTGA("Image//Sprites//Slash_Right_3_2.tga");
+		MeshBuilder::GetInstance()->GetMesh("Slash_Right_3_2")->textureID = LoadTGA("Image//Sprites//Charged_Right_Slash_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Slash_Right_3_3", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Slash_Right_3_3")->textureID = LoadTGA("Image//Sprites//Charged_Right_Slash_3.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Slash_Up_1", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Slash_Up_1")->textureID = LoadTGA("Image//Sprites//Slash_Up_1.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Slash_Up_2", Color(1, 1, 1), 1.f);

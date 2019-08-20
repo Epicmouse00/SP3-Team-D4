@@ -55,7 +55,14 @@ void Slash::Update(double dt)
 	{
 		if (direction == NOPE)
 		{
-			if (KeyboardController::GetInstance()->IsKeyDown('W'))
+			if (KeyboardController::GetInstance()->IsKeyReleased('K'))
+			{
+				if (CPlayerInfo2D::GetInstance()->isFacingRight())
+					direction = RIGHT3;
+				else
+					direction = LEFT3;
+			}
+			else if (KeyboardController::GetInstance()->IsKeyDown('W'))
 				direction = UP;
 			else if (KeyboardController::GetInstance()->IsKeyDown('S') && !CPlayerInfo2D::GetInstance()->isOnGround())
 				direction = DOWN;
@@ -101,6 +108,13 @@ void Slash::Update(double dt)
 		case LEFT2:
 			SetAnimationStatus(S_L2_1);
 			position.x -= 12;
+		case RIGHT3:
+			SetAnimationStatus(S_R3_1);
+			position.x += 12;
+			break;
+		case LEFT3:
+			SetAnimationStatus(S_L3_1);
+			position.x -= 12;
 		default:
 			break;
 		}
@@ -109,6 +123,6 @@ void Slash::Update(double dt)
 	else
 	{
 		direction = NOPE;
-		SetAnimationStatus(S_NOPE);
+		SetAnimationStatus(S_TOTAL);
 	}
 }

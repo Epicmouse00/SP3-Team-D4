@@ -113,6 +113,8 @@ public:
 
 	void Attack(const bool mode, const float timeDiff);
 
+	bool isCharged(void) const;
+
 	// Check if the player is standing on air
 	bool isOnAir(void);
 

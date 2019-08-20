@@ -410,6 +410,7 @@ void CPlayerInfo2D::Update(double dt)
 	//	MoveUpDown(false, 1.0f);
 	if (dashPower && !KeyboardController::GetInstance()->IsKeyDown('K'))
 	{
+		chargeAttack = 0.f;
 		MoveLeftRight(!isFacingRight(), 3.f);
 		dashPower -= static_cast<float>(dt * 10.0f);
 		if (dashPower <= 0.f)
@@ -418,9 +419,8 @@ void CPlayerInfo2D::Update(double dt)
 			Attack(!isFacingRight(), 0.5f);
 		}
 	}
-	else if (chargeAttack > chargeTime && !KeyboardController::GetInstance()->IsKeyDown('K'))
+	else if (isCharged() && KeyboardController::GetInstance()->IsKeyReleased('K'))
 	{
-		chargeAttack = 0.f;
 		Attack(!isFacingRight(), 0.5f);
 	}
 	else if (isRolling())
@@ -455,23 +455,27 @@ void CPlayerInfo2D::Update(double dt)
 	else if (KeyboardController::GetInstance()->IsKeyPressed('J')
 			&& KeyboardController::GetInstance()->IsKeyDown('W') || KeyboardController::GetInstance()->IsKeyPressed('J')
 			&& KeyboardController::GetInstance()->IsKeyDown('S')
+			&& !KeyboardController::GetInstance()->IsKeyDown('K')
 			&& !isOnGround())
 	{
 		Attack((!isFacingRight()), 0.5f);
 	}
 	else if (KeyboardController::GetInstance()->IsKeyPressed('J')
 			&& KeyboardController::GetInstance()->IsKeyDown('A')
+			&& !KeyboardController::GetInstance()->IsKeyDown('K')
 			&& !isAttacking()) // Attack Left
 	{
 		Attack(true, 0.5f);
 	}
 	else if (KeyboardController::GetInstance()->IsKeyPressed('J')
 			&& KeyboardController::GetInstance()->IsKeyDown('D')
+			&& !KeyboardController::GetInstance()->IsKeyDown('K')
 			&& !isAttacking()) // Attack Right
 	{
 		Attack(false, 0.5f);
 	}
-	else if (KeyboardController::GetInstance()->IsKeyPressed('J'))
+	else if (KeyboardController::GetInstance()->IsKeyPressed('J')
+			&& !KeyboardController::GetInstance()->IsKeyDown('K'))
 	{
 		Attack(!isFacingRight(), 0.5f);
 	}
@@ -481,10 +485,20 @@ void CPlayerInfo2D::Update(double dt)
 	}
 	else if (isOnGround()) // Idle
 	{
-		if (isFacingRight())
-			SetAnimationStatus(CAnimation::P_IDLE_R1);
+		if (isCharged())
+		{
+			if (isFacingRight())
+				SetAnimationStatus(CAnimation::P_CHARGE_R);
+			else
+				SetAnimationStatus(CAnimation::P_CHARGE_L);
+		}
 		else
-			SetAnimationStatus(CAnimation::P_IDLE_L1);
+		{
+			if (isFacingRight())
+				SetAnimationStatus(CAnimation::P_IDLE_R1);
+			else
+				SetAnimationStatus(CAnimation::P_IDLE_L1);
+		}
 
 		StaminaRegen(0.3, dt);
 
@@ -498,26 +512,25 @@ void CPlayerInfo2D::Update(double dt)
 	if (KeyboardController::GetInstance()->IsKeyDown('K') && isOnGround())
 	{
 		chargeAttack += static_cast<float>(10 * dt);
-		if (chargeAttack > chargeTime)
+		if (isCharged())
 		{
 			dashPower = 0.f;
 		}
 		else if (!dashPower
-			&& dashBounceTime > dashBounceTimeLimit
-			&& chargeAttack <= chargeTime)
+			&& dashBounceTime > dashBounceTimeLimit)
 		{
 			if (StaminaDecrease(0.4))
 				dashPower = 0.7f;
 		}
 	}
 
-	if (dashPower && !KeyboardController::GetInstance()->IsKeyDown('K'))
+	if (dashPower && KeyboardController::GetInstance()->IsKeyReleased('K'))
 		dashBounceTime = 0.f;
 
 	if (position.x + (tileSize_Width >> 1) > theMapReference->getNumOfTiles_MapWidth() * theMapReference->GetTileSize_Width())
 		position.x = static_cast<float>(theMapReference->getNumOfTiles_MapWidth() * theMapReference->GetTileSize_Width() - (tileSize_Width>>1));
 	if (position.x - (tileSize_Width >> 1) < 0)
-		position.x = static_cast<float>(0 + tileSize_Width>>1);
+		position.x = static_cast<float>(tileSize_Width>>1);
 
 	if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumped && isOnAir() && !m_bDoubleJump && isRolling() && !isAttacking())
 	{
@@ -726,10 +739,21 @@ void CPlayerInfo2D::Attack(const bool mode, const float timeDiff)
 			secondAttack = true;
 		if (!isAttacking())
 		{
-			if (mode)
-				SetAnimationStatus(CAnimation::P_ATTACK_L1);
+			if (isCharged())
+			{
+				if (mode)
+					SetAnimationStatus(CAnimation::P_CHARGE_ATTACK_L1);
+				else
+					SetAnimationStatus(CAnimation::P_CHARGE_ATTACK_R1);
+				chargeAttack = 0.f;
+			}
 			else
-				SetAnimationStatus(CAnimation::P_ATTACK_R1);
+			{
+				if (mode)
+					SetAnimationStatus(CAnimation::P_ATTACK_L1);
+				else
+					SetAnimationStatus(CAnimation::P_ATTACK_R1);
+			}
 			AttackSound();
 			UpdateAnimationIndex(timeDiff);
 			attackBounceTime = 0.f;
@@ -749,6 +773,11 @@ void CPlayerInfo2D::Attack(const bool mode, const float timeDiff)
 			attackBounceTime = 0.f;
 		}
 	}
+}
+
+bool CPlayerInfo2D::isCharged(void) const
+{
+	return chargeAttack > chargeTime;
 }
 
 // Check if the player is standing on air
@@ -1248,7 +1277,7 @@ void CPlayerInfo2D::InitSound(void) const
 
 bool CPlayerInfo2D::Roll()
 {
-	if (StaminaDecrease(0.1f))
+	if (StaminaDecrease(0.2f))
 	{
 		CSoundEngine::GetInstance()->PlayASound("roll");
 		rollBounceTime = 0;

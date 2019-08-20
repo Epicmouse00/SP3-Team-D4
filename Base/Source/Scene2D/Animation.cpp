@@ -68,14 +68,18 @@ int CAnimation::GuessNextFrame(int frame) const
 		break;
 	case P_ATTACK_L2:
 	case P_ROLL_L4:
+	case P_CHARGE_ATTACK_L3:
 		return P_IDLE_L1;
 		break;
 	case P_ATTACK_R2:
 	case P_ROLL_R4:
+	case P_CHARGE_ATTACK_R3:
 		return P_IDLE_R1;
 		break;
 	case P_JUMP_L2:
 	case P_JUMP_R2:
+	case P_CHARGE_R:
+	case P_CHARGE_L:
 		return frame;
 		break;
 	default:
@@ -95,10 +99,14 @@ bool CAnimation::isFacingRight(int frame) const
 	{
 	case P_IDLE_R1:
 	case P_IDLE_R2:
+	case P_CHARGE_R:
 	case P_RUN_R1:
 	case P_RUN_R2:
 	case P_ATTACK_R1:
 	case P_ATTACK_R2:
+	case P_CHARGE_ATTACK_R1:
+	case P_CHARGE_ATTACK_R2:
+	case P_CHARGE_ATTACK_R3:
 	case P_JUMP_R1:
 	case P_JUMP_R2:
 	case P_FALL_R1:
@@ -145,6 +153,12 @@ bool CAnimation::isAttacking(void) const
 	case P_ATTACK_R2:
 	case P_ATTACK_L1:
 	case P_ATTACK_L2:
+	case P_CHARGE_ATTACK_R1:
+	case P_CHARGE_ATTACK_R2:
+	case P_CHARGE_ATTACK_R3:
+	case P_CHARGE_ATTACK_L1:
+	case P_CHARGE_ATTACK_L2:
+	case P_CHARGE_ATTACK_L3:
 		return true;
 		break;
 	default:
