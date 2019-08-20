@@ -85,8 +85,8 @@ public:
 	double GetFallSpeed(void) const;
 	// Get Fall Acceleration of the player
 	double GetFallAcceleration(void) const;
-	// Get Roll Speed & Dash Attack of player
-	float GetStaminaSpeed(void) const;
+	// Get Stamina of player
+	float GetStamina(void) const;
 	// Get Tile Offset for x-axis
 	int GetTileOffset_x(void) const;
 
@@ -198,15 +198,17 @@ private:
 	// BounceTime
 	double attackBounceTime;
 	double rollBounceTime;
+	double dashBounceTime;
 
 	// BounceTime Limit
 	double attackBounceTimeLimit;
 	double rollBounceTimeLimit;
+	double dashBounceTimeLimit;
 
-	void Roll();
+	bool Roll();
 	// Roll Speed & Dash attack
-	float staminaSpeed;
-	void StaminaDecrease(float decrease);
+	float stamina;
+	bool StaminaDecrease(float decrease);
 	float dashPower;
 
 	// Second Attack

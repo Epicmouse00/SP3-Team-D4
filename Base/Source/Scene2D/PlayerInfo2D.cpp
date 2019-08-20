@@ -16,6 +16,7 @@ CPlayerInfo2D *CPlayerInfo2D::s_instance = 0;
 CPlayerInfo2D::CPlayerInfo2D(void)
 	: m_dSpeed(4.0)
 	, m_dMoveSpeed(0.6)
+	, m_dRollSpeed(0.8)
 	, m_dAcceleration(8.0)
 	, m_bJumpUpwards(false)
 	, m_bJumped(false)
@@ -45,9 +46,11 @@ CPlayerInfo2D::CPlayerInfo2D(void)
 	, rearMapFineOffset_y(0)
 	, attackBounceTime(0)
 	, rollBounceTime(0)
+	, dashBounceTime(0)
 	, attackBounceTimeLimit(0.5)
 	, rollBounceTimeLimit(0.7)
-	, staminaSpeed(0.8f)
+	, dashBounceTimeLimit(0.9)
+	, stamina(1.f)
 	, secondAttack(false)
 	, dashPower(0.f)
 {
@@ -251,9 +254,9 @@ double CPlayerInfo2D::GetJumpAcceleration(void) const
 	return m_dJumpAcceleration;
 }
 
-float CPlayerInfo2D::GetStaminaSpeed(void) const
+float CPlayerInfo2D::GetStamina(void) const
 {
-	return staminaSpeed;
+	return stamina;
 }
 
 // Set Tile Offset for x-axis
@@ -395,11 +398,9 @@ void CPlayerInfo2D::UpdateFreeFall(double dt)
  ********************************************************************************/
 void CPlayerInfo2D::Update(double dt)
 {
-	staminaSpeed += dt * 0.05;
-	if (staminaSpeed > 0.8f)
-		staminaSpeed = 0.8f;
 	attackBounceTime += dt;
 	rollBounceTime += dt;
+	dashBounceTime += dt;
 	// Update the player position
 	//if (KeyboardController::GetInstance()->IsKeyDown('W'))
 	//	MoveUpDown(true, 1.0f);
@@ -413,29 +414,46 @@ void CPlayerInfo2D::Update(double dt)
 			dashPower = 0.f;
 	}
 	else if (isRolling())
-		MoveLeftRight(!isFacingRight(), staminaSpeed);
-	else if (KeyboardController::GetInstance()->IsKeyPressed('L') && rollBounceTime > rollBounceTimeLimit && !isAttacking())
+		MoveLeftRight(!isFacingRight(), m_dRollSpeed);
+	else if (KeyboardController::GetInstance()->IsKeyPressed('L')
+			&& rollBounceTime > rollBounceTimeLimit
+			&& !isAttacking())
 	{
 		bool direction = !isFacingRight();
 		if (KeyboardController::GetInstance()->IsKeyDown('A'))
 			direction = true;
 		else if (KeyboardController::GetInstance()->IsKeyDown('D'))
 			direction = false;
-		MoveLeftRight(direction, staminaSpeed);
+		MoveLeftRight(direction, m_dRollSpeed);
 	}
-	else if (KeyboardController::GetInstance()->IsKeyDown('A') && !KeyboardController::GetInstance()->IsKeyDown('D') && !KeyboardController::GetInstance()->IsKeyPressed('J')) // Move Left
+	else if (KeyboardController::GetInstance()->IsKeyDown('A')
+			&& !KeyboardController::GetInstance()->IsKeyDown('D')
+			&& !KeyboardController::GetInstance()->IsKeyPressed('J')
+			&& !KeyboardController::GetInstance()->IsKeyDown('K')
+			&& !isPogo()) // Move Left
 		MoveLeftRight(true, m_dMoveSpeed);
-	else if (KeyboardController::GetInstance()->IsKeyDown('D') && !KeyboardController::GetInstance()->IsKeyDown('A') && !KeyboardController::GetInstance()->IsKeyPressed('J')) // Move Right
+	else if (KeyboardController::GetInstance()->IsKeyDown('D')
+			&& !KeyboardController::GetInstance()->IsKeyDown('A')
+			&& !KeyboardController::GetInstance()->IsKeyPressed('J')
+			&& !KeyboardController::GetInstance()->IsKeyDown('K')
+			&& !isPogo()) // Move Right
 		MoveLeftRight(false, m_dMoveSpeed);
-	else if (KeyboardController::GetInstance()->IsKeyPressed('J') && KeyboardController::GetInstance()->IsKeyDown('W') || KeyboardController::GetInstance()->IsKeyPressed('J') && KeyboardController::GetInstance()->IsKeyDown('S') && !isOnGround())
+	else if (KeyboardController::GetInstance()->IsKeyPressed('J')
+			&& KeyboardController::GetInstance()->IsKeyDown('W') || KeyboardController::GetInstance()->IsKeyPressed('J')
+			&& KeyboardController::GetInstance()->IsKeyDown('S')
+			&& !isOnGround())
 	{
 		Attack((!isFacingRight()), 0.5f);
 	}
-	else if (KeyboardController::GetInstance()->IsKeyPressed('J') && KeyboardController::GetInstance()->IsKeyDown('A') && !isAttacking()) // Attack Left
+	else if (KeyboardController::GetInstance()->IsKeyPressed('J')
+			&& KeyboardController::GetInstance()->IsKeyDown('A')
+			&& !isAttacking()) // Attack Left
 	{
 		Attack(true, 0.5f);
 	}
-	else if (KeyboardController::GetInstance()->IsKeyPressed('J') && KeyboardController::GetInstance()->IsKeyDown('D') && !isAttacking()) // Attack Right
+	else if (KeyboardController::GetInstance()->IsKeyPressed('J')
+			&& KeyboardController::GetInstance()->IsKeyDown('D')
+			&& !isAttacking()) // Attack Right
 	{
 		Attack(false, 0.5f);
 	}
@@ -449,21 +467,32 @@ void CPlayerInfo2D::Update(double dt)
 	}
 	else if (isOnGround()) // Idle
 	{
-		if (KeyboardController::GetInstance()->IsKeyDown('K') && dashPower < 1.f)
+		if (dashBounceTime > dashBounceTimeLimit
+			&& KeyboardController::GetInstance()->IsKeyDown('K')
+			&& stamina && dashPower < 1.f)
 		{
-			StaminaDecrease(0.02);
-			dashPower += 0.05f;
+			if (StaminaDecrease(0.03))
+				dashPower += 0.05f;
 		}
+
 		if (isFacingRight())
 			SetAnimationStatus(CAnimation::P_IDLE_R1);
 		else
 			SetAnimationStatus(CAnimation::P_IDLE_L1);
+
+		stamina += dt * 0.3;
+		if (stamina > 1.f)
+			stamina = 1.f;
+
 		UpdateAnimationIndex(0.1f);
 	}
 	else
 	{
 		UpdateAnimationIndex(1.f);
 	}
+
+	if (dashPower && !KeyboardController::GetInstance()->IsKeyDown('K'))
+		dashBounceTime = 0.f;
 
 	if (position.x + (tileSize_Width >> 1) > theMapReference->getNumOfTiles_MapWidth() * theMapReference->GetTileSize_Width())
 		position.x = theMapReference->getNumOfTiles_MapWidth() * theMapReference->GetTileSize_Width() - (tileSize_Width>>1);
@@ -571,8 +600,8 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 		checkPosition_X = (int)((position.x - (tileSize_Width >> 1)) / tileSize_Width);
 		if (KeyboardController::GetInstance()->IsKeyPressed('L') && rollBounceTime > rollBounceTimeLimit)
 		{
-			SetAnimationStatus(CAnimation::P_ROLL_L1);
-			Roll();
+			if (Roll())
+				SetAnimationStatus(CAnimation::P_ROLL_L1);
 		}
 		if (checkPosition_X >= 0)
 		{
@@ -588,8 +617,8 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 		checkPosition_X = (int)((position.x + (tileSize_Width >> 1)) / tileSize_Width);
 		if (KeyboardController::GetInstance()->IsKeyPressed('L') && rollBounceTime > rollBounceTimeLimit)
 		{
-			SetAnimationStatus(CAnimation::P_ROLL_R1);
-			Roll();
+			if (Roll())
+				SetAnimationStatus(CAnimation::P_ROLL_R1);
 		}
 
 		if (checkPosition_X < theMapReference->getNumOfTiles_MapWidth())
@@ -751,14 +780,14 @@ void CPlayerInfo2D::Constrain(void)
 	//if (position.x >= maxBoundary.x + mapOffset_x - (tileSize_Width >> 1))
 	//{
 	//	// 0.325 ~ 0.675 = 0.25 of screen
-	//	//mapOffset_x += m_dSpeed * (m_dMoveSpeed + ((position.x - maxBoundary.x - mapOffset_x) / (maxBoundary.x * 0.25f) * (staminaSpeed - m_dMoveSpeed)));
+	//	//mapOffset_x += m_dSpeed * (m_dMoveSpeed + ((position.x - maxBoundary.x - mapOffset_x) / (maxBoundary.x * 0.25f) * (stamina - m_dMoveSpeed)));
 	//	if (position.x >= maxBoundary.x * 1.25f + mapOffset_x)
 	//		mapOffset_x += m_dSpeed * m_dMoveSpeed;// this part is still a fail-safe
 	//	else
 	//	{
 	//		if (rollBounceTime < rollBounceTimeLimit)
 	//		{
-	//			mapOffset_x += m_dSpeed * staminaSpeed;// Note : causes problem when rolling in place
+	//			mapOffset_x += m_dSpeed * stamina;// Note : causes problem when rolling in place
 	//		}
 	//		else
 	//			mapOffset_x += m_dSpeed * m_dMoveSpeed;
@@ -777,7 +806,7 @@ void CPlayerInfo2D::Constrain(void)
 	//	else
 	//	{
 	//		if (rollBounceTime < rollBounceTimeLimit)
-	//			mapOffset_x -= m_dSpeed * (staminaSpeed - 0.1f);
+	//			mapOffset_x -= m_dSpeed * (stamina - 0.1f);
 	//		else
 	//			mapOffset_x -= m_dSpeed * (m_dMoveSpeed - 0.1f);
 	//	}
@@ -1197,16 +1226,25 @@ void CPlayerInfo2D::InitSound(void) const
 	CSoundEngine::GetInstance()->PlayBGM("bgmrroll"); // Where do I change music?
 }
 
-void CPlayerInfo2D::Roll()
+bool CPlayerInfo2D::Roll()
 {
-	CSoundEngine::GetInstance()->PlayASound("roll");
-	rollBounceTime = 0;
-	StaminaDecrease(0.1f);
+	if (StaminaDecrease(0.1f))
+	{
+		CSoundEngine::GetInstance()->PlayASound("roll");
+		rollBounceTime = 0;
+		return true;
+	}
+	else
+		return false;
 }
 
-void CPlayerInfo2D::StaminaDecrease(float decrease)
+bool CPlayerInfo2D::StaminaDecrease(float decrease)
 {
-	staminaSpeed -= decrease;
-	if (staminaSpeed < 0.3f)
-		staminaSpeed = 0.3f;
+	if (stamina - decrease >= 0.f)
+	{
+		stamina -= decrease;
+		return true;
+	}
+	else
+		return false;
 }
