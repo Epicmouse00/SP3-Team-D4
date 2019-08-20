@@ -58,3 +58,19 @@ int CAnimationSlash::GuessNextFrame(int frame) const
 		break;
 	}
 }
+
+bool CAnimationSlash::isDash(void) const
+{
+	switch (frameState)
+	{
+	case S_L3_1:
+	case S_L3_2:
+	case S_R3_1:
+	case S_R3_2:
+		return true;
+		break;
+	default:
+		return false;
+		break;
+	}
+}

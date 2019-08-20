@@ -12,10 +12,14 @@ public:
 		S_L1_2,
 		S_L2_1,
 		S_L2_2,
+		S_L3_1,
+		S_L3_2,
 		S_R1_1,
 		S_R1_2,
 		S_R2_1,
 		S_R2_2,
+		S_R3_1,
+		S_R3_2,
 		S_TOTAL,
 		S_NOPE
 	};
@@ -30,6 +34,7 @@ public:
 	int GetFrameState(void) const;
 	int GetFrameTotal(void) const;
 	int GuessNextFrame(int frame) const;
+	bool isDash(void) const;
 
 private:
 	int frameState;

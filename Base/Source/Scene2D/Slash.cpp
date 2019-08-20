@@ -59,10 +59,20 @@ void Slash::Update(double dt)
 				direction = UP;
 			else if (KeyboardController::GetInstance()->IsKeyDown('S') && !CPlayerInfo2D::GetInstance()->isOnGround())
 				direction = DOWN;
-			else if (CPlayerInfo2D::GetInstance()->isFacingRight())
-				direction = RIGHT;
+			else if (!CPlayerInfo2D::GetInstance()->getSecondAttack())
+			{
+				if (CPlayerInfo2D::GetInstance()->isFacingRight())
+					direction = RIGHT2;
+				else
+					direction = LEFT2;
+			}
 			else
-				direction = LEFT;
+			{
+				if (CPlayerInfo2D::GetInstance()->isFacingRight())
+					direction = RIGHT;
+				else
+					direction = LEFT;
+			}
 		}
 		position = CPlayerInfo2D::GetInstance()->GetPos();
 		position.x -= CPlayerInfo2D::GetInstance()->GetMapOffset_x();
@@ -85,6 +95,13 @@ void Slash::Update(double dt)
 			SetAnimationStatus(S_L1_1);
 			position.x -= 12;
 			break;
+		case RIGHT2:
+			SetAnimationStatus(S_R2_1);
+			position.x += 12;
+			break;
+		case LEFT2:
+			SetAnimationStatus(S_L2_1);
+			position.x -= 12;
 		default:
 			break;
 		}
