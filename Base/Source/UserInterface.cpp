@@ -13,7 +13,6 @@ UserInterface::UserInterface()
 	, theHeartInfo(NULL)
 	, barStatus(0)
 {
-	CSoundEngine::GetInstance()->PlayBGM("bgmrroll");
 	theHeartInfo = Hearts::GetInstance();
 	theHeartInfo->Init();
 
@@ -147,7 +146,6 @@ bool UserInterface::Update(double dt)
 			switch (choice) {
 			case 2:
 				screen = SC_PLAY;
-				CSoundEngine::GetInstance()->PlayBGM("bgm");
 				ChangeScreen(screen);
 				return true;
 				break;
@@ -281,6 +279,7 @@ void UserInterface::ChangeScreen(SCREEN_TYPE screenType)
 {
 	switch (screenType) {
 	case SC_MAIN:
+		CSoundEngine::GetInstance()->PlayBGM("bgmrroll");
 		buttonObj[2]->SetText("Play");
 
 		buttonObj[1]->SetText("Load");
@@ -288,9 +287,10 @@ void UserInterface::ChangeScreen(SCREEN_TYPE screenType)
 		buttonObj[0]->SetText("Exit");
 		break;
 	case SC_PLAY:
-
+		CSoundEngine::GetInstance()->PlayBGM("bgm");
 		break;
 	case SC_PAUSE:
+		CSoundEngine::GetInstance()->PlayBGM("bgmwalk");
 		buttonObj[2]->SetText("Continue");
 
 		buttonObj[1]->SetText("Save");
