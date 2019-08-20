@@ -1,7 +1,6 @@
 #include "EntityManager.h"
 #include "EntityBase.h"
 #include "Collider/Collider.h"
-
 #include <iostream>
 using namespace std;
 
@@ -146,6 +145,8 @@ bool EntityManager::CheckForCollision(void)
 				{
 					if (thePlayerInfo->GetHp() != 0) // Note : temporary placeholder
 						thePlayerInfo->SetHp(thePlayerInfo->GetHp() - 1);
+					else
+						thePlayerInfo->Die();
 				}
 			}
 

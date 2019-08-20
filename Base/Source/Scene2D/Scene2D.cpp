@@ -32,7 +32,7 @@ CScene2D::CScene2D()
 	, m_cRearMap(NULL)
 	, thePlayerInfo(NULL)
 	, theSlashInfo(NULL)
-	, m_iNumEnemy(1)
+	, m_iNumEnemy(0)
 {
 }
 
