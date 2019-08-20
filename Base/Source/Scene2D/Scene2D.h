@@ -63,6 +63,7 @@ private:
 	CEnemy** theEnemy;
 	int m_iNumEnemy;
 	SpriteEntity** Scene2D_Enemy;
+	CProjectile* temporop;
 
 	// Render the tile map
 	void RenderTileMap(void);

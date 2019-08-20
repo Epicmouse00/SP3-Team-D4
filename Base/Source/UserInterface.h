@@ -10,6 +10,8 @@ public:
 		SC_MAIN = 0,
 		SC_PLAY,
 		SC_PAUSE,
+		SC_SKILL_TREE,
+		SC_MENU2,
 		SC_TOTAL
 	};
 	UserInterface();

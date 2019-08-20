@@ -5,6 +5,7 @@
 #include "Strategy_Kill.h"
 #include "AnimationCrystal.h"
 #include "EntityBase.h"
+#include "../Projectile/Projectile.h"
 
 class CEnemy : public CAnimationCrystal , public EntityBase
 {
