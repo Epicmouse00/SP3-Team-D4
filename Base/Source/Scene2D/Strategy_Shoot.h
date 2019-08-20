@@ -9,7 +9,7 @@ public:
 	CStrategy_Shoot(void);
 	~CStrategy_Shoot(void);
 
-	void Update(Vector3& theDestination, Vector3& theEnemyPosition);
+	void Update(Vector3& PlayerPosition, Vector3& theEnemyPosition);
 	void SetDestination(const float x, const float y);
 
 	int GetDestination_x(void);
@@ -26,7 +26,7 @@ public:
 	};
 	enum AI_STATE_RANGE
 	{
-		AI_STATE_REPEL = 64,
+		AI_STATE_REPEL = 48,
 		AI_STATE_ATTACK = 96,
 		NUM_AI_STATE_RANGE,
 	};

@@ -47,7 +47,6 @@ public:
 	void ChangeStrategy(CStrategy* theNewStrategy, bool bDelete=true);
 
 private:
-
 	// The Destination is the position of the Hero
 	Vector3 theDestination;
 

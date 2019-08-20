@@ -20,10 +20,12 @@ CStrategy_Shoot::~CStrategy_Shoot()
 /********************************************************************************
  Update method
 ********************************************************************************/
-void CStrategy_Shoot::Update(Vector3& theDestination, Vector3& theEnemyPosition)
+void CStrategy_Shoot::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition)
 {
+	++bounce;
+
 	// Decide which state to change to
-	int distanceHeroToEnemy = CalculateDistance(theDestination, theEnemyPosition);
+	int distanceHeroToEnemy = CalculateDistance(PlayerPosition, theEnemyPosition);
 	if (distanceHeroToEnemy < AI_STATE_ATTACK*AI_STATE_ATTACK)
 	{		
 		if (distanceHeroToEnemy < AI_STATE_REPEL*AI_STATE_REPEL)
@@ -39,11 +41,18 @@ void CStrategy_Shoot::Update(Vector3& theDestination, Vector3& theEnemyPosition)
 	{
 	case ATTACK:
 		//theEnemyPosition.x = theEnemyPosition.x + (theDestination.x - theEnemyPosition.x > 0 ? 1 : -1);
-
+		if (bounce > 59)
+		{
+			bounce -= Math::RandIntMinMax(10, 60);
+			Vector3 direction = (PlayerPosition - theEnemyPosition).Normalized();
+			/*
+			enemybullet->dir = direction;
+			*/
+		}
 		
 		break;
 	case REPEL:
-		theEnemyPosition.x = theEnemyPosition.x + (theDestination.x - theEnemyPosition.x > 0 ? -1 : 1 );
+		theEnemyPosition.x = theEnemyPosition.x + (PlayerPosition.x - theEnemyPosition.x > 0 ? -1 : 1 );
 		break;
 	default:
 		// Do nothing if idling
