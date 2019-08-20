@@ -162,7 +162,7 @@ bool EntityManager::CheckForCollision(void)
 					{
 						if (theSlashInfo->GetFrameState() != Slash::S_NOPE)
 						{
-							if ((thisEntity->GetPosition() - theSlashInfo->position).Length() < thisEntity->GetScale().x / 2 + 16 / 2)
+							if ((thisEntity->GetPosition() - theSlashInfo->position).Length() < thisEntity->GetScale().x / 2 + 16 / 2 * 3 / 2)//hitbox X 1.5
 							{
 								if (thisEntity->GetType() == thisEntity->E_ENEMY_PROJECTILES)
 								{
@@ -182,11 +182,18 @@ bool EntityManager::CheckForCollision(void)
 								break; // break cuz that enemy is already dead.. no need to check against player
 							}
 						}
-						if ((thisEntity->GetPosition() - thePlayerInfo->position).Length() < thisEntity->GetScale().x / 2 + 16 / 2)// can use multiple of this based on thePlayerInfoState
+						if ((thisEntity->GetPosition() - thePlayerInfo->position).Length() < thisEntity->GetScale().x / 2 + 16 / 2)// Only run this when enemy is attacking
 						{//we probably are not calling the function checkCircleCollision.. since it needs hard code
-							thisEntity->SetIsDone(true);
-							if (thePlayerInfo->GetHp() != 0) // Note : temporary placeholder
-								thePlayerInfo->SetHp(thePlayerInfo->GetHp() - 1);
+							if (thePlayerInfo->isPogo())
+							{
+								thisEntity->SetIsDone(true);
+								break;
+							}
+							//if(thisEntity->)// some anim thing
+							//{
+							//	if (thePlayerInfo->GetHp() != 0) // Note : temporary placeholder
+							//		thePlayerInfo->SetHp(thePlayerInfo->GetHp() - 1);
+							//}
 							break;
 						}
 					}
