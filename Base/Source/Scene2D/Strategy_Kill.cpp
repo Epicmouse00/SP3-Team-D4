@@ -36,15 +36,15 @@ void CStrategy_Kill::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition)
 	if (bounce > 60)
 	{
 		bounce = 0;
-		n = Math::RandIntMinMax(0, 1);
+		n = Math::RandIntMinMax(-1, 1);
 	}
 
 	// Based on the current state, determine enemy behaviour
 	switch(CurrentState)
 	{
 	case PATROL:
-		if (bounce < 16 && theEnemyPosition.x > 0 && theEnemyPosition.x < theMapReference->GetNumOfTiles_Width() * theMapReference->GetTileSize_Width())
-			theEnemyPosition.x = theEnemyPosition.x + (n ? 1 : -1);
+		if (bounce < 16 && theEnemyPosition.x > 16 && theEnemyPosition.x < (theMapReference->GetNumOfTiles_Width() - 1) * theMapReference->GetTileSize_Width())
+			theEnemyPosition.x = theEnemyPosition.x + n;
 		break;
 	case ATTACK:
 		theEnemyPosition.x = theEnemyPosition.x + (PlayerPosition.x - theEnemyPosition.x > 0 ? 1.5 : -1.5);
