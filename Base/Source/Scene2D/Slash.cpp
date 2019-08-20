@@ -75,7 +75,6 @@ void Slash::Update(double dt)
 			}
 		}
 		position = CPlayerInfo2D::GetInstance()->GetPos();
-		position.x -= CPlayerInfo2D::GetInstance()->GetMapOffset_x();
 		switch (direction)
 		{
 		case UP:

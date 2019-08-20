@@ -613,7 +613,7 @@ void CScene2D::RenderPlayer()
 	Scene2D_Hero_Animated[thePlayerInfo->GetFrameState()]->RenderUI();
 	if (theSlashInfo->GetFrameState() != Slash::S_NOPE)
 	{
-		Scene2D_Slash_Animated[theSlashInfo->GetFrameState()]->SetPosition(theSlashInfo->GetPos());
+		Scene2D_Slash_Animated[theSlashInfo->GetFrameState()]->SetPosition(Vector3(theSlashInfo->GetPos().x - thePlayerInfo->GetMapOffset_x(), theSlashInfo->GetPos().y, theSlashInfo->GetPos().z));
 		Scene2D_Slash_Animated[theSlashInfo->GetFrameState()]->RenderUI();
 	}
 }
