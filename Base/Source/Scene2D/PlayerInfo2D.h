@@ -214,6 +214,7 @@ private:
 	float dashPower;
 
 	float chargeAttack;
+	float chargeTime;
 
 	// Second Attack
 	bool secondAttack;
