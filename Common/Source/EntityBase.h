@@ -8,7 +8,10 @@ class EntityBase
 public:
 	enum ENTITY_TYPE {
 		E_PLAYER = 0,
+		E_PLAYER_PROJECTILES,
 		E_ENEMY,
+		E_ENEMY_PROJECTILES,
+		E_CORRUPTION,
 		E_TOTAL
 	};
 	EntityBase(ENTITY_TYPE typeValue = E_TOTAL);

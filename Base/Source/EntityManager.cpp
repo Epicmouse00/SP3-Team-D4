@@ -144,7 +144,7 @@ bool EntityManager::CheckForCollision(void)
 		{
 			EntityBase *thisEntity = dynamic_cast<EntityBase*>(*colliderThis);
 
-			if (thisEntity->GetType() != thisEntity->E_PLAYER) {// set based on what can hit the player(specifically the player)
+			if (thisEntity->GetType() != thisEntity->E_PLAYER && thisEntity->GetType() != thisEntity->E_CORRUPTION) {// set based on what can hit the player(specifically the player)
 				if (CheckCircleCollision(thisEntity, player) == true)// can use multiple of this based on thePlayerInfoState
 				{//we probably are not calling the function checkCircleCollision.. since it needs hard code
 					thisEntity->SetIsDone(true);

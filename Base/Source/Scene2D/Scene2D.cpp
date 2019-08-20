@@ -377,6 +377,9 @@ void CScene2D::Init()
 				break;
 		}
 	}
+	temporop = Create::Projectile("Corrupt_temp", Vector3(-m_cMap->getScreenWidth() / 2, m_cMap->getScreenHeight() / 2, 0)
+		, Vector3(m_cMap->getScreenWidth(), m_cMap->getScreenHeight(), 0), Vector3(1, 0, 0)
+		, 1.f, 20.f, EntityBase::ENTITY_TYPE::E_CORRUPTION);
 
 	Scene2D_Enemy = new SpriteEntity*[theEnemy[0]->GetFrameTotal()]; // Enemy stuff
 	Scene2D_Enemy[0] = Create::Sprite2DObject("Crystal_Attack_1",
@@ -492,6 +495,7 @@ void CScene2D::Render()
 		RenderEnemy();
 		// Render the player
 		RenderPlayer();
+		temporop->RenderUI();
 	}
 	ui->Render();
 }
@@ -821,6 +825,8 @@ void CScene2D::LoadMeshes(void)
 	// UI
 	{
 		MeshBuilder::GetInstance()->GenerateQuad("UI_BOX", Color(1, 0, 1), 1.f);
+		MeshBuilder::GetInstance()->GenerateQuad("Corrupt_temp", Color(1, 0, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Corrupt_temp")->textureID = LoadTGA("Image//corruptionAlpha.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("UI_BOX2", Color(0, 0, 1), 1.f);
 		MeshBuilder::GetInstance()->GenerateQuad("UI_Bar", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("UI_Bar")->textureID = LoadTGA("Image//Sprites//UI_Bar.tga");
