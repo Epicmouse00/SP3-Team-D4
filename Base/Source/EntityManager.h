@@ -5,6 +5,7 @@
 #include <list>
 #include "Vector3.h"
 #include "Scene2D/PlayerInfo2D.h"
+#include "Scene2D/Slash.h"
 
 class EntityBase;
 
@@ -35,6 +36,8 @@ private:
 	bool CheckForCollision(void);
 
 	CPlayerInfo2D* thePlayerInfo;
+	Slash* theSlashInfo;
+
 	std::list<EntityBase*> entityList;
 };
 
