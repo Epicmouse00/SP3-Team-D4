@@ -8,7 +8,6 @@ Constructor
 ********************************************************************************/
 CStrategy_Kill::CStrategy_Kill()
 {
-	bounce = 0;
 }
 
 /********************************************************************************
@@ -23,6 +22,8 @@ CStrategy_Kill::~CStrategy_Kill()
 ********************************************************************************/
 void CStrategy_Kill::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition)
 {
+	++bounce;
+
 	// Decide which state to change to
 	int distanceHeroToEnemy = CalculateDistance(PlayerPosition, theEnemyPosition);
 	if (distanceHeroToEnemy < AI_STATE_ATTACK*AI_STATE_ATTACK)
@@ -32,7 +33,6 @@ void CStrategy_Kill::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition)
 	else
 		CurrentState = PATROL;
 
-	++bounce;
 	if (bounce > 60)
 	{
 		bounce = 0;
@@ -43,7 +43,7 @@ void CStrategy_Kill::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition)
 	switch(CurrentState)
 	{
 	case PATROL:
-		if (bounce < 16)
+		if (bounce < 16 && theEnemyPosition.x > 0 && theEnemyPosition.x < theMapReference->GetNumOfTiles_Width() * theMapReference->GetTileSize_Width())
 			theEnemyPosition.x = theEnemyPosition.x + (n ? 1 : -1);
 		break;
 	case ATTACK:

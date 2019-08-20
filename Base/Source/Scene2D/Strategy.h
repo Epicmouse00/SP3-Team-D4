@@ -1,5 +1,6 @@
 #pragma once
 #include "Vector3.h"
+#include "Map.h"
 
 class CStrategy
 {
@@ -18,13 +19,17 @@ public:
 	int GetLR();
 	int GetUD();
 
+	void Init(CMap* m_cMap);
+
 protected:
 	int CalculateDistance(Vector3 theDestination, Vector3 theEnemyPosition);
 
 	// The Destination for this Strategy
 	Vector3 theDestination;
 
+	CMap* theMapReference;
+
 	int bounce;
-	int m;
-	int n;
+	int m; // Up Down
+	int n; // Left Right
 };

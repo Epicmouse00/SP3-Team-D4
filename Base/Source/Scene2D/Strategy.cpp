@@ -5,10 +5,20 @@ using namespace std;
 
 CStrategy::CStrategy()
 {
+	
+
+	bounce = 0;
+	m = 0;
+	n = 0;
 }
 
 CStrategy::~CStrategy()
 {
+}
+
+void CStrategy::Init(CMap* m_cMap)
+{
+	theMapReference = m_cMap;
 }
 
 void CStrategy::Update(Vector3& theDestination, Vector3& theEnemyPosition)

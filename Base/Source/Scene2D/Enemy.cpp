@@ -165,6 +165,7 @@ void CEnemy::ChangeStrategy(CStrategy* theNewStrategy, bool bDelete)
 	}
 
 	theStrategy = theNewStrategy;
+	theStrategy->Init(theMapReference);
 }
 
 void CEnemy::constrain()
