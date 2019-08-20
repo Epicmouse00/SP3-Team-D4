@@ -4,8 +4,9 @@
 #include "Strategy.h"
 #include "Strategy_Kill.h"
 #include "AnimationCrystal.h"
+#include "EntityBase.h"
 
-class CEnemy : public CAnimationCrystal
+class CEnemy : public CAnimationCrystal , public EntityBase
 {
 //	friend class CStrategy;
 public:
@@ -45,8 +46,6 @@ public:
 	void ChangeStrategy(CStrategy* theNewStrategy, bool bDelete=true);
 
 private:
-	// ENEMY's information
-	Vector3 theENEMYPosition;
 
 	// The Destination is the position of the Hero
 	Vector3 theDestination;
@@ -56,4 +55,9 @@ private:
 	CMap* theMapReference;
 
 	void constrain(int a, int b);
+};
+
+namespace Create
+{
+	CEnemy* EnemyEntity(CMap* m_cMap, CStrategy* theNewStrategy, bool bDelete, const Vector3& _position);
 };

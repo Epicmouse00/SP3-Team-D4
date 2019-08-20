@@ -414,9 +414,9 @@ void CPlayerInfo2D::Update(double dt)
 			direction = false;
 		MoveLeftRight(direction, rollSpeed);
 	}
-	else if (KeyboardController::GetInstance()->IsKeyDown('A')  && !KeyboardController::GetInstance()->IsKeyPressed('J')) // Move Left
+	else if (KeyboardController::GetInstance()->IsKeyDown('A') && !KeyboardController::GetInstance()->IsKeyDown('D') && !KeyboardController::GetInstance()->IsKeyPressed('J')) // Move Left
 		MoveLeftRight(true, m_dMoveSpeed);
-	else if (KeyboardController::GetInstance()->IsKeyDown('D') && !KeyboardController::GetInstance()->IsKeyPressed('J')) // Move Right
+	else if (KeyboardController::GetInstance()->IsKeyDown('D') && !KeyboardController::GetInstance()->IsKeyDown('A') && !KeyboardController::GetInstance()->IsKeyPressed('J')) // Move Right
 		MoveLeftRight(false, m_dMoveSpeed);
 	else if (KeyboardController::GetInstance()->IsKeyPressed('J') && KeyboardController::GetInstance()->IsKeyDown('W') || KeyboardController::GetInstance()->IsKeyPressed('J') && KeyboardController::GetInstance()->IsKeyDown('S') && !isOnGround())
 	{
@@ -424,7 +424,7 @@ void CPlayerInfo2D::Update(double dt)
 	}
 	else if (KeyboardController::GetInstance()->IsKeyPressed('J') && KeyboardController::GetInstance()->IsKeyDown('A') && !isAttacking()) // Attack Left
 	{
-			Attack(true, 0.5f);
+		Attack(true, 0.5f);
 	}
 	else if (KeyboardController::GetInstance()->IsKeyPressed('J') && KeyboardController::GetInstance()->IsKeyDown('D') && !isAttacking()) // Attack Right
 	{
@@ -446,6 +446,8 @@ void CPlayerInfo2D::Update(double dt)
 			SetAnimationStatus(CAnimation::P_IDLE_L1);
 		UpdateAnimationIndex(0.1f);
 	}
+	else
+		UpdateAnimationIndex(1.f);
 
 	if (position.x + (tileSize_Width >> 1) > theMapReference->getNumOfTiles_MapWidth() * theMapReference->GetTileSize_Width())
 		position.x = theMapReference->getNumOfTiles_MapWidth() * theMapReference->GetTileSize_Width() - (tileSize_Width>>1);
@@ -1144,6 +1146,7 @@ void CPlayerInfo2D::InitSound(void) const
 	CSoundEngine::GetInstance()->Init();
 	CSoundEngine::GetInstance()->AddSound("bgm", "Sound//bgm.mp3");
 	CSoundEngine::GetInstance()->AddSound("bgmwalk", "Sound//bgmwalk.mp3");
+	CSoundEngine::GetInstance()->AddSound("bgmrroll", "Sound//rroll.mp3");
 	CSoundEngine::GetInstance()->AddSound("jump", "Sound//jump.wav");
 	CSoundEngine::GetInstance()->AddSound("step1", "Sound//step1.wav");
 	CSoundEngine::GetInstance()->AddSound("step2", "Sound//step2.wav");
@@ -1162,7 +1165,7 @@ void CPlayerInfo2D::InitSound(void) const
 	CSoundEngine::GetInstance()->AddSound("door4", "Sound//door4.wav");
 	CSoundEngine::GetInstance()->AddSound("death", "Sound//death.wav");
 
-	CSoundEngine::GetInstance()->PlayBGM("bgmwalk");
+	CSoundEngine::GetInstance()->PlayBGM("bgmrroll"); // Where do I change music?
 }
 
 void CPlayerInfo2D::Roll()

@@ -131,6 +131,7 @@ void CSoundEngine::PlayASound(const std::string& _soundIndex)
 
 void CSoundEngine::PlayBGM(const std::string & _soundIndex)
 {
+	theSoundEngineBGM->stopAllSounds();
 	std::string aSound = GetSound(_soundIndex);
 	theSoundEngineBGM->setSoundVolume(0.1f);
 	theSoundEngineBGM->play2D(aSound.c_str(), true, false);

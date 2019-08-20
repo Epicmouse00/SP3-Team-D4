@@ -1,4 +1,5 @@
 #include "Enemy.h"
+#include "../EntityManager.h"
 #include <iostream>
 
 /********************************************************************************
@@ -6,7 +7,6 @@
  ********************************************************************************/
 CEnemy::CEnemy(void)
 	: theStrategy(NULL)
-	, theENEMYPosition(Vector3(0.0f, 0.0f, 0.0f))
 	, theMapReference(nullptr)
 {
 }
@@ -29,8 +29,8 @@ CEnemy::~CEnemy(void)
 void CEnemy::Init(CMap* m_cMap)
 {
 	theMapReference = m_cMap;
-	theENEMYPosition.x=0;
-	theENEMYPosition.y=0;
+	position.x=0;
+	position.y=0;
 }
 
 /********************************************************************************
@@ -38,7 +38,7 @@ void CEnemy::Init(CMap* m_cMap)
  ********************************************************************************/
 void CEnemy::SetPos_x(int pos_x)
 {
-	theENEMYPosition.x = pos_x;
+	position.x = pos_x;
 }
 
 /********************************************************************************
@@ -46,7 +46,7 @@ void CEnemy::SetPos_x(int pos_x)
  ********************************************************************************/
 void CEnemy::SetPos_y(int pos_y)
 {
-	theENEMYPosition.y = pos_y;
+	position.y = pos_y;
 }
 
 /********************************************************************************
@@ -54,8 +54,8 @@ void CEnemy::SetPos_y(int pos_y)
  ********************************************************************************/
 void CEnemy::SetPos(const int pos_x, const int pos_y)
 {
-	theENEMYPosition.x = pos_x;
-	theENEMYPosition.y = pos_y;
+	position.x = pos_x;
+	position.y = pos_y;
 }
 
 /********************************************************************************
@@ -88,7 +88,7 @@ void CEnemy::SetDestination(Vector3 pos)
  ********************************************************************************/
 int CEnemy::GetPos_x(void) const
 {
-	return theENEMYPosition.x;
+	return position.x;
 }
 
 /********************************************************************************
@@ -96,7 +96,7 @@ int CEnemy::GetPos_x(void) const
  ********************************************************************************/
 int CEnemy::GetPos_y(void) const
 {
-	return theENEMYPosition.y;
+	return position.y;
 }
 
 /********************************************************************************
@@ -104,7 +104,7 @@ int CEnemy::GetPos_y(void) const
  ********************************************************************************/
 Vector3 CEnemy::GetPos(void) const
 {
-	return theENEMYPosition;
+	return position;
 }
 
 /********************************************************************************
@@ -138,8 +138,9 @@ void CEnemy::Update(void)
 {
 	if (theStrategy != NULL)
 	{
-		theStrategy->Update(theDestination, theENEMYPosition);
+		theStrategy->Update(theDestination, position);
 		constrain(theStrategy->GetLR(), theStrategy->GetUD());
+
 		if (dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::IDLE ||
 			dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::REPEL)
 			SetAnimationStatus(C_IDLE_1);
@@ -251,4 +252,17 @@ void CEnemy::constrain(int a, int b)
 		}
 
 	}
+}
+
+CEnemy * Create::EnemyEntity(CMap* m_cMap, CStrategy* theNewStrategy, bool bDelete, const Vector3 & _position)
+{
+	CEnemy* result = new CEnemy();
+	result->SetType(result->E_ENEMY);
+	result->Init(m_cMap);
+	result->ChangeStrategy(theNewStrategy, bDelete);
+	result->SetPosition(_position);
+	result->SetScale(Vector3(16, 16, 16));
+	result->SetCollider(true);
+	EntityManager::GetInstance()->AddEntity(result);
+	return result;
 }
