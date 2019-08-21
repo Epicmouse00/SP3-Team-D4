@@ -142,7 +142,12 @@ bool EntityManager::CheckForCollision(void)
 			EntityBase *thisEntity = dynamic_cast<EntityBase*>(*colliderThis);
 
 			if (thisEntity->GetType() == EntityBase::E_CORRUPTION)
-			{// set based on what can hit the player(specifically the player)
+			{
+				if (thisEntity->GetPosition().x - thisEntity->GetScale().x / 2 - 16/2 > 64 * 16)
+				{
+					thisEntity->SetIsDead(true);
+				}
+				// set based on what can hit the player(specifically the player)
 				if (thePlayerInfo->position.x < thisEntity->GetPosition().x + thisEntity->GetScale().x / 2)
 				{
 					if (thePlayerInfo->GetHp() != 0) // Note : temporary placeholder
@@ -165,7 +170,10 @@ bool EntityManager::CheckForCollision(void)
 						{
 							if (thisEntity->GetPosition().x < thatEntity->GetPosition().x + thatEntity->GetScale().x / 2 - 16 / 2)
 							{
-								thisEntity->SetIsDone(true);
+								if (thisEntity->GetType() == EntityBase::E_ENEMY_PROJECTILES)
+									thisEntity->SetIsDead(true);
+								else
+									thisEntity->SetIsDone(true);
 							}
 
 						}
@@ -182,7 +190,7 @@ bool EntityManager::CheckForCollision(void)
 										, thisEntity->GetScale()
 										, -thisEntity->GetDirection()
 										, 10.f, 4.f, EntityBase::E_PLAYER_PROJECTILES);
-									thisEntity->SetIsDone(true);
+									thisEntity->SetIsDead(true);
 								}
 								else
 								{
@@ -196,7 +204,7 @@ bool EntityManager::CheckForCollision(void)
 							if (CheckCircleCollision(thisEntity, thatEntity) == true)
 							{
 								thisEntity->SetIsDone(true);
-								thatEntity->SetIsDone(true);
+								thatEntity->SetIsDead(true);
 								break; // break cuz that enemy is already dead.. no need to check against player
 							}
 						}
