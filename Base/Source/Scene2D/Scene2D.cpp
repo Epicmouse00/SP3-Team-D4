@@ -650,7 +650,9 @@ void CScene2D::RenderTileMap()
 			if (m >= m_cMap->getNumOfTiles_MapWidth())
 				break;
 
-			if ((m_cMap->theScreenMap[i][m] != 0 && m_cMap->theScreenMap[i][m] != 101) && m*m_cMap->GetTileSize_Width() + kiHalfTileWidth < temporop->GetPosition().x + temporop->GetScale().x / 2 - kiHalfTileWidth)
+			if ((m_cMap->theScreenMap[i][m] != 0 && m_cMap->theScreenMap[i][m] != 101)
+				&& (m_cMap->theScreenMap[i][m] != 0 && m_cMap->theScreenMap[i][m] != 102)
+				&& m*m_cMap->GetTileSize_Width() + kiHalfTileWidth < temporop->GetPosition().x + temporop->GetScale().x / 2 - kiHalfTileWidth)
 			{
 				switch (rand() % 5)
 				{
