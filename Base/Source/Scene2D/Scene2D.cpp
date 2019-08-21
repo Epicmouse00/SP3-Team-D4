@@ -70,6 +70,8 @@ CScene2D::~CScene2D()
 	Scene2D_SpikeD = NULL;
 	delete Scene2D_Error;
 	Scene2D_Error = NULL;
+	delete Scene2D_ShopScreen;
+	Scene2D_ShopScreen = NULL;
 
 	for (int i = 0; i < theEnemy[0]->GetFrameTotal(); ++i)
 	{
@@ -248,6 +250,9 @@ void CScene2D::Init()
 	Scene2D_Error = Create::Sprite2DObject("Tile_Poison_Back",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_ShopScreen = Create::Sprite2DObject("Tile_Shop_Screen",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(320.f, 240.f, 0.f));
 
 	Scene2D_Hero_Animated = new SpriteEntity*[thePlayerInfo->GetFrameTotal()];
 	Scene2D_Hero_Animated[0] = Create::Sprite2DObject("Lonin_Right_Idle_1",
@@ -525,7 +530,7 @@ void CScene2D::Init()
 
 void CScene2D::Update(double dt)
 {
-	if (ui->Update(dt))
+	if (ui->Update(dt, m_cMap, thePlayerInfo->GetPos()))
 	{
 		// Update our entities
 		EntityManager::GetInstance()->Update(dt);
