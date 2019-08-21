@@ -238,4 +238,25 @@ private:
 	double XP;
 	double maxXP;
 	double level;
+
+	// Skill Tree
+	enum Skills
+	{
+		SK_DOUBLE_JUMP,
+		SK_DASH_ATTACK,
+		SK_DEFLECT,
+		SK_DOUBLE_ATTACK,
+		SK_CHARGE_ATTACK,
+		SK_FAST_ROLL,
+		SK_HIGH_JUMP,
+		SK_TRIPLE_JUMP,
+		SK_AIR_ROLL,
+		SK_HEART2,
+		SK_ROLL_COST,
+		SK_HEART3,
+		SK_LIFESTEAL,
+		SK_TOTAL
+	};
+	bool skill[SK_TOTAL];
+	void InitSkill(void);
 };
