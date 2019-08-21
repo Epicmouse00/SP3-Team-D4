@@ -720,16 +720,17 @@ void CScene2D::RenderTileMap()
 			else if (m_cMap->theScreenMap[i][m] == 3)
 			{
 				SpriteEntity* Door = nullptr;
-				//if ()
+				if (m_cMap->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X] == 3 
+					||m_cMap->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X + 1] == 3)
+					Door = Scene2D_TileDoor2;
+				else
 					Door = Scene2D_TileDoor;
-				//else
-				//	Door = Scene2D_TileDoor2;
-					Door->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
+				Door->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
 					- thePlayerInfo->GetMapFineOffset_x()),
 					static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
 					0.0f));
 				Door->RenderUI();
-			}
+				}
 			else if (m_cMap->theScreenMap[i][m] == 10)
 			{
 				Scene2D_Goodies_TreasureChest->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
