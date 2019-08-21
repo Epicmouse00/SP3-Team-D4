@@ -57,6 +57,9 @@ CPlayerInfo2D::CPlayerInfo2D(void)
 	, dashPower(0.f)
 	, chargeAttack(0.f)
 	, chargeTime(5.f)
+	, XP(0)
+	, maxXP(10)
+	, level(0)
 {
 }
 
@@ -278,6 +281,31 @@ double CPlayerInfo2D::GetJumpAcceleration(void) const
 float CPlayerInfo2D::GetStamina(void) const
 {
 	return stamina;
+}
+
+double CPlayerInfo2D::GetXP(void) const
+{
+	return XP;
+}
+
+void CPlayerInfo2D::AddXP(double xp)
+{
+	XP += xp;
+	XPLevelUp();
+}
+
+void CPlayerInfo2D::XPLevelUp(void)
+{
+	if (XP >= maxXP)
+	{
+		XP /= maxXP;
+		++level;
+	}
+}
+
+double CPlayerInfo2D::GetLevel(void) const
+{
+	return level;
 }
 
 // Set Tile Offset for x-axis

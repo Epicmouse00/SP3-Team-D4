@@ -39,7 +39,7 @@ UserInterface::UserInterface()
 
 		staminaBar = new SpriteEntity*[3];
 		staminaBar[0] = Create::Sprite2DObject("Stamina_Green",
-			Vector3(thePlayerInfo->GetStamina() / 2 + 18, 208.f, 0.0f),// Note : replace 0.5 with stamina????
+			Vector3(thePlayerInfo->GetStamina() / 2 + 18, 208.f, 0.0f),
 			Vector3(thePlayerInfo->GetStamina(), 14.f, 0.0f));
 		staminaBar[1] = Create::Sprite2DObject("Stamina_Amber",
 			Vector3(thePlayerInfo->GetStamina() / 2 + 18, 208.f, 0.0f),
@@ -63,6 +63,10 @@ UserInterface::UserInterface()
 		UI_Bar = Create::Sprite2DObject("UI_Bar",
 			Vector3(halfWindowWidth, 208.f, 0.0f),
 			Vector3(360.0f, 32.0f, 0.0f));
+
+		xpBar = Create::Sprite2DObject("XP_Bar",
+			Vector3(thePlayerInfo->GetXP() / 2 + 128, 208.f, 0.0f),
+			Vector3(thePlayerInfo->GetXP(), 14.f, 0.0f));
 	}
 
 	float fontSize = 16.0f;
@@ -98,6 +102,8 @@ UserInterface::~UserInterface()
 	heartEntity = NULL;
 	delete staminaBattery;
 	staminaBattery = NULL;
+	delete xpBar;
+	xpBar = NULL;
 	for (int i = 0; i < 3; ++i)
 	{
 		delete buttonObj[i];
@@ -242,6 +248,9 @@ bool UserInterface::Update(double dt)
 		staminaBar[barStatus]->SetScale(Vector3((thePlayerInfo->GetStamina()) * 25, staminaBar[barStatus]->GetScale().y, staminaBar[barStatus]->GetScale().z));
 		staminaBar[barStatus]->SetPosition(Vector3(staminaBar[barStatus]->GetScale().x / 2 + 18, staminaBar[barStatus]->GetPosition().y, staminaBar[barStatus]->GetPosition().z));
 
+		xpBar->SetScale(Vector3((thePlayerInfo->GetXP()) * 6, xpBar->GetScale().y, xpBar->GetScale().z));
+		xpBar->SetPosition(Vector3(xpBar->GetScale().x / 2 + 128, xpBar->GetPosition().y, xpBar->GetPosition().z));
+
 		std::ostringstream ss;
 		ss.precision(5);
 		ss << "CP: " << thePlayerInfo->checkPosition_X << ", " << thePlayerInfo->checkPosition_Y << endl
@@ -362,6 +371,7 @@ void UserInterface::Render()// this is at the back since it needs to be on top? 
 		}
 		staminaBar[barStatus]->RenderUI();
 		staminaBattery->RenderUI();
+		xpBar->RenderUI();
 		textObj[0]->RenderUI();
 		textObj[1]->RenderUI();
 		return;

@@ -91,6 +91,12 @@ public:
 	double GetFallAcceleration(void) const;
 	// Get Stamina of player
 	float GetStamina(void) const;
+	// Get XP of player
+	double GetXP(void) const;
+	void AddXP(double xp);
+	void XPLevelUp(void);
+	// Get Level of player
+	double GetLevel(void) const;
 	// Get Tile Offset for x-axis
 	int GetTileOffset_x(void) const;
 
@@ -227,4 +233,9 @@ private:
 
 	// Second Attack
 	bool secondAttack;
+
+	// Experience
+	double XP;
+	double maxXP;
+	double level;
 };
