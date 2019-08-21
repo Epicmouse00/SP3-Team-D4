@@ -683,21 +683,18 @@ void CScene2D::RenderTileMap()
 				switch (rand() % 5)
 				{
 				case 0:
-				case 2:
-				case 3:
-				case 4:
-					Scene2D_Error->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-						- thePlayerInfo->GetMapFineOffset_x()),
-						static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
-						0.0f));
-					Scene2D_Error->RenderUI();
-					break;
-				case 1:
 					Scene2D_Error2->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
 						- thePlayerInfo->GetMapFineOffset_x()),
 						static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
 						0.0f));
 					Scene2D_Error2->RenderUI();
+					break;
+				default:
+					Scene2D_Error->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
+						- thePlayerInfo->GetMapFineOffset_x()),
+						static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
+						0.0f));
+					Scene2D_Error->RenderUI();
 					break;
 				}
 			}
@@ -720,8 +717,8 @@ void CScene2D::RenderTileMap()
 			else if (m_cMap->theScreenMap[i][m] == 3)
 			{
 				SpriteEntity* Door = nullptr;
-				if (m_cMap->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X] == 3 
-					||m_cMap->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X + 1] == 3)
+				if (m_cMap->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X] == 3 ||
+					(thePlayerInfo->checkPosition_X + 1 < m_cMap->GetNumOfTiles_Width() && m_cMap->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X + 1] == 3))
 					Door = Scene2D_TileDoor2;
 				else
 					Door = Scene2D_TileDoor;
@@ -1110,6 +1107,8 @@ void CScene2D::LoadMeshes(void)
 		MeshBuilder::GetInstance()->GetMesh("Stamina_Red")->textureID = LoadTGA("Image//Sprites//Stamina_Red.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Stamina_Bar", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Stamina_Bar")->textureID = LoadTGA("Image//Sprites//Stamina_Bar.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("XP_Bar", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("XP_Bar")->textureID = LoadTGA("Image//Sprites//XP_Bar.tga");
 
 		MeshBuilder::GetInstance()->GenerateQuad("Heart_1", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Heart_1")->textureID = LoadTGA("Image//Sprites//Heart_1.tga");

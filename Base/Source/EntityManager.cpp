@@ -195,6 +195,8 @@ bool EntityManager::CheckForCollision(void)
 								}
 								else
 								{
+									if (!thisEntity->IsDone())
+										thePlayerInfo->AddXP(1);
 									thisEntity->SetIsDone(true);
 									break;
 								}
