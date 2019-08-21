@@ -646,7 +646,8 @@ void CScene2D::Render()
 		RenderEnemy();
 		// Render the player
 		RenderPlayer();
-		temporop->RenderUI();
+		if(!temporop->IsDead())
+			temporop->RenderUI();
 	}
 	ui->Render();
 }
@@ -672,7 +673,7 @@ void CScene2D::RenderTileMap()
 				break;
 
 			if (m_cMap->theScreenMap[i][m] != 0
-				&& m*m_cMap->GetTileSize_Width() + kiHalfTileWidth < temporop->GetPosition().x + temporop->GetScale().x / 2 - kiHalfTileWidth)
+				&& m*m_cMap->GetTileSize_Width() + kiHalfTileWidth < temporop->GetPosition().x + temporop->GetScale().x / 2 - kiHalfTileWidth || temporop->IsDead())
 			{
 				switch (rand() % 5)
 				{
