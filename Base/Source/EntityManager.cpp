@@ -149,10 +149,7 @@ bool EntityManager::CheckForCollision(void)
 				// set based on what can hit the player(specifically the player)
 				if (thePlayerInfo->position.x < thisEntity->GetPosition().x + thisEntity->GetScale().x / 2)
 				{
-					if (thePlayerInfo->GetHp() != 0) // Note : temporary placeholder
-						thePlayerInfo->SetHp(thePlayerInfo->GetHp() - 1);
-					else
-						thePlayerInfo->Die();
+					thePlayerInfo->TakeDamage();
 				}
 			}
 
@@ -218,8 +215,7 @@ bool EntityManager::CheckForCollision(void)
 							}
 							//if(thisEntity->)// some anim thing
 							//{
-							//	if (thePlayerInfo->GetHp() != 0) // Note : temporary placeholder
-							//		thePlayerInfo->SetHp(thePlayerInfo->GetHp() - 1);
+							//	thePlayerInfo->TakeDamage();
 							//}
 							break;
 						}

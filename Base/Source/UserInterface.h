@@ -11,12 +11,12 @@ public:
 		SC_PLAY,
 		SC_PAUSE,
 		SC_SKILL_TREE,
-		SC_MENU2,
+		SC_SHOP,
 		SC_TOTAL
 	};
 	UserInterface();
 	~UserInterface();
-	bool Update(double dt, CMap* map, Vector3 playerPos);
+	bool Update(double dt);
 	bool GetScreenStatus();
 	void Render();
 

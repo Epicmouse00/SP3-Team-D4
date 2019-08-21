@@ -551,7 +551,7 @@ void CScene2D::Init()
 
 void CScene2D::Update(double dt)
 {
-	if (ui->Update(dt, m_cMap, thePlayerInfo->GetPos()))
+	if (ui->Update(dt))
 	{
 		// Update our entities
 		EntityManager::GetInstance()->Update(dt);
@@ -678,7 +678,7 @@ void CScene2D::RenderTileMap()
 				break;
 
 			if (m_cMap->theScreenMap[i][m] != 0
-				&& m*m_cMap->GetTileSize_Width() + kiHalfTileWidth < temporop->GetPosition().x + temporop->GetScale().x / 2 - kiHalfTileWidth || temporop->IsDead())
+				&& (m*m_cMap->GetTileSize_Width() + kiHalfTileWidth < temporop->GetPosition().x + temporop->GetScale().x / 2 - kiHalfTileWidth || temporop->IsDead()))
 			{
 				switch (rand() % 5)
 				{
