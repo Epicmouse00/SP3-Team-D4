@@ -706,14 +706,6 @@ void CScene2D::RenderTileMap()
 															0.0f));
 				Scene2D_TileGround->RenderUI();
 			}
-			//else if (m_cMap->theScreenMap[i][m] == 2)
-			//{
-			//	Scene2D_TileTree->SetPosition(Vector3(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth 
-			//												- thePlayerInfo->GetMapFineOffset_x(),
-			//										  224 - i*m_cMap->GetTileSize_Height() + kiHalfTileHeight,
-			//										  0.0f));
-			//	Scene2D_TileTree->RenderUI();
-			//}
 			else if (m_cMap->theScreenMap[i][m] == 3)
 			{
 				SpriteEntity* Door = nullptr;
@@ -1109,6 +1101,8 @@ void CScene2D::LoadMeshes(void)
 		MeshBuilder::GetInstance()->GetMesh("Stamina_Bar")->textureID = LoadTGA("Image//Sprites//Stamina_Bar.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("XP_Bar", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("XP_Bar")->textureID = LoadTGA("Image//Sprites//XP_Bar.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("XP_Block", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("XP_Block")->textureID = LoadTGA("Image//Sprites//XP_Block.tga");
 
 		MeshBuilder::GetInstance()->GenerateQuad("Heart_1", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Heart_1")->textureID = LoadTGA("Image//Sprites//Heart_1.tga");

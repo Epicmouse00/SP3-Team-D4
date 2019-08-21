@@ -32,6 +32,7 @@ private:
 	SpriteEntity** heartEntity;
 	UIButton* buttonObj[3];
 	SpriteEntity* xpBar;
+	SpriteEntity* xpBlock;
 	SpriteEntity** staminaBar;
 	int barStatus;
 	SpriteEntity* staminaBattery;
