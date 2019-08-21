@@ -1210,7 +1210,7 @@ bool CPlayerInfo2D::Save(const string saveFileName)
 	}
 	else
 	{
-#if(_DEBUG == TRUE)
+#ifdef _DEBUG
 		cout << "PlayerInfo: Unable to save " << saveFileName.c_str() << endl;
 #endif
 		myfile.close();

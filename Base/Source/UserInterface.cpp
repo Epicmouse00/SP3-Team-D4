@@ -121,7 +121,7 @@ UserInterface::~UserInterface()
 
 }
 
-bool UserInterface::Update(double dt)
+bool UserInterface::Update(double dt, CMap* map, Vector3 playerPos)
 {
 	switch (screen) {
 	case SC_MAIN: // This is the starting screen
@@ -261,6 +261,13 @@ bool UserInterface::Update(double dt)
 		ss.clear();
 		ss << "mapOffset_x: " << thePlayerInfo->mapOffset_x << endl;
 		textObj[0]->SetText(ss.str());
+
+		if (KeyboardController::GetInstance()->IsKeyPressed('E') && thePlayerInfo->checkPosition_X > 54 && thePlayerInfo->checkPosition_X < 57 && thePlayerInfo->checkPosition_Y == 4)
+		{
+			screen = SC_SKILL_TREE;
+			ChangeScreen(screen);
+			return false;
+		}
 
 		if (KeyboardController::GetInstance()->IsKeyPressed('P'))
 		{

@@ -16,7 +16,7 @@ public:
 	};
 	UserInterface();
 	~UserInterface();
-	bool Update(double dt);
+	bool Update(double dt, CMap* map, Vector3 playerPos);
 	bool GetScreenStatus();
 	void Render();
 
