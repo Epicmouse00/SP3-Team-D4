@@ -70,6 +70,8 @@ CScene2D::~CScene2D()
 	Scene2D_SpikeD = NULL;
 	delete Scene2D_Error;
 	Scene2D_Error = NULL;
+	delete Scene2D_Error2;
+	Scene2D_Error2 = NULL;
 
 	for (int i = 0; i < theEnemy[0]->GetFrameTotal(); ++i)
 	{
@@ -245,7 +247,10 @@ void CScene2D::Init()
 	Scene2D_SpikeD = Create::Sprite2DObject("Tile_Spike_Down",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Error = Create::Sprite2DObject("Tile_Poison_Back",
+	Scene2D_Error = Create::Sprite2DObject("Tile_Null_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Error2 = Create::Sprite2DObject("Tile_Null_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
 
@@ -446,12 +451,14 @@ void CScene2D::Init()
 			{
 				if (m_cMap->theScreenMap[height][width] == 101)
 				{
+					m_cMap->theScreenMap[height][width] = 0;
 					theEnemy[i] = Create::EnemyEntity(m_cMap, new CStrategy_Kill(), false
 						, Vector3(static_cast<float>(width * m_cMap->GetTileSize_Width() + (m_cMap->GetTileSize_Width() >> 1)), static_cast<float>(232 - height * m_cMap->GetTileSize_Height())));
 					++i;
 				}
 				if (m_cMap->theScreenMap[height][width] == 102)
 				{
+					m_cMap->theScreenMap[height][width] = 0;
 					theAxeEnemy[i2] = Create::AxeEnemyEntity(m_cMap, new CStrategy_Kill(), false
 						, Vector3(static_cast<float>(width * m_cMap->GetTileSize_Width() + (m_cMap->GetTileSize_Width() >> 1)), static_cast<float>(232 - height * m_cMap->GetTileSize_Height())));
 					++i2;
@@ -650,8 +657,7 @@ void CScene2D::RenderTileMap()
 			if (m >= m_cMap->getNumOfTiles_MapWidth())
 				break;
 
-			if ((m_cMap->theScreenMap[i][m] != 0 && m_cMap->theScreenMap[i][m] != 101)
-				&& (m_cMap->theScreenMap[i][m] != 0 && m_cMap->theScreenMap[i][m] != 102)
+			if (m_cMap->theScreenMap[i][m] != 0
 				&& m*m_cMap->GetTileSize_Width() + kiHalfTileWidth < temporop->GetPosition().x + temporop->GetScale().x / 2 - kiHalfTileWidth)
 			{
 				switch (rand() % 5)
@@ -667,11 +673,11 @@ void CScene2D::RenderTileMap()
 					Scene2D_Error->RenderUI();
 					break;
 				case 1:
-					Scene2D_SpikeU->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
+					Scene2D_Error2->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
 						- thePlayerInfo->GetMapFineOffset_x()),
 						static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
 						0.0f));
-					Scene2D_SpikeU->RenderUI();
+					Scene2D_Error2->RenderUI();
 					break;
 				}
 			}
@@ -890,6 +896,10 @@ void CScene2D::LoadMeshes(void)
 		MeshBuilder::GetInstance()->GetMesh("Tile_Spike_Right")->textureID = LoadTGA("Image//Sprites//Tile_Spike_Right.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Tile_Spike_Up", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Tile_Spike_Up")->textureID = LoadTGA("Image//Sprites//Tile_Spike_Up.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_Null_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_Null_1")->textureID = LoadTGA("Image//Sprites//Tile_Null_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_Null_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_Null_2")->textureID = LoadTGA("Image//Sprites//Tile_Null_2.tga");
 	}
 	// Lonin
 	{
