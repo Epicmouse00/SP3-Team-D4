@@ -108,6 +108,7 @@ void Slash::Update(double dt)
 		case LEFT2:
 			SetAnimationStatus(S_L2_1);
 			position.x -= 12;
+			break;
 		case RIGHT3:
 			SetAnimationStatus(S_R3_1);
 			position.x += 12;
@@ -118,7 +119,7 @@ void Slash::Update(double dt)
 		default:
 			break;
 		}
-		UpdateAnimationIndex(0.5f);
+		UpdateAnimationIndex(0.6f);
 	}
 	else
 	{

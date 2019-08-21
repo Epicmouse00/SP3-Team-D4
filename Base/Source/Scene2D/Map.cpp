@@ -12,6 +12,7 @@ CMap::CMap(void)
 , theNumOfTiles_MapHeight(0)
 , theNumOfTiles_MapWidth(0)
 , numberOfEnemies(0)
+, numberOfAxeEnemies(0)
 {
 	theScreenMap.clear();
 }
@@ -100,8 +101,11 @@ bool CMap::LoadFile(const string mapName)
 					istringstream iss(aLineOfText);
 					while (getline(iss, token, ',') && (theColumnCounter<theNumOfTiles_MapWidth))
 					{
-						if ((theScreenMap[theLineCounter][theColumnCounter++] = atoi(token.c_str())) == 101)
+						if ((theScreenMap[theLineCounter][theColumnCounter] = atoi(token.c_str()) == 101))
 							++numberOfEnemies;
+						else if (theScreenMap[theLineCounter][theColumnCounter] == 102)
+						++numberOfAxeEnemies;
+						++theColumnCounter;
 					}
 				}
 			}
@@ -151,6 +155,10 @@ int CMap::getScreenWidth(void)
 int CMap::getNumberOfEnemies(void)
 {
 	return numberOfEnemies;
+}
+int CMap::getNumberOfAxeEnemies(void)
+{
+	return numberOfAxeEnemies;
 }
 // Get the number of tiles for height of the map
 int CMap::getNumOfTiles_MapHeight(void)

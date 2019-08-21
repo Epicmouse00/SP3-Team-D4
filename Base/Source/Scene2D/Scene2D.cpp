@@ -32,7 +32,10 @@ CScene2D::CScene2D()
 	, m_cRearMap(NULL)
 	, thePlayerInfo(NULL)
 	, theSlashInfo(NULL)
-	, m_iNumEnemy(1)
+	, theEnemy(NULL)
+	, theAxeEnemy(NULL)
+	, m_iNumEnemy(0)
+	, m_iNumAxeEnemy(0)
 {
 }
 
@@ -48,8 +51,6 @@ CScene2D::~CScene2D()
 	// Delete the sprites
 	//delete Scene2D_Goodies_TreasureChest;
 	//Scene2D_Goodies_TreasureChest = NULL;
-	delete Scene2D_Enemy;
-	Scene2D_Enemy = NULL;
 	delete Scene2D_Background;
 	Scene2D_Background = NULL;
 	delete Scene2D_TileGround;
@@ -69,8 +70,29 @@ CScene2D::~CScene2D()
 	delete Scene2D_Error;
 	Scene2D_Error = NULL;
 
+	for (int i = 0; i < theEnemy[0]->GetFrameTotal(); ++i)
+	{
+		delete Scene2D_Enemy[i];
+		Scene2D_Enemy[i] = NULL;
+	}
+	delete Scene2D_Enemy;
+	Scene2D_Enemy = NULL;
+
+	for (int i = 0; i < m_iNumEnemy; ++i)
+	{
+		delete theEnemy[i];
+		theEnemy[i] = NULL;
+	}
 	delete theEnemy;
 	theEnemy = NULL;
+
+	for (int i = 0; i < m_iNumAxeEnemy; ++i)
+	{
+		delete theAxeEnemy[i];
+		theAxeEnemy[i] = NULL;
+	}
+	delete theAxeEnemy;
+	theAxeEnemy = NULL;
 
 	for (int i = 0; i < thePlayerInfo->GetFrameTotal(); ++i)
 	{
@@ -420,9 +442,11 @@ void CScene2D::Init()
 	// Create the 3 enemies
 	m_iNumEnemy = m_cMap->getNumberOfEnemies();
 	theEnemy = new CEnemy*[m_iNumEnemy];
+	m_iNumAxeEnemy = m_cMap->getNumberOfAxeEnemies();
+	theAxeEnemy = new CAxeEnemy*[m_iNumAxeEnemy];
 
 	{
-		int i=0;
+		int i = 0, i2 = 0;
 		bool breakk = false;
 		for (int width = 0; width < m_cMap->getNumOfTiles_MapWidth(); ++width)
 		{
@@ -431,13 +455,19 @@ void CScene2D::Init()
 				if (m_cMap->theScreenMap[height][width] == 101)
 				{
 					theEnemy[i] = Create::EnemyEntity(m_cMap, new CStrategy_Kill(), false
-						, Vector3(static_cast<float>(width * m_cMap->GetTileSize_Width() + (m_cMap->GetTileSize_Width()>>1)), static_cast<float>(232 - height * m_cMap->GetTileSize_Height())));
+						, Vector3(static_cast<float>(width * m_cMap->GetTileSize_Width() + (m_cMap->GetTileSize_Width() >> 1)), static_cast<float>(232 - height * m_cMap->GetTileSize_Height())));
 					++i;
-						if (i == m_iNumEnemy)
-						{
-							breakk = true;
-							break;
-						}
+				}
+				if (m_cMap->theScreenMap[height][width] == 102)
+				{
+					theAxeEnemy[i2] = Create::AxeEnemyEntity(m_cMap, new CStrategy_Kill(), false
+						, Vector3(static_cast<float>(width * m_cMap->GetTileSize_Width() + (m_cMap->GetTileSize_Width() >> 1)), static_cast<float>(232 - height * m_cMap->GetTileSize_Height())));
+					++i2;
+				}
+				if (i == m_iNumEnemy && i2 == m_iNumAxeEnemy)
+				{
+					breakk = true;
+					break;
 				}
 			}
 			if (breakk)
@@ -465,6 +495,38 @@ void CScene2D::Init()
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
 	Scene2D_Enemy[5] = Create::Sprite2DObject("Crystal_Idle_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+
+	Scene2D_AxeEnemy = new SpriteEntity*[theAxeEnemy[0]->GetFrameTotal()];
+	Scene2D_AxeEnemy[0] = Create::Sprite2DObject("Axe_Attack_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_AxeEnemy[1] = Create::Sprite2DObject("Axe_Attack_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_AxeEnemy[2] = Create::Sprite2DObject("Axe_Attack_3",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_AxeEnemy[3] = Create::Sprite2DObject("Axe_Attack_4",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_AxeEnemy[4] = Create::Sprite2DObject("Axe_Attack_5",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_AxeEnemy[5] = Create::Sprite2DObject("Axe_Die",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_AxeEnemy[6] = Create::Sprite2DObject("Axe_Idle_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_AxeEnemy[7] = Create::Sprite2DObject("Axe_Idle_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_AxeEnemy[8] = Create::Sprite2DObject("Axe_Run_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_AxeEnemy[9] = Create::Sprite2DObject("Axe_Run_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
 }
@@ -514,13 +576,22 @@ void CScene2D::Update(double dt)
 		theSlashInfo->Update(dt);
 
 		// Update the enemies
-		for (int i = 0; i < m_iNumEnemy; ++i) // This is the AI of the enemies??
+		for (int i = 0; i < m_iNumEnemy; ++i)
 		{
 			if (!theEnemy[i]->IsDead()) {
 				theEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x - thePlayerInfo->mapOffset_x,
 					thePlayerInfo->GetPos().y,
 					0));
 				theEnemy[i]->Update();
+			}
+		}
+		for (int i = 0; i < m_iNumAxeEnemy; ++i)
+		{
+			if (!theAxeEnemy[i]->IsDead()) {
+				theAxeEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x - thePlayerInfo->mapOffset_x,
+					thePlayerInfo->GetPos().y,
+					0));
+				theAxeEnemy[i]->Update();
 			}
 		}
 
@@ -744,6 +815,21 @@ void CScene2D::RenderEnemy(void)
 			{
 				Scene2D_Enemy[theEnemy[i]->GetFrameState()]->SetPosition(Vector3(static_cast<float>(theEnemy_x), static_cast<float>(theEnemy_y), 0));
 				Scene2D_Enemy[theEnemy[i]->GetFrameState()]->RenderUI();
+			}
+		}
+	}
+	for (int i = 0; i < m_iNumAxeEnemy; ++i)
+	{
+		if (!theAxeEnemy[i]->IsDead()) {
+			int theEnemy_x = theAxeEnemy[i]->GetPos_x() - thePlayerInfo->mapOffset_x;
+			int theEnemy_y = theAxeEnemy[i]->GetPos_y();
+
+			if (((theEnemy_x >= 0) && (theEnemy_x < m_cMap->GetNumOfTiles_Width()*m_cMap->GetTileSize_Width())) &&
+				((theEnemy_y >= 0) && (theEnemy_y < m_cMap->GetNumOfTiles_Height()*m_cMap->GetTileSize_Height())) &&
+				theAxeEnemy[i]->GetFrameState() != CEnemy::C_TOTAL)
+			{
+				Scene2D_AxeEnemy[theAxeEnemy[i]->GetFrameState()]->SetPosition(Vector3(static_cast<float>(theEnemy_x), static_cast<float>(theEnemy_y), 0));
+				Scene2D_AxeEnemy[theAxeEnemy[i]->GetFrameState()]->RenderUI();
 			}
 		}
 	}

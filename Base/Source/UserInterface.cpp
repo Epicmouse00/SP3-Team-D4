@@ -3,6 +3,7 @@
 
 #include "MeshBuilder.h"
 #include "Application.h"
+#include "SoundEngine.h"
 
 using namespace std;
 UserInterface::UserInterface()
@@ -279,6 +280,7 @@ void UserInterface::ChangeScreen(SCREEN_TYPE screenType)
 {
 	switch (screenType) {
 	case SC_MAIN:
+		CSoundEngine::GetInstance()->PlayBGM("bgmrroll");
 		buttonObj[2]->SetText("Play");
 
 		buttonObj[1]->SetText("Load");
@@ -286,9 +288,10 @@ void UserInterface::ChangeScreen(SCREEN_TYPE screenType)
 		buttonObj[0]->SetText("Exit");
 		break;
 	case SC_PLAY:
-
+		CSoundEngine::GetInstance()->PlayBGM("bgm");
 		break;
 	case SC_PAUSE:
+		CSoundEngine::GetInstance()->PlayBGM("bgmwalk");
 		buttonObj[2]->SetText("Continue");
 
 		buttonObj[1]->SetText("Save");
@@ -296,6 +299,7 @@ void UserInterface::ChangeScreen(SCREEN_TYPE screenType)
 		buttonObj[0]->SetText("Load");
 		break;
 	case SC_SKILL_TREE:
+		CSoundEngine::GetInstance()->PlayBGM("bgmmii");
 		buttonObj[2]->SetText("Some skill tree choising stuff...");
 
 		buttonObj[1]->SetText("");

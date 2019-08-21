@@ -831,6 +831,11 @@ void CPlayerInfo2D::Attack(const bool mode, const float timeDiff)
 	}
 }
 
+void CPlayerInfo2D::Die()
+{
+	//CSoundEngine::GetInstance()->PlayASound("death");
+}
+
 bool CPlayerInfo2D::isCharged(void) const
 {
 	return chargeAttack > chargeTime;
@@ -1310,6 +1315,7 @@ void CPlayerInfo2D::InitSound(void) const
 	CSoundEngine::GetInstance()->AddSound("bgm", "Sound//bgm.mp3");
 	CSoundEngine::GetInstance()->AddSound("bgmwalk", "Sound//bgmwalk.mp3");
 	CSoundEngine::GetInstance()->AddSound("bgmrroll", "Sound//rroll.mp3");
+	CSoundEngine::GetInstance()->AddSound("bgmmii", "Sound//bgmmii.mp3");
 	CSoundEngine::GetInstance()->AddSound("jump", "Sound//jump.wav");
 	CSoundEngine::GetInstance()->AddSound("step1", "Sound//step1.wav");
 	CSoundEngine::GetInstance()->AddSound("step2", "Sound//step2.wav");
@@ -1327,8 +1333,6 @@ void CPlayerInfo2D::InitSound(void) const
 	CSoundEngine::GetInstance()->AddSound("door3", "Sound//door3.wav");
 	CSoundEngine::GetInstance()->AddSound("door4", "Sound//door4.wav");
 	CSoundEngine::GetInstance()->AddSound("death", "Sound//death.wav");
-
-	CSoundEngine::GetInstance()->PlayBGM("bgmrroll"); // Where do I change music?
 }
 
 bool CPlayerInfo2D::Roll()

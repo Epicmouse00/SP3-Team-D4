@@ -112,6 +112,7 @@ public:
 	void MoveLeftRight(const bool mode, const float timeDiff);
 
 	void Attack(const bool mode, const float timeDiff);
+	void Die();
 
 	bool isCharged(void) const;
 
