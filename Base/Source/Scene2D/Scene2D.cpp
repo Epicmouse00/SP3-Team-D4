@@ -513,19 +513,22 @@ void CScene2D::Init()
 	Scene2D_AxeEnemy[4] = Create::Sprite2DObject("Axe_Attack_5",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_AxeEnemy[5] = Create::Sprite2DObject("Axe_Die",
+	Scene2D_AxeEnemy[5] = Create::Sprite2DObject("Axe_Die_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_AxeEnemy[6] = Create::Sprite2DObject("Axe_Idle_1",
+	Scene2D_AxeEnemy[6] = Create::Sprite2DObject("Axe_Die_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_AxeEnemy[7] = Create::Sprite2DObject("Axe_Idle_2",
+	Scene2D_AxeEnemy[7] = Create::Sprite2DObject("Axe_Idle_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_AxeEnemy[8] = Create::Sprite2DObject("Axe_Run_1",
+	Scene2D_AxeEnemy[8] = Create::Sprite2DObject("Axe_Idle_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_AxeEnemy[9] = Create::Sprite2DObject("Axe_Run_2",
+	Scene2D_AxeEnemy[9] = Create::Sprite2DObject("Axe_Run_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_AxeEnemy[10] = Create::Sprite2DObject("Axe_Run_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
 }
@@ -1031,8 +1034,10 @@ void CScene2D::LoadMeshes(void)
 		MeshBuilder::GetInstance()->GetMesh("Axe_Attack_4")->textureID = LoadTGA("Image//Sprites//Axe_Attack_4.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Axe_Attack_5", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Axe_Attack_5")->textureID = LoadTGA("Image//Sprites//Axe_Attack_5.tga");
-		MeshBuilder::GetInstance()->GenerateQuad("Axe_Die", Color(1, 1, 1), 1.f);
-		MeshBuilder::GetInstance()->GetMesh("Axe_Die")->textureID = LoadTGA("Image//Sprites//Axe_Die.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Axe_Die_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Axe_Die_1")->textureID = LoadTGA("Image//Sprites//Axe_Die_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Axe_Die_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Axe_Die_2")->textureID = LoadTGA("Image//Sprites//Axe_Die_2.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Axe_Idle_1", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Axe_Idle_1")->textureID = LoadTGA("Image//Sprites//Axe_Idle_1.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Axe_Idle_2", Color(1, 1, 1), 1.f);

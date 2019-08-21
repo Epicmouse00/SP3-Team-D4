@@ -148,7 +148,7 @@ void CAxeEnemy::Update(void)
 				constrain();
 			}
 			if (isDone)
-				SetAnimationStatus(A_DIE);
+				SetAnimationStatus(A_DIE_1);
 			else if (dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::IDLE)
 				SetAnimationStatus(A_IDLE_1);
 			else if (dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::REPEL)

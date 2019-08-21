@@ -51,7 +51,7 @@ int CAnimationAxe::GuessNextFrame(int frame) const
 	case A_RUN_2:
 		return frame - 1;
 		break;
-	case A_DIE:
+	case A_DIE_2:
 	case A_TOTAL:
 		return A_TOTAL;
 		break;
