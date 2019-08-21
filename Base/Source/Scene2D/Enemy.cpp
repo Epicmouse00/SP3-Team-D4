@@ -77,7 +77,7 @@ void CEnemy::SetDestination(const int pos_x, const int pos_y)
 void CEnemy::SetDestination(Vector3 pos)
 {
 	theDestination = pos;
-	if (theStrategy != NULL);
+	if (theStrategy != NULL)
 	{
 		theStrategy->SetDestination(theDestination.x, theDestination.y);
 	}
