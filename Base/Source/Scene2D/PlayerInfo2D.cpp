@@ -873,7 +873,7 @@ void CPlayerInfo2D::Attack(const bool mode, const float timeDiff)
 
 void CPlayerInfo2D::Die()
 {
-	//CSoundEngine::GetInstance()->PlayASound("death");
+	CSoundEngine::GetInstance()->PlayASound("death");
 }
 
 bool CPlayerInfo2D::isCharged(void) const

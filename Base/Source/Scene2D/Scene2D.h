@@ -90,6 +90,8 @@ private:
 	void CreateGoodies(void);
 
 	void LoadMeshes(void);
+
+	bool doorIsOpen;
 };
 
 #endif

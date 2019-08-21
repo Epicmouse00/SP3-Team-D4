@@ -37,6 +37,7 @@ CScene2D::CScene2D()
 	, theAxeEnemy(NULL)
 	, m_iNumEnemy(0)
 	, m_iNumAxeEnemy(0)
+	, doorIsOpen(false)
 {
 }
 
@@ -613,6 +614,20 @@ void CScene2D::Update(double dt)
 			}
 		}
 
+		if (m_cMap->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X] == 3 ||
+			(thePlayerInfo->checkPosition_X + 1 < m_cMap->GetNumOfTiles_Width() && m_cMap->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X + 1] == 3))
+		{
+			if (doorIsOpen)
+				thePlayerInfo->DoorSound();
+			doorIsOpen = false;
+		}
+		else
+		{
+			if (!doorIsOpen)
+				thePlayerInfo->DoorSound();
+			doorIsOpen = true;
+		}
+
 		GraphicsManager::GetInstance()->UpdateLights(dt);
 	}
 }
@@ -709,11 +724,10 @@ void CScene2D::RenderTileMap()
 			else if (m_cMap->theScreenMap[i][m] == 3)
 			{
 				SpriteEntity* Door = nullptr;
-				if (m_cMap->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X] == 3 ||
-					(thePlayerInfo->checkPosition_X + 1 < m_cMap->GetNumOfTiles_Width() && m_cMap->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X + 1] == 3))
-					Door = Scene2D_TileDoor2;
-				else
+				if (doorIsOpen)
 					Door = Scene2D_TileDoor;
+				else
+					Door = Scene2D_TileDoor2;
 				Door->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
 					- thePlayerInfo->GetMapFineOffset_x()),
 					static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
