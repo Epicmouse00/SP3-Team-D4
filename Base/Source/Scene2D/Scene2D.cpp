@@ -72,6 +72,8 @@ CScene2D::~CScene2D()
 	Scene2D_Error = NULL;
 	delete Scene2D_Error2;
 	Scene2D_Error2 = NULL;
+	delete Scene2D_LevelUp;
+	Scene2D_LevelUp = NULL;
 	delete Scene2D_ShopScreen;
 	Scene2D_ShopScreen = NULL;
 
@@ -254,6 +256,9 @@ void CScene2D::Init()
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
 	Scene2D_Error2 = Create::Sprite2DObject("Tile_Null_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_LevelUp = Create::Sprite2DObject("Tile_LevelUp",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
 	Scene2D_ShopScreen = Create::Sprite2DObject("Tile_Shop_Screen",
@@ -753,6 +758,14 @@ void CScene2D::RenderTileMap()
 					static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
 					0.0f));
 				Scene2D_SpikeD->RenderUI();
+			}
+			else if (m_cMap->theScreenMap[i][m] == 30)
+			{
+				Scene2D_LevelUp->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
+					- thePlayerInfo->GetMapFineOffset_x()),
+					static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
+					0.0f));
+				Scene2D_LevelUp->RenderUI();
 			}
 		}
 	}

@@ -52,6 +52,7 @@ private:
 	SpriteEntity* Scene2D_SpikeD;
 	SpriteEntity* Scene2D_Error;
 	SpriteEntity* Scene2D_Error2;
+	SpriteEntity* Scene2D_LevelUp;
 	SpriteEntity** Scene2D_Hero_Animated;
 	SpriteEntity** Scene2D_Slash_Animated;
 	SpriteEntity* Scene2D_Goodies_TreasureChest;
