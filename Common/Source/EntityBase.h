@@ -27,6 +27,9 @@ public:
 	inline void SetScale(const Vector3& _value){ scale = _value; };
 	inline Vector3 GetScale(){ return scale; };
 
+	inline void SetDirection(const Vector3& _value){ theDirection = _value; };
+	inline Vector3 GetDirection(){ return theDirection; };
+
 	inline void SetType(const ENTITY_TYPE& _value) { type = _value; };
 	inline ENTITY_TYPE GetType(){ return type; };
 
@@ -44,6 +47,7 @@ protected:
 	ENTITY_TYPE type;
 	Vector3 position;
 	Vector3 scale;
+	Vector3 theDirection;
 
 	bool isDone;
 	bool isDead;

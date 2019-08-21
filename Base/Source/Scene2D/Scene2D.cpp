@@ -58,6 +58,16 @@ CScene2D::~CScene2D()
 	Scene2D_TileDoor = NULL;
 	delete Scene2D_RearStructure;
 	Scene2D_RearStructure = NULL;
+	delete Scene2D_SpikeL;
+	Scene2D_SpikeL = NULL;
+	delete Scene2D_SpikeR;
+	Scene2D_SpikeR = NULL;
+	delete Scene2D_SpikeU;
+	Scene2D_SpikeU = NULL;
+	delete Scene2D_SpikeD;
+	Scene2D_SpikeD = NULL;
+	delete Scene2D_Error;
+	Scene2D_Error = NULL;
 
 	delete theEnemy;
 	theEnemy = NULL;
@@ -207,6 +217,21 @@ void CScene2D::Init()
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
 	Scene2D_RearStructure = Create::Sprite2DObject("Tile_BG",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_SpikeL = Create::Sprite2DObject("Tile_Spike_Left",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_SpikeR = Create::Sprite2DObject("Tile_Spike_Right",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_SpikeU = Create::Sprite2DObject("Tile_Spike_Up",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_SpikeD = Create::Sprite2DObject("Tile_Spike_Down",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Error = Create::Sprite2DObject("Tile_Poison_Back",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
 
@@ -421,7 +446,7 @@ void CScene2D::Init()
 	}
 	temporop = Create::Projectile("Corrupt_temp", Vector3(static_cast<float>(-m_cMap->getScreenWidth()) / 2, static_cast<float>(m_cMap->getScreenHeight()) / 2, 0)
 		, Vector3(static_cast<float>(m_cMap->getScreenWidth()), static_cast<float>(m_cMap->getScreenHeight()), 0), Vector3(1, 0, 0)
-		, 1.f, 10.f, EntityBase::ENTITY_TYPE::E_CORRUPTION);
+		, 1.f, 30.f, EntityBase::ENTITY_TYPE::E_CORRUPTION);
 
 	Scene2D_Enemy = new SpriteEntity*[theEnemy[0]->GetFrameTotal()]; // Enemy stuff
 	Scene2D_Enemy[0] = Create::Sprite2DObject("Crystal_Attack_1",
@@ -562,7 +587,30 @@ void CScene2D::RenderTileMap()
 			if (m >= m_cMap->getNumOfTiles_MapWidth())
 				break;
 
-			if (m_cMap->theScreenMap[i][m] == 1)
+			if ((m_cMap->theScreenMap[i][m] != 0 && m_cMap->theScreenMap[i][m] != 101) && m*m_cMap->GetTileSize_Width() + kiHalfTileWidth < temporop->GetPosition().x + temporop->GetScale().x / 2 - kiHalfTileWidth)
+			{
+				switch (rand() % 5)
+				{
+				case 0:
+				case 2:
+				case 3:
+				case 4:
+					Scene2D_Error->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
+						- thePlayerInfo->GetMapFineOffset_x()),
+						static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
+						0.0f));
+					Scene2D_Error->RenderUI();
+					break;
+				case 1:
+					Scene2D_SpikeU->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
+						- thePlayerInfo->GetMapFineOffset_x()),
+						static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
+						0.0f));
+					Scene2D_SpikeU->RenderUI();
+					break;
+				}
+			}
+			else if (m_cMap->theScreenMap[i][m] == 1)
 			{
 				Scene2D_TileGround->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
 															- thePlayerInfo->GetMapFineOffset_x()), 
@@ -593,6 +641,38 @@ void CScene2D::RenderTileMap()
 					static_cast<float>(224 - i*m_cMap->GetTileSize_Height() + kiHalfTileHeight),
 					0.0f));
 				Scene2D_Goodies_TreasureChest->RenderUI();
+			}
+			else if (m_cMap->theScreenMap[i][m] == 20)
+			{
+				Scene2D_SpikeL->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
+					- thePlayerInfo->GetMapFineOffset_x()),
+					static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
+					0.0f));
+				Scene2D_SpikeL->RenderUI();
+			}
+			else if (m_cMap->theScreenMap[i][m] == 21)
+			{
+				Scene2D_SpikeR->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
+					- thePlayerInfo->GetMapFineOffset_x()),
+					static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
+					0.0f));
+				Scene2D_SpikeR->RenderUI();
+			}
+			else if (m_cMap->theScreenMap[i][m] == 22)
+			{
+				Scene2D_SpikeU->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
+					- thePlayerInfo->GetMapFineOffset_x()),
+					static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
+					0.0f));
+				Scene2D_SpikeU->RenderUI();
+			}
+			else if (m_cMap->theScreenMap[i][m] == 23)
+			{
+				Scene2D_SpikeD->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
+					- thePlayerInfo->GetMapFineOffset_x()),
+					static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
+					0.0f));
+				Scene2D_SpikeD->RenderUI();
 			}
 		}
 	}

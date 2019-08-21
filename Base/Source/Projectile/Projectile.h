@@ -46,8 +46,6 @@ protected:
 	float m_fLifetime;
 	// Speed of this projectile in unit / sec
 	float m_fSpeed;
-	// The direction of the projectile
-	Vector3 theDirection;
 };
 
 namespace Create

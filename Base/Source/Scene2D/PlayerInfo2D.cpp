@@ -314,8 +314,14 @@ void CPlayerInfo2D::UpdateJumpUpwards(double dt)
 	{
 		if (((int)(position.x - (tileSize_Width >> 1)) % tileSize_Width) == 0)
 		{
-			if (theMapReference->theScreenMap[i][checkPosition_X] == 1)
+			if (theMapReference->theScreenMap[i][checkPosition_X] == 1 || 
+				theMapReference->theScreenMap[i][checkPosition_X]>=200 && theMapReference->theScreenMap[i][checkPosition_X]<=203)
 			{
+				if (theMapReference->theScreenMap[i][checkPosition_X] != 1)
+				{
+					if (hp != 0)
+						--hp;
+				}
 				// Since the new position does not allow the player to move into, then go back to the old position
 				position.y = static_cast<float>((theMapReference->GetNumOfTiles_Height() - i - 1) * tileSize_Height - (tileSize_Height >> 1));
 				// Set on free fall
@@ -326,8 +332,16 @@ void CPlayerInfo2D::UpdateJumpUpwards(double dt)
 		else
 		{
 			if ((theMapReference->theScreenMap[i][checkPosition_X] == 1) ||
-				(theMapReference->theScreenMap[i][checkPosition_X + 1] == 1))
+				(theMapReference->theScreenMap[i][checkPosition_X + 1] == 1)||
+				theMapReference->theScreenMap[i][checkPosition_X] >= 20 && theMapReference->theScreenMap[i][checkPosition_X] <=23 ||
+				theMapReference->theScreenMap[i][checkPosition_X + 1] >= 20 && theMapReference->theScreenMap[i][checkPosition_X + 1] <=23)
 			{
+				if((theMapReference->theScreenMap[i][checkPosition_X] != 1) &&
+					(theMapReference->theScreenMap[i][checkPosition_X + 1] != 1))
+				{
+					if (hp != 0)
+						--hp;
+				}
 				// Since the new position does not allow the player to move into, then go back to the old position
 				position.y = static_cast<float>((theMapReference->GetNumOfTiles_Height() - i - 1) * tileSize_Height - (tileSize_Height >> 1));
 				// Set on free fall
@@ -365,8 +379,14 @@ void CPlayerInfo2D::UpdateFreeFall(double dt)
 	{
 		if (((int)(position.x - (tileSize_Width>>1)) % tileSize_Width) == 0)
 		{
-			if (theMapReference->theScreenMap[i][checkPosition_X] == 1)
+			if (theMapReference->theScreenMap[i][checkPosition_X] == 1 ||
+				theMapReference->theScreenMap[i][checkPosition_X] >= 20 && theMapReference->theScreenMap[i][checkPosition_X] <=23)
 			{
+				if(theMapReference->theScreenMap[i][checkPosition_X] != 1)
+				{
+					if (hp != 0)
+						--hp;
+				}
 				// Since the new position does not allow the player to move into, then go back to the old position
 				position.y = static_cast<float>((theMapReference->GetNumOfTiles_Height() - i) * tileSize_Height + (tileSize_Height >> 1));
 				// Stop all vertical movement
@@ -380,8 +400,16 @@ void CPlayerInfo2D::UpdateFreeFall(double dt)
 		else
 		{
 			if ((theMapReference->theScreenMap[i][checkPosition_X] == 1) ||
-				(theMapReference->theScreenMap[i][checkPosition_X + 1] == 1))
+				(theMapReference->theScreenMap[i][checkPosition_X + 1] == 1) ||
+				theMapReference->theScreenMap[i][checkPosition_X] >= 20 && theMapReference->theScreenMap[i][checkPosition_X] <=23 ||
+				theMapReference->theScreenMap[i][checkPosition_X + 1] >= 20 && theMapReference->theScreenMap[i][checkPosition_X + 1] <=23)
 			{
+				if ((theMapReference->theScreenMap[i][checkPosition_X] != 1) &&
+					(theMapReference->theScreenMap[i][checkPosition_X + 1] != 1))
+				{
+					if (hp != 0)
+						--hp;
+				}
 				// Since the new position does not allow the player to move into, then go back to the old position
 				position.y = static_cast<float>((theMapReference->GetNumOfTiles_Height() - i) * tileSize_Height + (tileSize_Height >> 1));
 				// Stop all vertical movement
@@ -638,9 +666,16 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 		}
 		if (checkPosition_X >= 0)
 		{
-			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
+			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1 ||
+				theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] >= 20 && theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] <=23)
 			{
 				position.x = static_cast<float>((checkPosition_X + 1) * tileSize_Width + (tileSize_Width >> 1));
+				if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] != 1)
+				{
+					if (hp != 0)
+						--hp;
+					//position.x += 8;
+				}
 			}
 		}
 	}
@@ -657,10 +692,17 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 		if (checkPosition_X < theMapReference->getNumOfTiles_MapWidth())
 		{
 
-			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
+			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1 ||
+				theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] >= 20 && theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] <=23)
 			{
 				// this part causes the player to be stuck when there is a tile on its right
 				position.x = static_cast<float>((checkPosition_X - 1) * tileSize_Width + (tileSize_Width >> 1));
+				if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] != 1)
+				{
+					if (hp != 0)
+						--hp;
+					//position.x -= 8;
+				}
 			}
 
 		}
@@ -674,9 +716,16 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 
 		if (checkPosition_X >= 0)
 		{
-			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
+			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1 ||
+				theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] >= 20 && theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] <=23)
 			{
 				position.x = static_cast<float>((checkPosition_X + 1) * tileSize_Width + (tileSize_Width >> 1));
+				if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] != 1)
+				{
+					if (hp != 0)
+						--hp;
+					//position.x += 8;
+				}
 			}
 		}
 	}
@@ -689,9 +738,16 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 
 		if (checkPosition_X < theMapReference->GetNumOfTiles_Width())
 		{
-			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
+			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1 ||
+				theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] >= 20 && theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] <=23)
 			{
 				position.x = static_cast<float>((checkPosition_X - 1) * tileSize_Width + (tileSize_Width >> 1));
+				if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] != 1)
+				{
+					if (hp != 0)
+						--hp;
+					//position.x -= 8;
+				}
 			}
 		}
 	}

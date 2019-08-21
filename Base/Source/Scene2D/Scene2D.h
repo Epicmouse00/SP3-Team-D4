@@ -45,6 +45,11 @@ private:
 	SpriteEntity* Scene2D_TileGround;
 	SpriteEntity* Scene2D_TileDoor;
 	SpriteEntity* Scene2D_RearStructure;
+	SpriteEntity* Scene2D_SpikeL;
+	SpriteEntity* Scene2D_SpikeR;
+	SpriteEntity* Scene2D_SpikeU;
+	SpriteEntity* Scene2D_SpikeD;
+	SpriteEntity* Scene2D_Error;
 	SpriteEntity** Scene2D_Hero_Animated;
 	SpriteEntity** Scene2D_Slash_Animated;
 	SpriteEntity* Scene2D_Goodies_TreasureChest;
