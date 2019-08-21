@@ -4,6 +4,7 @@ EntityBase::EntityBase(ENTITY_TYPE typeValue)
 	: type(typeValue)
 	, position(0.0f, 0.0f, 0.0f)
 	, scale(1.0f, 1.0f, 1.0f)
+	, theDirection(0.f, 0.f, 0.f)
 	, isDone(false)
 	, m_bCollider(false)
 {

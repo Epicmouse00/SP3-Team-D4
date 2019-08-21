@@ -217,6 +217,7 @@ bool UserInterface::Update(double dt)
 			ChangeScreen(screen);
 			return false;
 		}
+		return true;
 		break;
 	}
 	case SC_MENU2:
