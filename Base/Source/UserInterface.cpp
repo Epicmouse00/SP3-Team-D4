@@ -121,7 +121,7 @@ UserInterface::~UserInterface()
 
 }
 
-bool UserInterface::Update(double dt, CMap* map, Vector3 playerPos)
+bool UserInterface::Update(double dt)
 {
 	switch (screen) {
 	case SC_MAIN: // This is the starting screen
@@ -175,18 +175,6 @@ bool UserInterface::Update(double dt, CMap* map, Vector3 playerPos)
 			}
 			buttonObj[choice]->SetSelected(true);
 		}
-		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RIGHT) || KeyboardController::GetInstance()->IsKeyPressed('D'))
-		{
-			screen = SC_SKILL_TREE;
-			ChangeScreen(screen);
-			return false;
-		}
-		if (KeyboardController::GetInstance()->IsKeyPressed(VK_LEFT) || KeyboardController::GetInstance()->IsKeyPressed('A'))
-		{
-			screen = SC_MENU2;
-			ChangeScreen(screen);
-			return false;
-		}
 		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN) || KeyboardController::GetInstance()->IsKeyPressed(VK_SPACE))
 		{
 			switch (choice) {
@@ -206,35 +194,38 @@ bool UserInterface::Update(double dt, CMap* map, Vector3 playerPos)
 	}
 	case SC_SKILL_TREE:
 	{
-		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RIGHT) || KeyboardController::GetInstance()->IsKeyPressed('D'))
+		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RIGHT) || KeyboardController::GetInstance()->IsKeyPressed(VK_LEFT))
 		{
-			screen = SC_MENU2;
+			screen = SC_SHOP;
 			ChangeScreen(screen);
-			return false;
+			return true;
 		}
-		if (KeyboardController::GetInstance()->IsKeyPressed(VK_LEFT) || KeyboardController::GetInstance()->IsKeyPressed('A'))
+		if (!(thePlayerInfo->GetMap()->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X] == 30 ||
+			thePlayerInfo->GetMap()->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X + 1] == 30))
 		{
-			screen = SC_PAUSE;
+			screen = SC_PLAY;
 			ChangeScreen(screen);
-			return false;
+			return true;
 		}
 		return true;
 		break;
 	}
-	case SC_MENU2:
+	case SC_SHOP:
 	{
-		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RIGHT) || KeyboardController::GetInstance()->IsKeyPressed('D'))
-		{
-			screen = SC_PAUSE;
-			ChangeScreen(screen);
-			return false;
-		}
-		if (KeyboardController::GetInstance()->IsKeyPressed(VK_LEFT) || KeyboardController::GetInstance()->IsKeyPressed('A'))
+		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RIGHT) || KeyboardController::GetInstance()->IsKeyPressed(VK_LEFT))
 		{
 			screen = SC_SKILL_TREE;
 			ChangeScreen(screen);
-			return false;
+			return true;
 		}
+		if (!(thePlayerInfo->GetMap()->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X] == 30 ||
+			thePlayerInfo->GetMap()->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X + 1] == 30))
+		{
+			screen = SC_PLAY;
+			ChangeScreen(screen);
+			return true;
+		}
+		return true;
 		break;
 	}
 	case SC_PLAY: // This just checks for changes in UI* stuff while in play
@@ -262,10 +253,13 @@ bool UserInterface::Update(double dt, CMap* map, Vector3 playerPos)
 		ss << "mapOffset_x: " << thePlayerInfo->mapOffset_x << endl;
 		textObj[0]->SetText(ss.str());
 
-		if (KeyboardController::GetInstance()->IsKeyPressed('E') && thePlayerInfo->checkPosition_X > 54 && thePlayerInfo->checkPosition_X < 57 && thePlayerInfo->checkPosition_Y == 4)
+		if (KeyboardController::GetInstance()->IsKeyPressed('E') && (thePlayerInfo->GetMap()->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X]==30||
+			thePlayerInfo->GetMap()->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X + 1] == 30))
 		{
 			screen = SC_SKILL_TREE;
 			ChangeScreen(screen);
+			choice = 2;
+			maxChoices = 3;
 			return false;
 		}
 
@@ -307,14 +301,14 @@ void UserInterface::ChangeScreen(SCREEN_TYPE screenType)
 		break;
 	case SC_SKILL_TREE:
 		CSoundEngine::GetInstance()->PlayBGM("bgmmii");
-		buttonObj[2]->SetText("Some skill tree choising stuff...");
+		buttonObj[2]->SetText("SKILL TREE");
 
 		buttonObj[1]->SetText("");
 
 		buttonObj[0]->SetText("");
 		break;
-	case SC_MENU2:
-		buttonObj[2]->SetText("");
+	case SC_SHOP:
+		buttonObj[2]->SetText("SHOP");
 
 		buttonObj[1]->SetText("");
 
@@ -340,7 +334,7 @@ bool UserInterface::GetScreenStatus()
 	case SC_SKILL_TREE:
 		return true;
 		break;
-	case SC_MENU2:
+	case SC_SHOP:
 		return true;
 		break;
 	}
@@ -382,7 +376,7 @@ void UserInterface::Render()// this is at the back since it needs to be on top? 
 		buttonObj[1]->RenderUI();
 		buttonObj[2]->RenderUI();
 		break;
-	case SC_MENU2:
+	case SC_SHOP:
 		buttonObj[0]->RenderUI();
 		buttonObj[1]->RenderUI();
 		buttonObj[2]->RenderUI();

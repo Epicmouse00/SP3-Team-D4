@@ -47,9 +47,11 @@ CPlayerInfo2D::CPlayerInfo2D(void)
 	, attackBounceTime(1)
 	, rollBounceTime(1)
 	, dashBounceTime(1)
+	, damageBounceTime(1)
 	, attackBounceTimeLimit(0.5)
 	, rollBounceTimeLimit(0.7)
 	, dashBounceTimeLimit(0.9)
+	, damageBounceTimeLimit(1)
 	, stamina(1.f)
 	, secondAttack(false)
 	, dashPower(0.f)
@@ -104,6 +106,11 @@ void CPlayerInfo2D::SetTileSize(const int x, const int y)
 void CPlayerInfo2D::SetMap(CMap* m_cMap)
 {
 	theMapReference = m_cMap;
+}
+
+CMap * CPlayerInfo2D::GetMap(void)
+{
+	return theMapReference;
 }
 
 // Returns true if the player is on ground
@@ -194,6 +201,18 @@ void CPlayerInfo2D::SetUp(const Vector3& up)
 void CPlayerInfo2D::SetHp(const int hp)
 {
 	this->hp = hp;
+}
+
+void CPlayerInfo2D::TakeDamage(void)
+{
+	if (damageBounceTime > damageBounceTimeLimit)
+	{
+		if (hp != 0)
+			--hp;
+		else
+			Die();
+		damageBounceTime = 0.f;
+	}
 }
 
 // Set m_dJumpAcceleration of the player
@@ -319,8 +338,7 @@ void CPlayerInfo2D::UpdateJumpUpwards(double dt)
 			{
 				if (theMapReference->theScreenMap[i][checkPosition_X] != 1)
 				{
-					if (hp != 0)
-						--hp;
+					TakeDamage();
 				}
 				// Since the new position does not allow the player to move into, then go back to the old position
 				position.y = static_cast<float>((theMapReference->GetNumOfTiles_Height() - i - 1) * tileSize_Height - (tileSize_Height >> 1));
@@ -339,8 +357,7 @@ void CPlayerInfo2D::UpdateJumpUpwards(double dt)
 				if((theMapReference->theScreenMap[i][checkPosition_X] != 1) &&
 					(theMapReference->theScreenMap[i][checkPosition_X + 1] != 1))
 				{
-					if (hp != 0)
-						--hp;
+					TakeDamage();
 				}
 				// Since the new position does not allow the player to move into, then go back to the old position
 				position.y = static_cast<float>((theMapReference->GetNumOfTiles_Height() - i - 1) * tileSize_Height - (tileSize_Height >> 1));
@@ -384,8 +401,7 @@ void CPlayerInfo2D::UpdateFreeFall(double dt)
 			{
 				if(theMapReference->theScreenMap[i][checkPosition_X] != 1)
 				{
-					if (hp != 0)
-						--hp;
+					TakeDamage();
 				}
 				// Since the new position does not allow the player to move into, then go back to the old position
 				position.y = static_cast<float>((theMapReference->GetNumOfTiles_Height() - i) * tileSize_Height + (tileSize_Height >> 1));
@@ -407,8 +423,7 @@ void CPlayerInfo2D::UpdateFreeFall(double dt)
 				if ((theMapReference->theScreenMap[i][checkPosition_X] != 1) &&
 					(theMapReference->theScreenMap[i][checkPosition_X + 1] != 1))
 				{
-					if (hp != 0)
-						--hp;
+					TakeDamage();
 				}
 				// Since the new position does not allow the player to move into, then go back to the old position
 				position.y = static_cast<float>((theMapReference->GetNumOfTiles_Height() - i) * tileSize_Height + (tileSize_Height >> 1));
@@ -431,6 +446,7 @@ void CPlayerInfo2D::Update(double dt)
 	attackBounceTime += dt;
 	rollBounceTime += dt;
 	dashBounceTime += dt;
+	damageBounceTime += dt;
 	// Update the player position
 	//if (KeyboardController::GetInstance()->IsKeyDown('W'))
 	//	MoveUpDown(true, 1.0f);
@@ -672,8 +688,7 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 				position.x = static_cast<float>((checkPosition_X + 1) * tileSize_Width + (tileSize_Width >> 1));
 				if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] != 1)
 				{
-					if (hp != 0)
-						--hp;
+					TakeDamage();
 					//position.x += 8;
 				}
 			}
@@ -699,8 +714,7 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 				position.x = static_cast<float>((checkPosition_X - 1) * tileSize_Width + (tileSize_Width >> 1));
 				if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] != 1)
 				{
-					if (hp != 0)
-						--hp;
+					TakeDamage();
 					//position.x -= 8;
 				}
 			}
@@ -722,8 +736,7 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 				position.x = static_cast<float>((checkPosition_X + 1) * tileSize_Width + (tileSize_Width >> 1));
 				if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] != 1)
 				{
-					if (hp != 0)
-						--hp;
+					TakeDamage();
 					//position.x += 8;
 				}
 			}
@@ -744,8 +757,7 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 				position.x = static_cast<float>((checkPosition_X - 1) * tileSize_Width + (tileSize_Width >> 1));
 				if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] != 1)
 				{
-					if (hp != 0)
-						--hp;
+					TakeDamage();
 					//position.x -= 8;
 				}
 			}

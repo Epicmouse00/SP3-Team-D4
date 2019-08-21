@@ -36,6 +36,8 @@ public:
 	void SetTileSize(const int x, const int y);
 	// Set the map pointer to this class
 	void SetMap(CMap* m_cMap);
+	// Get the map pointer to this class
+	CMap* GetMap(void);
 
 	// Returns true if the player is on ground
 	bool isOnGround(void);
@@ -60,6 +62,8 @@ public:
 	void SetUp(const Vector3& up);
 	// Set Hp
 	void SetHp(const int hp);
+	// Take damage
+	void TakeDamage(void);
 	// Set m_dJumpSpeed of the player
 	void SetJumpSpeed(const double m_dJumpSpeed);
 	// Set m_dJumpAcceleration of the player
@@ -202,11 +206,13 @@ private:
 	double attackBounceTime;
 	double rollBounceTime;
 	double dashBounceTime;
+	double damageBounceTime;
 
 	// BounceTime Limit
 	double attackBounceTimeLimit;
 	double rollBounceTimeLimit;
 	double dashBounceTimeLimit;
+	double damageBounceTimeLimit;
 
 	bool Roll();
 

@@ -551,7 +551,7 @@ void CScene2D::Init()
 
 void CScene2D::Update(double dt)
 {
-	if (ui->Update(dt, m_cMap, thePlayerInfo->GetPos()))
+	if (ui->Update(dt))
 	{
 		// Update our entities
 		EntityManager::GetInstance()->Update(dt);
