@@ -13,6 +13,7 @@
 #include "PlayerInfo2D.h"
 #include "Slash.h"
 #include "Enemy.h"
+#include "AxeEnemy.h"
 
 class ShaderProgram;
 class SceneManager;
@@ -61,8 +62,11 @@ private:
 
 	// The enemies
 	CEnemy** theEnemy;
+	CAxeEnemy** theAxeEnemy;
 	int m_iNumEnemy;
+	int m_iNumAxeEnemy;
 	SpriteEntity** Scene2D_Enemy;
+	SpriteEntity** Scene2D_AxeEnemy;
 	CProjectile* temporop;
 
 	// Render the tile map

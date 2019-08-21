@@ -32,6 +32,7 @@ public:
 	int getScreenHeight(void);
 	int getScreenWidth(void);
 	int getNumberOfEnemies(void);
+	int getNumberOfAxeEnemies(void);
 	vector<vector<int> > theScreenMap;
 
 private:
@@ -48,5 +49,6 @@ private:
 	int theNumOfTiles_MapWidth;		// Number of tiles in the map's width
 	
 	int numberOfEnemies;
+	int numberOfAxeEnemies;
 	bool LoadFile(const string mapName);
 };
