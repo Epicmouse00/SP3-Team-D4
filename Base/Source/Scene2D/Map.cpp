@@ -101,7 +101,7 @@ bool CMap::LoadFile(const string mapName)
 					istringstream iss(aLineOfText);
 					while (getline(iss, token, ',') && (theColumnCounter<theNumOfTiles_MapWidth))
 					{
-						if ((theScreenMap[theLineCounter][theColumnCounter] = atoi(token.c_str()) == 101))
+						if ((theScreenMap[theLineCounter][theColumnCounter] = atoi(token.c_str())) == 101)
 							++numberOfEnemies;
 						else if (theScreenMap[theLineCounter][theColumnCounter] == 102)
 						++numberOfAxeEnemies;
