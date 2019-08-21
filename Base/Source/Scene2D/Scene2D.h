@@ -45,6 +45,7 @@ private:
 	SpriteEntity* Scene2D_Background;
 	SpriteEntity* Scene2D_TileGround;
 	SpriteEntity* Scene2D_TileDoor;
+	SpriteEntity* Scene2D_TileDoor2;
 	SpriteEntity* Scene2D_RearStructure;
 	SpriteEntity* Scene2D_SpikeL;
 	SpriteEntity* Scene2D_SpikeR;
