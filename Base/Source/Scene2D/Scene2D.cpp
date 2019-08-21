@@ -19,6 +19,7 @@
 #include "../SpriteEntity.h"
 #include "../Light.h"
 #include "Strategy_Kill.h"
+#include "Strategy_Shoot.h"
 
 #include "GoodiesFactory.h"
 
@@ -405,7 +406,7 @@ void CScene2D::Init()
 			{
 				if (m_cMap->theScreenMap[height][width] == 101)
 				{
-					theEnemy[i] = Create::EnemyEntity(m_cMap, new CStrategy_Kill(), false
+					theEnemy[i] = Create::EnemyEntity(m_cMap, new CStrategy_Shoot(), false
 						, Vector3(static_cast<float>(width * m_cMap->GetTileSize_Width() + (m_cMap->GetTileSize_Width()>>1)), static_cast<float>(232 - height * m_cMap->GetTileSize_Height())));
 					++i;
 						if (i == m_iNumEnemy)

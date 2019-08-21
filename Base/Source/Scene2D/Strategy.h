@@ -5,6 +5,12 @@
 class CStrategy
 {
 public:
+	enum STRATEGY_TYPE {
+		E_STRATEGY_KILL = 0,
+		E_STRATEGY_SHOOT,
+		E_STRATEGY_TOTAL
+	};
+
 	CStrategy(void);
 	~CStrategy(void);
 
@@ -15,6 +21,9 @@ public:
 	virtual int GetDestination_x(void) = 0;
 	virtual int GetDestination_y(void) = 0;
 	virtual Vector3 GetDestination(void) = 0;
+
+	void SetType(const STRATEGY_TYPE& _value) { type = _value; };
+	STRATEGY_TYPE GetType();
 
 	int GetLR();
 	int GetUD();
@@ -28,6 +37,8 @@ protected:
 	Vector3 theDestination;
 
 	CMap* theMapReference;
+
+	STRATEGY_TYPE type;
 
 	int bounce;
 	int m; // Up Down

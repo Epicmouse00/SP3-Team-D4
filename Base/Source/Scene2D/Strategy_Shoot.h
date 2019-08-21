@@ -1,6 +1,7 @@
 #pragma once
 #include "Strategy.h"
 #include "Vector3.h"
+#include "../Projectile/Projectile.h"
 
 class CStrategy_Shoot
 	: public CStrategy

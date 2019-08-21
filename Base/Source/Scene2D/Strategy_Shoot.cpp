@@ -8,6 +8,7 @@ Constructor
 ********************************************************************************/
 CStrategy_Shoot::CStrategy_Shoot()
 {
+	bounce = 60;
 }
 
 /********************************************************************************
@@ -22,8 +23,6 @@ CStrategy_Shoot::~CStrategy_Shoot()
 ********************************************************************************/
 void CStrategy_Shoot::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition)
 {
-	++bounce;
-
 	// Decide which state to change to
 	int distanceHeroToEnemy = CalculateDistance(PlayerPosition, theEnemyPosition);
 	if (distanceHeroToEnemy < AI_STATE_ATTACK*AI_STATE_ATTACK)
@@ -40,14 +39,12 @@ void CStrategy_Shoot::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition)
 	switch(CurrentState)
 	{
 	case ATTACK:
-		//theEnemyPosition.x = theEnemyPosition.x + (theDestination.x - theEnemyPosition.x > 0 ? 1 : -1);
+		++bounce;
 		if (bounce > 59)
 		{
 			bounce -= Math::RandIntMinMax(10, 60);
 			Vector3 direction = (PlayerPosition - theEnemyPosition).Normalized();
-			/*
-			enemybullet->dir = direction;
-			*/
+			Create::Projectile("Crystal_Projectile_1", theEnemyPosition, Vector3(1,1,1), direction, 1.f, 5, EntityBase::E_ENEMY_PROJECTILES);
 		}
 		
 		break;
