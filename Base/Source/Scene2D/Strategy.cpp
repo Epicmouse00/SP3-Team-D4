@@ -30,6 +30,11 @@ int CStrategy::CalculateDistance(Vector3 theDestination, Vector3 theEnemyPositio
 			(theDestination.y - theEnemyPosition.y)*(theDestination.y - theEnemyPosition.y));
 }
 
+CStrategy::STRATEGY_TYPE CStrategy::GetType()
+{
+	return type;
+}
+
 int CStrategy::GetLR()
 {
 	return n;

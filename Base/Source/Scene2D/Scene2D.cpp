@@ -19,6 +19,7 @@
 #include "../SpriteEntity.h"
 #include "../Light.h"
 #include "Strategy_Kill.h"
+#include "Strategy_Shoot.h"
 
 #include "GoodiesFactory.h"
 
