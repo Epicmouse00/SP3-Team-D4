@@ -78,19 +78,10 @@ CScene2D::~CScene2D()
 	delete Scene2D_Enemy;
 	Scene2D_Enemy = NULL;
 
-	for (int i = 0; i < m_iNumEnemy; ++i)
-	{
-		delete theEnemy[i];
-		theEnemy[i] = NULL;
-	}
+
 	delete theEnemy;
 	theEnemy = NULL;
 
-	for (int i = 0; i < m_iNumAxeEnemy; ++i)
-	{
-		delete theAxeEnemy[i];
-		theAxeEnemy[i] = NULL;
-	}
 	delete theAxeEnemy;
 	theAxeEnemy = NULL;
 
@@ -826,7 +817,7 @@ void CScene2D::RenderEnemy(void)
 
 			if (((theEnemy_x >= 0) && (theEnemy_x < m_cMap->GetNumOfTiles_Width()*m_cMap->GetTileSize_Width())) &&
 				((theEnemy_y >= 0) && (theEnemy_y < m_cMap->GetNumOfTiles_Height()*m_cMap->GetTileSize_Height())) &&
-				theAxeEnemy[i]->GetFrameState() != CEnemy::C_TOTAL)
+				theAxeEnemy[i]->GetFrameState() != CAxeEnemy::A_TOTAL)
 			{
 				Scene2D_AxeEnemy[theAxeEnemy[i]->GetFrameState()]->SetPosition(Vector3(static_cast<float>(theEnemy_x), static_cast<float>(theEnemy_y), 0));
 				Scene2D_AxeEnemy[theAxeEnemy[i]->GetFrameState()]->RenderUI();
