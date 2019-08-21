@@ -598,18 +598,20 @@ void CScene2D::Update(double dt)
 		for (int i = 0; i < m_iNumEnemy; ++i)
 		{
 			if (!theEnemy[i]->IsDead()) {
-				theEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x - thePlayerInfo->mapOffset_x,
-					thePlayerInfo->GetPos().y,
-					0));
+				if (!theEnemy[i]->IsDone())
+					theEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x - thePlayerInfo->mapOffset_x,
+						thePlayerInfo->GetPos().y,
+						0));
 				theEnemy[i]->Update();
 			}
 		}
 		for (int i = 0; i < m_iNumAxeEnemy; ++i)
 		{
 			if (!theAxeEnemy[i]->IsDead()) {
-				theAxeEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x - thePlayerInfo->mapOffset_x,
-					thePlayerInfo->GetPos().y,
-					0));
+				if (!theAxeEnemy[i]->IsDone())
+					theAxeEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x - thePlayerInfo->mapOffset_x,
+						thePlayerInfo->GetPos().y,
+						0));
 				theAxeEnemy[i]->Update();
 			}
 		}

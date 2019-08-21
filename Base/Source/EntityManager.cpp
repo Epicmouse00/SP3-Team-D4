@@ -162,7 +162,7 @@ bool EntityManager::CheckForCollision(void)
 				{
 					EntityBase *thatEntity = dynamic_cast<EntityBase*>(*colliderThat);
 
-					if (thisEntity->GetType() == EntityBase::E_ENEMY || thisEntity->GetType() == EntityBase::E_ENEMY_PROJECTILES)
+					if (!thisEntity->IsDead() && !thisEntity->IsDone() && (thisEntity->GetType() == EntityBase::E_ENEMY || thisEntity->GetType() == EntityBase::E_ENEMY_PROJECTILES))
 					{
 						if (thatEntity->GetType() == EntityBase::E_CORRUPTION)
 						{
