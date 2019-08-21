@@ -651,7 +651,7 @@ void CScene2D::Render()
 		RenderEnemy();
 		// Render the player
 		RenderPlayer();
-		if(!temporop->IsDead())
+		if(!temporop->IsDone())
 			temporop->RenderUI();
 	}
 	ui->Render();

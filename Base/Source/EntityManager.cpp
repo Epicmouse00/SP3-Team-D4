@@ -144,7 +144,7 @@ bool EntityManager::CheckForCollision(void)
 			{
 				if (thisEntity->GetPosition().x - thisEntity->GetScale().x / 2 - 16/2 > 64 * 16)
 				{
-					thisEntity->SetIsDead(true);
+					thisEntity->SetIsDone(true);
 				}
 				// set based on what can hit the player(specifically the player)
 				if (thePlayerInfo->position.x < thisEntity->GetPosition().x + thisEntity->GetScale().x / 2)
