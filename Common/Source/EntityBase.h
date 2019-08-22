@@ -40,6 +40,7 @@ public:
 
 	bool IsDone();
 	bool IsDead();
+	virtual bool IsAttacking(void);
 	virtual void SetIsDone(const bool _value);
 	void SetIsDead(const bool _value);
 

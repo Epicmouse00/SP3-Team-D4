@@ -55,6 +55,11 @@ bool EntityBase::IsDone()
 	return isDone;
 }
 
+bool EntityBase::IsAttacking(void)
+{
+	return false;
+}
+
 void EntityBase::SetIsDone(bool _value)
 {
 	isDone = _value;

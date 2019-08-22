@@ -222,7 +222,7 @@ void CScene2D::Init()
 	// Create the playerinfo instance, which manages all information about the player
 	thePlayerInfo = CPlayerInfo2D::GetInstance();
 	thePlayerInfo->Init();
-	thePlayerInfo->SetPos(Vector3(50.0f + kiHalfTileWidth, 100.0f + kiHalfTileHeight));
+	thePlayerInfo->SetPos(Vector3(64.0f + kiHalfTileWidth, 80.f + kiHalfTileHeight));
 	//thePlayerInfo->SetBoundary(Vector3(210.f, 230.0f, 0.0f), Vector3(10.0f, 10.0f, 0.0f));
 	thePlayerInfo->SetBoundary(Vector3(static_cast<float>(m_cMap->getScreenWidth()) / 2, static_cast<float>(m_cMap->getScreenHeight()), 0.0f)
 		, Vector3(static_cast<float>(m_cMap->getScreenWidth()) / 2, 0, 0.0f));

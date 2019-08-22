@@ -41,6 +41,7 @@ public:
 	Vector3 GetDestination(void) const;
 
 	void SetIsDone(const bool _value);
+	bool IsAttacking(void);
 
 	// ENEMY Update
 	void Update(void);

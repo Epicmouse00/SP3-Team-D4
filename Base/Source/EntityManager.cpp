@@ -217,10 +217,10 @@ bool EntityManager::CheckForCollision(void)
 								thisEntity->SetIsDone(true);
 								break;
 							}
-							//if(thisEntity->)// some anim thing
-							//{
-							//	thePlayerInfo->TakeDamage(); // Enemy atack X Player
-							//}
+							else if(thisEntity->IsAttacking() || thisEntity->GetType() == thisEntity->E_ENEMY_PROJECTILES)
+							{
+								thePlayerInfo->TakeDamage(); // Enemy atack X Player
+							}
 							break;
 						}
 					}

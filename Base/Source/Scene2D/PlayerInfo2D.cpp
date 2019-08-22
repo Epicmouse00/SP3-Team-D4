@@ -71,12 +71,12 @@ CPlayerInfo2D::~CPlayerInfo2D(void)
 void CPlayerInfo2D::Init(void)
 {
 	// Set the default values
-	defaultPosition.Set(0,0,8);
+	defaultPosition.Set(0,0,0);
 	defaultTarget.Set(0,0,0);
 	defaultUp.Set(0,1,0);
 
 	// Set the current values
-	position.Set(0, 0, 8);
+	position.Set(0, 0, 0);
 	target.Set(0, 0, 0);
 	up.Set(0, 1, 0);
 
@@ -1461,20 +1461,11 @@ void CPlayerInfo2D::InitSkill(void)
 {
 	for (int i = 0; i < SK_TOTAL; ++i)
 	{
-		skill[i] = false;
+		skill[i] = true;
 	}
 
-	skill[SK_DOUBLE_JUMP] = true;
-	skill[SK_DASH_ATTACK] = true;
-	skill[SK_DEFLECT] = true;
-	skill[SK_DOUBLE_ATTACK] = true;
-	skill[SK_CHARGE_ATTACK] = true;
-	skill[SK_FAST_ROLL] = true;
-	skill[SK_HIGH_JUMP] = true;
 	// triple jump
-	skill[SK_AIR_ROLL] = true;
 	// heart 2
-	skill[SK_ROLL_COST] = true;
 	// heart 3
 	// lifesteal
 }

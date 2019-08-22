@@ -139,6 +139,11 @@ void CAxeEnemy::SetIsDone(const bool _value)
 	EntityBase::SetIsDone(_value);
 }
 
+bool CAxeEnemy::IsAttacking(void)
+{
+	return isAttacking();
+}
+
 /********************************************************************************
  Update
  ********************************************************************************/
