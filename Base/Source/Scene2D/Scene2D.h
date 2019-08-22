@@ -60,7 +60,6 @@ private:
 	SpriteEntity** Scene2D_Hero_Animated;
 	SpriteEntity** Scene2D_Slash_Animated;
 	SpriteEntity* Scene2D_Goodies_TreasureChest;
-	SpriteEntity* Scene2D_ShopScreen;
 	SpriteEntity* Scene2D_EnemyHpBar;
 
 	UserInterface* ui;

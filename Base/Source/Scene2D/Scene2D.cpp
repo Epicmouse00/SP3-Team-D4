@@ -83,8 +83,6 @@ CScene2D::~CScene2D()
 	Scene2D_Error2 = NULL;
 	delete Scene2D_LevelUp;
 	Scene2D_LevelUp = NULL;
-	delete Scene2D_ShopScreen;
-	Scene2D_ShopScreen = NULL;
 	delete Scene2D_EnemyHpBar;
 	Scene2D_EnemyHpBar = NULL;
 
@@ -284,9 +282,6 @@ void CScene2D::Init()
 	Scene2D_LevelUp = Create::Sprite2DObject("Tile_LevelUp",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_ShopScreen = Create::Sprite2DObject("Tile_Shop_Screen",
-		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(320.f, 240.f, 0.f));
 	Scene2D_EnemyHpBar = Create::Sprite2DObject("Stamina_Amber",//temp
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(320.f, 240.f, 0.f));
@@ -1161,6 +1156,8 @@ void CScene2D::LoadMeshes(void)
 		MeshBuilder::GetInstance()->GetMesh("XP_Bar")->textureID = LoadTGA("Image//Sprites//XP_Bar.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("XP_Block", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("XP_Block")->textureID = LoadTGA("Image//Sprites//XP_Block.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Level_Up_Screen", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Level_Up_Screen")->textureID = LoadTGA("Image//Level_Up_Screen.tga");
 
 		MeshBuilder::GetInstance()->GenerateQuad("Heart_1", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Heart_1")->textureID = LoadTGA("Image//Sprites//Heart_1.tga");
