@@ -19,21 +19,21 @@ void EntityManager::Update(double _dt)
 	CheckForCollision();
 
 	// Clean up entities that are done
-	//it = entityList.begin();
-	//while (it != end)
-	//{
-	//	if ((*it)->IsDead())
-	//	{
-	//		// Delete if done
-	//		delete *it;
-	//		it = entityList.erase(it);
-	//	}
-	//	else
-	//	{
-	//		// Move on otherwise
-	//		++it;
-	//	}
-	//}
+	it = entityList.begin();
+	while (it != end)
+	{
+		if ((*it)->IsDead())
+		{
+			// Delete if done
+			delete *it;
+			it = entityList.erase(it);
+		}
+		else
+		{
+			// Move on otherwise
+			++it;
+		}
+	}
 }
 
 // Render all entities
