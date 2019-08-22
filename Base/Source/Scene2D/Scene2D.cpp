@@ -61,6 +61,12 @@ CScene2D::~CScene2D()
 	Scene2D_TileDoor = NULL;
 	delete Scene2D_TileDoor2;
 	Scene2D_TileDoor2 = NULL;
+	delete Scene2D_TilePillar_1;
+	Scene2D_TilePillar_1 = NULL;
+	delete Scene2D_TilePillar_2;
+	Scene2D_TilePillar_2 = NULL;
+	delete Scene2D_TilePillar_3;
+	Scene2D_TilePillar_3 = NULL;
 	delete Scene2D_RearStructure;
 	Scene2D_RearStructure = NULL;
 	delete Scene2D_SpikeL;
@@ -210,7 +216,7 @@ void CScene2D::Init()
 	CreateGoodies();
 
 	m_cRearMap = new CMap();
-	m_cRearMap->Init(Application::GetInstance().GetWindowHeight(), Application::GetInstance().GetWindowWidth(), 15, 64, 240, 1024);
+	m_cRearMap->Init(Application::GetInstance().GetWindowHeight(), Application::GetInstance().GetWindowWidth(), 15, 32, 240, 512);
 	m_cRearMap->LoadMap("Image//RearMapDesign.csv");
 
 	// Create the playerinfo instance, which manages all information about the player
@@ -243,6 +249,15 @@ void CScene2D::Init()
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
 	Scene2D_TileDoor2 = Create::Sprite2DObject("Tile_Door_Open",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_TilePillar_1 = Create::Sprite2DObject("Tile_Pillar_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_TilePillar_2 = Create::Sprite2DObject("Tile_Pillar_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_TilePillar_3 = Create::Sprite2DObject("Tile_Pillar_3",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
 	Scene2D_RearStructure = Create::Sprite2DObject("Tile_BG",
@@ -811,19 +826,28 @@ void CScene2D::RenderRearTileMap(void)
 
 			if (m_cRearMap->theScreenMap[i][m] == 1)
 			{
-				Scene2D_RearStructure->SetPosition(Vector3(static_cast<float>(k*m_cRearMap->GetTileSize_Width() + kiHalfTileWidth
+				Scene2D_TilePillar_1->SetPosition(Vector3(static_cast<float>(k*m_cRearMap->GetTileSize_Width() + kiHalfTileWidth
 					- thePlayerInfo->GetRearMapFineOffset_x()),
-					static_cast<float>(224 - i*m_cRearMap->GetTileSize_Height() + kiHalfTileHeight),
+					static_cast<float>(224 - i * m_cRearMap->GetTileSize_Height() + kiHalfTileHeight),
 					0.0f));
-				Scene2D_RearStructure->RenderUI();
+
+				Scene2D_TilePillar_1->RenderUI();
 			}
 			else if (m_cRearMap->theScreenMap[i][m] == 2)
 			{
-				Scene2D_RearStructure->SetPosition(Vector3(static_cast<float>(k*m_cRearMap->GetTileSize_Width() + kiHalfTileWidth
+				Scene2D_TilePillar_2->SetPosition(Vector3(static_cast<float>(k*m_cRearMap->GetTileSize_Width() + kiHalfTileWidth
 					- thePlayerInfo->GetRearMapFineOffset_x()),
-					static_cast<float>(224 - i*m_cRearMap->GetTileSize_Height() + kiHalfTileHeight),
+					static_cast<float>(224 - i * m_cRearMap->GetTileSize_Height() + kiHalfTileHeight),
 					0.0f));
-				Scene2D_RearStructure->RenderUI();
+				Scene2D_TilePillar_2->RenderUI();
+			}
+			else if (m_cRearMap->theScreenMap[i][m] == 3)
+			{
+				Scene2D_TilePillar_3->SetPosition(Vector3(static_cast<float>(k*m_cRearMap->GetTileSize_Width() + kiHalfTileWidth
+					- thePlayerInfo->GetRearMapFineOffset_x()),
+					static_cast<float>(224 - i * m_cRearMap->GetTileSize_Height() + kiHalfTileHeight),
+					0.0f));
+				Scene2D_TilePillar_3->RenderUI();
 			}
 		}
 	}
@@ -952,6 +976,12 @@ void CScene2D::LoadMeshes(void)
 		MeshBuilder::GetInstance()->GetMesh("Tile_Null_1")->textureID = LoadTGA("Image//Sprites//Tile_Null_1.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Tile_Null_2", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Tile_Null_2")->textureID = LoadTGA("Image//Sprites//Tile_Null_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_Pillar_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_Pillar_1")->textureID = LoadTGA("Image//Sprites//Tile_Pillar_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_Pillar_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_Pillar_2")->textureID = LoadTGA("Image//Sprites//Tile_Pillar_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_Pillar_3", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_Pillar_3")->textureID = LoadTGA("Image//Sprites//Tile_Pillar_3.tga");
 	}
 	// Lonin
 	{

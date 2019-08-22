@@ -1029,7 +1029,7 @@ void CPlayerInfo2D::SetRearMap(CMap* m_cRearMap)
 // Update the rear map
 void CPlayerInfo2D::UpdateRearMap(void)
 {
-	rearMapOffset_x = (int)(mapOffset_x/* / 2*/);
+	rearMapOffset_x = (int)(mapOffset_x / 2);
 	rearTileOffset_x = (int)(rearMapOffset_x / theRearMapReference->GetTileSize_Width());
 	if (rearTileOffset_x + theRearMapReference->GetNumOfTiles_Width() > 
 			theRearMapReference->getNumOfTiles_MapWidth())
