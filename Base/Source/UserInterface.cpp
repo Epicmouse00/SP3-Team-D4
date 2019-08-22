@@ -302,7 +302,7 @@ void UserInterface::ChangeScreen(SCREEN_TYPE screenType)
 		buttonObj[0]->SetText("Exit");
 		break;
 	case SC_PLAY:
-		CSoundEngine::GetInstance()->PlayBGM("bgmrroll");
+		CSoundEngine::GetInstance()->PlayBGM("bgm");
 		break;
 	case SC_PAUSE:
 		CSoundEngine::GetInstance()->PlayBGM("bgmwalk");
