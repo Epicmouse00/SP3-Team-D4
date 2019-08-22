@@ -446,7 +446,7 @@ void CScene2D::Init()
 			{
 				if (m_cMap->theScreenMap[height][width] == 101)
 				{
-					theEnemy[i] = Create::EnemyEntity(m_cMap, new CStrategy_Kill(), false
+					theEnemy[i] = Create::EnemyEntity(m_cMap, new CStrategy_Shoot(), false
 						, Vector3(static_cast<float>(width * m_cMap->GetTileSize_Width() + (m_cMap->GetTileSize_Width() >> 1)), static_cast<float>(232 - height * m_cMap->GetTileSize_Height())));
 					++i;
 				}
@@ -571,7 +571,7 @@ void CScene2D::Update(double dt)
 		for (int i = 0; i < m_iNumEnemy; ++i)
 		{
 			if (!theEnemy[i]->IsDead()) {
-				theEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x - thePlayerInfo->mapOffset_x,
+				theEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x,
 					thePlayerInfo->GetPos().y,
 					0));
 				theEnemy[i]->Update();

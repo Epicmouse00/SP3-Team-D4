@@ -44,7 +44,7 @@ void CStrategy_Shoot::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition)
 		{
 			bounce -= Math::RandIntMinMax(10, 60);
 			Vector3 direction = (PlayerPosition - theEnemyPosition).Normalized();
-			Create::Projectile("Crystal_Projectile_1", theEnemyPosition, Vector3(1,1,1), direction, 1.f, 5, EntityBase::E_ENEMY_PROJECTILES);
+			Create::Projectile("Crystal_Projectile_1", theEnemyPosition, Vector3(10,10,10), direction, 1.f, 100, EntityBase::E_ENEMY_PROJECTILES);
 		}
 		
 		break;

@@ -49,7 +49,15 @@ void CStrategy_Kill::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition)
 			theEnemyPosition.x = theEnemyPosition.x + n;
 		break;
 	case ATTACK:
-		theEnemyPosition.x = theEnemyPosition.x + (PlayerPosition.x - theEnemyPosition.x > 0 ? 1.5 : -1.5);
+		if (theEnemyPosition.x != PlayerPosition.x)
+		{
+			n = 1;
+			if (theEnemyPosition.x > PlayerPosition.x)
+			{
+				n = -n;
+			}
+			theEnemyPosition.x = theEnemyPosition.x + n;
+		}
 		break;
 	default:
 		// Do nothing if idling
