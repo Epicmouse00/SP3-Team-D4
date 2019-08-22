@@ -24,8 +24,8 @@ void EntityManager::Update(double _dt)
 	{
 		if ((*it)->IsDead())
 		{
-			// Delete if done
-			delete *it;
+			if (!(*it)->GetType() == EntityBase::E_ENEMY)
+				delete *it;
 			it = entityList.erase(it);
 		}
 		else
@@ -217,7 +217,7 @@ bool EntityManager::CheckForCollision(void)
 								thisEntity->SetIsDone(true);
 								break;
 							}
-							else if(thisEntity->IsAttacking() || thisEntity->GetType() == thisEntity->E_ENEMY_PROJECTILES)
+							else if((thisEntity->IsAttacking() || thisEntity->GetType() == thisEntity->E_ENEMY_PROJECTILES) && !thePlayerInfo->isRolling())
 							{
 								thePlayerInfo->TakeDamage(); // Enemy atack X Player
 							}

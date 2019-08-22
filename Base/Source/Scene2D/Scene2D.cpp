@@ -608,11 +608,16 @@ void CScene2D::Update(double dt)
 		// Update the thePlayerInfo
 		thePlayerInfo->Update(dt);
 		theSlashInfo->Update(dt);
-
 		// Update the enemies
 		for (int i = 0; i < m_iNumEnemy; ++i)
 		{
-			if (!theEnemy[i]->IsDead()) {
+			if (theEnemy[i] != nullptr) {
+				if (theEnemy[i]->IsDead())
+				{
+					delete theEnemy[i];
+					theEnemy[i] = nullptr;
+					continue;
+				}
 				if (!theEnemy[i]->IsDone())
 					theEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x,
 						thePlayerInfo->GetPos().y,
@@ -622,7 +627,13 @@ void CScene2D::Update(double dt)
 		}
 		for (int i = 0; i < m_iNumAxeEnemy; ++i)
 		{
-			if (!theAxeEnemy[i]->IsDead()) {
+			if (theAxeEnemy[i] != nullptr) {
+				if (theAxeEnemy[i]->IsDead())
+				{
+					delete theAxeEnemy[i];
+					theAxeEnemy[i] = nullptr;
+					continue;
+				}
 				if (!theAxeEnemy[i]->IsDone())
 					theAxeEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x,
 						thePlayerInfo->GetPos().y,
@@ -868,7 +879,7 @@ void CScene2D::RenderEnemy(void)
 	// Render the enemies
 	for (int i = 0; i < m_iNumEnemy; ++i)
 	{
-		if (!theEnemy[i]->IsDead()) {
+		if (theEnemy[i] != nullptr) {
 			int theEnemy_x = theEnemy[i]->GetPos_x() - thePlayerInfo->mapOffset_x;
 			int theEnemy_y = theEnemy[i]->GetPos_y();
 
@@ -883,7 +894,7 @@ void CScene2D::RenderEnemy(void)
 	}
 	for (int i = 0; i < m_iNumAxeEnemy; ++i)
 	{
-		if (!theAxeEnemy[i]->IsDead()) {
+		if (theAxeEnemy[i] != nullptr) {
 			int theEnemy_x = theAxeEnemy[i]->GetPos_x() - thePlayerInfo->mapOffset_x;
 			int theEnemy_y = theAxeEnemy[i]->GetPos_y();
 

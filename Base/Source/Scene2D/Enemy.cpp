@@ -65,7 +65,7 @@ void CEnemy::SetDestination(const int pos_x, const int pos_y)
 {
 	theDestination.x = static_cast<float>(pos_x);
 	theDestination.y = static_cast<float>(pos_y);
-	if (theStrategy != nullptr)
+	if (theStrategy != NULL)
 	{
 		theStrategy->SetDestination(theDestination.x, theDestination.y);
 	}
@@ -77,9 +77,9 @@ void CEnemy::SetDestination(const int pos_x, const int pos_y)
 void CEnemy::SetDestination(Vector3 pos)
 {
 	theDestination = pos;
-	if (theStrategy != nullptr)
+	if (theStrategy != NULL)
 	{
-		theStrategy->SetDestination(theDestination.x, theDestination.y);
+  		theStrategy->SetDestination(theDestination.x, theDestination.y);
 	}
 }
 
