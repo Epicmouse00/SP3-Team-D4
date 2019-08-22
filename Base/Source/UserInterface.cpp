@@ -234,7 +234,7 @@ bool UserInterface::Update(double dt)
 			ChangeScreen(screen);
 			return true;
 		}
-		if (thePlayerInfo->GetHp()>-1&&!(thePlayerInfo->GetMap()->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X] == 30 ||
+		if (thePlayerInfo->GetHp()>0&&!(thePlayerInfo->GetMap()->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X] == 30 ||
 			thePlayerInfo->checkPosition_X + 1 < thePlayerInfo->GetMap()->GetNumOfTiles_Width() && thePlayerInfo->GetMap()->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X + 1] == 30))
 		{
 			screen = SC_PLAY;
@@ -272,7 +272,7 @@ bool UserInterface::Update(double dt)
 		ss << "mapOffset_x: " << thePlayerInfo->mapOffset_x << endl;
 		textObj[0]->SetText(ss.str());
 
-		if (thePlayerInfo->GetHp() < 0)
+		if (thePlayerInfo->GetHp() <= 0)
 		{
 			screen = SC_SHOP;
 			ChangeScreen(screen);

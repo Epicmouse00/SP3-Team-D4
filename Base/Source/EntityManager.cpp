@@ -215,7 +215,7 @@ bool EntityManager::CheckForCollision(void)
 							if((thisEntity->IsAttacking() || thisEntity->GetType() == thisEntity->E_ENEMY_PROJECTILES) && !thePlayerInfo->isRolling())
 							{
 								if (thisEntity->GetType() == thisEntity->E_ENEMY_PROJECTILES)
-								{
+								{ 
 									thePlayerInfo->TakeDamage(); // Player Pogo(still take dmg) X Projectiles 
 									thisEntity->SetIsDead(true);
 									break;

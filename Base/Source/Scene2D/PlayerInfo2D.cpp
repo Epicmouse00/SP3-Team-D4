@@ -217,7 +217,7 @@ void CPlayerInfo2D::TakeDamage(void)
 	{
 		--hp;
 		CSoundEngine::GetInstance()->PlayASound("damaged");
-		if (hp < 0)
+		if (hp <= 0)
 			Die();
 		damageBounceTime = 0.f;
 	}
