@@ -93,7 +93,7 @@ void CProjectile::Update(double dt)
 		return;
 
 	// Update TimeLife of projectile. Set to inactive if too long
-	if (!type == ENTITY_TYPE::E_CORRUPTION)
+	if (!(type == ENTITY_TYPE::E_CORRUPTION))
 		m_fLifetime -= (float)dt;
 
 	if (m_fLifetime < 0.0f)
