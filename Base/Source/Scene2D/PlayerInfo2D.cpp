@@ -1368,6 +1368,21 @@ void CPlayerInfo2D::DeflectSound(void) const
 	CSoundEngine::GetInstance()->PlayASound("deflect");
 }
 
+void CPlayerInfo2D::KillSound(int type) const
+{
+	switch (type)
+	{
+	case 0:
+		CSoundEngine::GetInstance()->PlayASound("killcrystal");
+		break;
+	case 1:
+		CSoundEngine::GetInstance()->PlayASound("killaxe");
+		break;
+	default:
+		break;
+	}
+}
+
 bool CPlayerInfo2D::getSecondAttack(void) const
 {
 	return secondAttack;
@@ -1403,6 +1418,8 @@ void CPlayerInfo2D::InitSound(void) const
 	CSoundEngine::GetInstance()->AddSound("door4", "Sound//door4.wav");
 	CSoundEngine::GetInstance()->AddSound("death", "Sound//death.wav");
 	CSoundEngine::GetInstance()->AddSound("deflect", "Sound//deflect.wav");
+	CSoundEngine::GetInstance()->AddSound("killcrystal", "Sound//killcrystal.wav");
+	CSoundEngine::GetInstance()->AddSound("killaxe", "Sound//killaxe.wav");
 }
 
 bool CPlayerInfo2D::Roll()

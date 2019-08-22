@@ -167,6 +167,7 @@ public:
 	void StepSound(void) const;
 	void DoorSound(void) const;
 	void DeflectSound(void) const;
+	void KillSound(int type) const;
 
 	bool getSecondAttack(void) const;
 

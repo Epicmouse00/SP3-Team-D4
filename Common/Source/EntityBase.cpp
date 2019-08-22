@@ -48,7 +48,7 @@ void EntityBase::TakeDamage()
 		DamageBounceTime = 0.f;
 	}
 	if (!hp)
-		isDone = true;
+		SetIsDone(true);
 }
 bool EntityBase::IsDone()
 {

@@ -192,7 +192,7 @@ bool EntityManager::CheckForCollision(void)
 								else
 								{
 									thisEntity->TakeDamage();// Player slash X Enemy
-									if (thisEntity->IsDone()) 
+									if (thisEntity->IsDone())
 										thePlayerInfo->AddXP(1);
 									break;
 								}

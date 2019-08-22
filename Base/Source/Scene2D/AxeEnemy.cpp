@@ -133,6 +133,12 @@ Vector3 CAxeEnemy::GetDestination(void) const
 	return theDestination;
 }
 
+void CAxeEnemy::SetIsDone(const bool _value)
+{
+	CPlayerInfo2D::GetInstance()->KillSound(1);
+	EntityBase::SetIsDone(_value);
+}
+
 /********************************************************************************
  Update
  ********************************************************************************/

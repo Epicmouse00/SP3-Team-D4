@@ -40,6 +40,8 @@ public:
 	// Get the destination of this enemy as a Vector3
 	Vector3 GetDestination(void) const;
 
+	void SetIsDone(const bool _value);
+
 	// ENEMY Update
 	void Update(void);
 

@@ -40,7 +40,7 @@ public:
 
 	bool IsDone();
 	bool IsDead();
-	void SetIsDone(const bool _value);
+	virtual void SetIsDone(const bool _value);
 	void SetIsDead(const bool _value);
 
 	// Check if this entity has a collider class parent

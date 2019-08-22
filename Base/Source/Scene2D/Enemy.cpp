@@ -131,6 +131,12 @@ Vector3 CEnemy::GetDestination(void) const
 	return theDestination;
 }
 
+void CEnemy::SetIsDone(const bool _value)
+{
+	CPlayerInfo2D::GetInstance()->KillSound(0);
+	EntityBase::SetIsDone(_value);
+}
+
 /********************************************************************************
  Update
  ********************************************************************************/
