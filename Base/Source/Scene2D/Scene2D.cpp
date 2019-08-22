@@ -216,7 +216,7 @@ void CScene2D::Init()
 	CreateGoodies();
 
 	m_cRearMap = new CMap();
-	m_cRearMap->Init(Application::GetInstance().GetWindowHeight(), Application::GetInstance().GetWindowWidth(), 15, 32, 240, 512);
+	m_cRearMap->Init(Application::GetInstance().GetWindowHeight(), Application::GetInstance().GetWindowWidth(), 15, 64, 240, 1024);
 	m_cRearMap->LoadMap("Image//RearMapDesign.csv");
 
 	// Create the playerinfo instance, which manages all information about the player
