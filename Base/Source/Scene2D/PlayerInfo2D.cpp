@@ -214,9 +214,8 @@ void CPlayerInfo2D::TakeDamage(void)
 {
 	if (damageBounceTime > damageBounceTimeLimit)
 	{
-		if (hp != 0)
-			--hp;
-		else
+		--hp;
+		if (hp < 0)
 			Die();
 		damageBounceTime = 0.f;
 	}
