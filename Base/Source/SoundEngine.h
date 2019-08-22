@@ -1,8 +1,10 @@
 #pragma once
 
 #include "SingletonTemplate.h"
-#include <irrKlang.h>
+//#include <irrKlang.h>
+#include "../../irrklang/include/irrKlang.h"
 using namespace irrklang;
+#pragma comment(lib, "../../irrklang/lib/Win32-visualStudio/irrKlang.lib") // link with irrKlang.dll
 #include <map>
 
 class CSoundEngine : public Singleton<CSoundEngine>

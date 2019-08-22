@@ -81,4 +81,10 @@
     <None Include="Shader\Texture.fragmentshader" />
     <None Include="Shader\Texture.vertexshader" />
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Base.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Icon\Lonin_icon.ico" />
+  </ItemGroup>
 </Project>
