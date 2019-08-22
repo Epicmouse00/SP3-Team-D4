@@ -26,7 +26,7 @@ void CStrategy_Shoot::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition)
 	// Decide which state to change to
 	int distanceHeroToEnemy = CalculateDistance(PlayerPosition, theEnemyPosition);
 	if (distanceHeroToEnemy < AI_STATE_ATTACK*AI_STATE_ATTACK)
-	{		
+	{
 		if (distanceHeroToEnemy < AI_STATE_REPEL*AI_STATE_REPEL)
 			CurrentState = REPEL;
 		else
@@ -36,7 +36,7 @@ void CStrategy_Shoot::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition)
 		CurrentState = IDLE;
 
 	// Based on the current state, determine enemy behaviour
-	switch(CurrentState)
+	switch (CurrentState)
 	{
 	case ATTACK:
 		++bounce;
@@ -44,12 +44,23 @@ void CStrategy_Shoot::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition)
 		{
 			bounce -= Math::RandIntMinMax(10, 60);
 			Vector3 direction = (PlayerPosition - theEnemyPosition).Normalized();
-			Create::Projectile("Crystal_Projectile_1", theEnemyPosition, Vector3(10,10,10), direction, 1.f, 100, EntityBase::E_ENEMY_PROJECTILES);
+			Create::Projectile("Crystal_Projectile_1", theEnemyPosition, Vector3(10, 10, 10), direction, 1.f, 100, EntityBase::E_ENEMY_PROJECTILES);
 		}
-		
+
 		break;
 	case REPEL:
-		theEnemyPosition.x = theEnemyPosition.x + (PlayerPosition.x - theEnemyPosition.x > 0 ? -1 : 1 );
+		if (theEnemyPosition.x > 16 && theEnemyPosition.x < (theMapReference->GetNumOfTiles_Width() - 1) * theMapReference->GetTileSize_Width())
+		{
+			if (theEnemyPosition.x != PlayerPosition.x)
+			{
+				n = 1;
+				if (theEnemyPosition.x < PlayerPosition.x)
+				{
+					n = -n;
+				}
+				theEnemyPosition.x = theEnemyPosition.x + n;
+			}
+		}
 		break;
 	default:
 		// Do nothing if idling
