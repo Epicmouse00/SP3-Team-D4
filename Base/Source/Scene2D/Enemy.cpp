@@ -65,7 +65,7 @@ void CEnemy::SetDestination(const int pos_x, const int pos_y)
 {
 	theDestination.x = static_cast<float>(pos_x);
 	theDestination.y = static_cast<float>(pos_y);
-	if (theStrategy != NULL)
+	if (theStrategy != nullptr)
 	{
 		theStrategy->SetDestination(theDestination.x, theDestination.y);
 	}
@@ -77,7 +77,7 @@ void CEnemy::SetDestination(const int pos_x, const int pos_y)
 void CEnemy::SetDestination(Vector3 pos)
 {
 	theDestination = pos;
-	if (theStrategy != NULL)
+	if (theStrategy != nullptr)
 	{
 		theStrategy->SetDestination(theDestination.x, theDestination.y);
 	}
@@ -136,13 +136,13 @@ Vector3 CEnemy::GetDestination(void) const
  ********************************************************************************/
 void CEnemy::Update(void)
 {
-	if (theStrategy != NULL)
+	if (theStrategy != nullptr)
 	{
 		if (GetFrameState() == GetFrameTotal())
 			isDead = true;
 		else
 		{
-			if (!isDone)
+			if (!isDead && !isDone)
 			{
 				theStrategy->Update(theDestination, position);
 				constrain();
@@ -152,21 +152,17 @@ void CEnemy::Update(void)
 			else
 				switch (theStrategy->GetType())
 				{
-					case CStrategy::E_STRATEGY_KILL:
-					{
-						if (dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::IDLE ||
-							dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::REPEL)
-							SetAnimationStatus(C_IDLE_1);
-						else if (dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::ATTACK)
-							SetAnimationStatus(C_ATTACK_1);
-						break;
-					}
 					case CStrategy::E_STRATEGY_SHOOT:
 					{
-						// code here
-
+						if (dynamic_cast<CStrategy_Shoot*>(theStrategy)->GetState() == CStrategy_Shoot::ATTACK && !isAttacking())
+							SetAnimationStatus(C_ATTACK_1);
+						else if (dynamic_cast<CStrategy_Shoot*>(theStrategy)->GetState() == CStrategy_Shoot::IDLE ||
+							dynamic_cast<CStrategy_Shoot*>(theStrategy)->GetState() == CStrategy_Shoot::REPEL)
+							SetAnimationStatus(C_IDLE_1);
 						break;
 					}
+					default:
+						break;
 				}
 			UpdateAnimationIndex(0.2f);
 		}

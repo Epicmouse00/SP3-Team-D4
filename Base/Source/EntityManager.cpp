@@ -181,7 +181,7 @@ bool EntityManager::CheckForCollision(void)
 								if (thisEntity->GetType() == thisEntity->E_ENEMY_PROJECTILES)
 								{
 									thisEntity->SetType(EntityBase::E_PLAYER_PROJECTILES);// Player Slash X Enemy Proj
-									Create::Projectile("UI_BOX"//change this
+									Create::Projectile("Crystal_Projectile_2"
 										, thisEntity->GetPosition()
 										, thisEntity->GetScale()
 										, -thisEntity->GetDirection()//cuz he scales by direction

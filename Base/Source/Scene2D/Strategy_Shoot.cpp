@@ -8,6 +8,7 @@ Constructor
 ********************************************************************************/
 CStrategy_Shoot::CStrategy_Shoot()
 {
+	SetType(E_STRATEGY_SHOOT);
 	bounce = 60;
 }
 

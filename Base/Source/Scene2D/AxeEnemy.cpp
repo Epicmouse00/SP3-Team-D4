@@ -67,7 +67,7 @@ void CAxeEnemy::SetDestination(const int pos_x, const int pos_y)
 {
 	theDestination.x = static_cast<float>(pos_x);
 	theDestination.y = static_cast<float>(pos_y);
-	if (theStrategy != NULL)
+	if (theStrategy != nullptr)
 	{
 		theStrategy->SetDestination(theDestination.x, theDestination.y);
 	}
@@ -79,7 +79,7 @@ void CAxeEnemy::SetDestination(const int pos_x, const int pos_y)
 void CAxeEnemy::SetDestination(Vector3 pos)
 {
 	theDestination = pos;
-	if (theStrategy != NULL)
+	if (theStrategy != nullptr)
 	{
 		theStrategy->SetDestination(theDestination.x, theDestination.y);
 	}
@@ -144,7 +144,7 @@ void CAxeEnemy::Update(void)
 			isDead = true;
 		else
 		{
-			if (!isDone)
+			if (!isDead && !isDone)
 			{
 				theStrategy->Update(theDestination, position);
 				constrain();
@@ -160,16 +160,12 @@ void CAxeEnemy::Update(void)
 							SetAnimationStatus(A_IDLE_1);
 						else if (dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::REPEL)
 							SetAnimationStatus(A_RUN_1);
-						else if (dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::ATTACK)
+						else if (dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::ATTACK && !isAttacking())
 							SetAnimationStatus(A_ATTACK_1);
 						break;
 					}
-					case CStrategy::E_STRATEGY_SHOOT:
-					{
-						// code here
-
+					default:
 						break;
-					}
 				}
 			UpdateAnimationIndex(0.2f);
 		}

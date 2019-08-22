@@ -2,7 +2,7 @@
 #include "Vector3.h"
 #include "Map.h"
 #include "Strategy.h"
-#include "Strategy_Kill.h"
+#include "Strategy_Shoot.h"
 #include "AnimationCrystal.h"
 #include "EntityBase.h"
 #include "../Projectile/Projectile.h"
