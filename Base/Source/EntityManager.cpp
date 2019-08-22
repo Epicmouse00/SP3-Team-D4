@@ -17,26 +17,23 @@ void EntityManager::Update(double _dt)
 	}
 
 	CheckForCollision();
-	// Note : fix this in furutre to prevent too much memory usage
+
 	// Clean up entities that are done
-	it = entityList.begin();
-	while (it != end)
-	{
-		if ((*it)->IsDead())
-		{
-			if (!(*it)->GetType() == EntityBase::E_ENEMY)// deletes anything dead but enemies
-			{
-				// Delete if done
-				delete *it;
-				it = entityList.erase(it);
-			}
-		}
-		else
-		{
-			// Move on otherwise
-			++it;
-		}
-	}
+	//it = entityList.begin();
+	//while (it != end)
+	//{
+	//	if ((*it)->IsDead())
+	//	{
+	//		// Delete if done
+	//		delete *it;
+	//		it = entityList.erase(it);
+	//	}
+	//	else
+	//	{
+	//		// Move on otherwise
+	//		++it;
+	//	}
+	//}
 }
 
 // Render all entities
@@ -208,10 +205,7 @@ bool EntityManager::CheckForCollision(void)
 								if (thisEntity->GetType() == thisEntity->E_ENEMY_PROJECTILES)
 									thisEntity->SetIsDead(true);
 								else
-								{ 
 									thisEntity->SetIsDone(true); // Player proj X Enemy
-									thePlayerInfo->AddXP(1);
-								}
 								thatEntity->SetIsDead(true);
 								break; // break cuz that enemy is already dead.. no need to check against player
 							}
