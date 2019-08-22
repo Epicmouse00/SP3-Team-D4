@@ -604,7 +604,7 @@ void CScene2D::Update(double dt)
 		{
 			if (!theEnemy[i]->IsDead()) {
 				if (!theEnemy[i]->IsDone())
-					theEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x - thePlayerInfo->mapOffset_x,
+					theEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x,
 						thePlayerInfo->GetPos().y,
 						0));
 
@@ -615,7 +615,7 @@ void CScene2D::Update(double dt)
 		{
 			if (!theAxeEnemy[i]->IsDead()) {
 				if (!theAxeEnemy[i]->IsDone())
-					theAxeEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x - thePlayerInfo->mapOffset_x,
+					theAxeEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x,
 						thePlayerInfo->GetPos().y,
 						0));
 				theAxeEnemy[i]->Update();
