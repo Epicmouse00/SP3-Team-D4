@@ -47,7 +47,6 @@ void CStrategy_Shoot::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition)
 			Vector3 direction = (PlayerPosition - theEnemyPosition).Normalized();
 			Create::Projectile("Crystal_Projectile_1", theEnemyPosition, Vector3(10, 10, 10), direction, 1.5f, 100, EntityBase::E_ENEMY_PROJECTILES);
 		}
-
 		break;
 	case REPEL:
 		if (theEnemyPosition.x > 16 && theEnemyPosition.x < (theMapReference->GetNumOfTiles_Width() - 1) * theMapReference->GetTileSize_Width())
