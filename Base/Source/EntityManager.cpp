@@ -178,7 +178,7 @@ bool EntityManager::CheckForCollision(void)
 						{
 							if ((thisEntity->GetPosition() - theSlashInfo->position).Length() < thisEntity->GetScale().x / 2 + 16 / 2 * 3 / 2)//hitbox X 1.5
 							{
-								if (thisEntity->GetType() == thisEntity->E_ENEMY_PROJECTILES)
+								if (thisEntity->GetType() == thisEntity->E_ENEMY_PROJECTILES && thePlayerInfo->getSkill(CPlayerInfo2D::SK_DEFLECT))
 								{
 									thisEntity->SetType(EntityBase::E_PLAYER_PROJECTILES);// Player Slash X Enemy Proj
 									Create::Projectile("Crystal_Projectile_2"
@@ -187,6 +187,7 @@ bool EntityManager::CheckForCollision(void)
 										, -thisEntity->GetDirection()//cuz he scales by direction
 										, 1.f, 100.f, EntityBase::E_PLAYER_PROJECTILES);
 									thisEntity->SetIsDead(true);
+									thePlayerInfo->DeflectSound();
 								}
 								else
 								{

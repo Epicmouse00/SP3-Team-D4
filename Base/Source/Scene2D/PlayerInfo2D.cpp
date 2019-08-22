@@ -1363,9 +1363,19 @@ void CPlayerInfo2D::DoorSound(void) const
 	}
 }
 
+void CPlayerInfo2D::DeflectSound(void) const
+{
+	CSoundEngine::GetInstance()->PlayASound("deflect");
+}
+
 bool CPlayerInfo2D::getSecondAttack(void) const
 {
 	return secondAttack;
+}
+
+bool CPlayerInfo2D::getSkill(int skill) const
+{
+	return this->skill[skill];
 }
 
 void CPlayerInfo2D::InitSound(void) const
@@ -1392,6 +1402,7 @@ void CPlayerInfo2D::InitSound(void) const
 	CSoundEngine::GetInstance()->AddSound("door3", "Sound//door3.wav");
 	CSoundEngine::GetInstance()->AddSound("door4", "Sound//door4.wav");
 	CSoundEngine::GetInstance()->AddSound("death", "Sound//death.wav");
+	CSoundEngine::GetInstance()->AddSound("deflect", "Sound//deflect.wav");
 }
 
 bool CPlayerInfo2D::Roll()
@@ -1438,7 +1449,7 @@ void CPlayerInfo2D::InitSkill(void)
 
 	skill[SK_DOUBLE_JUMP] = true;
 	skill[SK_DASH_ATTACK] = true;
-	// deflect
+	skill[SK_DEFLECT] = true;
 	skill[SK_DOUBLE_ATTACK] = true;
 	skill[SK_CHARGE_ATTACK] = true;
 	skill[SK_FAST_ROLL] = true;
