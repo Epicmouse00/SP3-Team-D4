@@ -752,10 +752,11 @@ void CScene2D::RenderTileMap()
 			else if (m_cMap->theScreenMap[i][m] == 3)
 			{
 				SpriteEntity* Door = nullptr;
-				if (doorIsOpen)
-					Door = Scene2D_TileDoor;
-				else
+				if (thePlayerInfo->checkPosition_Y == i && thePlayerInfo->checkPosition_X == m ||
+					(thePlayerInfo->checkPosition_X + 1 < m_cMap->GetNumOfTiles_Width() && thePlayerInfo->checkPosition_Y == i && thePlayerInfo->checkPosition_X + 1 == m))
 					Door = Scene2D_TileDoor2;
+				else
+					Door = Scene2D_TileDoor;
 				Door->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
 					- thePlayerInfo->GetMapFineOffset_x()),
 					static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
