@@ -33,6 +33,11 @@ public:
 	inline void SetType(const ENTITY_TYPE& _value) { type = _value; };
 	inline ENTITY_TYPE GetType(){ return type; };
 
+	inline void SetHp(const int& _value) { hp = _value; };
+	inline int GetHp(){ return hp; };
+	inline int GetMaxHp(){ return maxHp; };
+	void TakeDamage();
+
 	bool IsDone();
 	bool IsDead();
 	void SetIsDone(const bool _value);
@@ -49,6 +54,9 @@ protected:
 	Vector3 scale;
 	Vector3 theDirection;
 
+	float DamageBounceTime;
+	int hp;
+	int maxHp;
 	bool isDone;
 	bool isDead;
 	bool m_bCollider;
