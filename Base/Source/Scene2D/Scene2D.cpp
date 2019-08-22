@@ -78,6 +78,8 @@ CScene2D::~CScene2D()
 	Scene2D_LevelUp = NULL;
 	delete Scene2D_ShopScreen;
 	Scene2D_ShopScreen = NULL;
+	delete Scene2D_EnemyHpBar;
+	Scene2D_EnemyHpBar = NULL;
 
 
 	for (int i = 0; i < theEnemy[0]->GetFrameTotal(); ++i)
@@ -267,6 +269,9 @@ void CScene2D::Init()
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
 	Scene2D_ShopScreen = Create::Sprite2DObject("Tile_Shop_Screen",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(320.f, 240.f, 0.f));
+	Scene2D_EnemyHpBar = Create::Sprite2DObject("Stamina_Amber",//temp
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(320.f, 240.f, 0.f));
 
@@ -861,6 +866,13 @@ void CScene2D::RenderEnemy(void)
 			{
 				Scene2D_AxeEnemy[theAxeEnemy[i]->GetFrameState()]->SetPosition(Vector3(static_cast<float>(theEnemy_x), static_cast<float>(theEnemy_y), 0));
 				Scene2D_AxeEnemy[theAxeEnemy[i]->GetFrameState()]->RenderUI();
+				if (theAxeEnemy[i]->GetHp() < theAxeEnemy[i]->GetMaxHp())
+				{
+					float temporaryFloat = static_cast<float>(theAxeEnemy[i]->GetHp()) / static_cast<float>(theAxeEnemy[i]->GetMaxHp()) * m_cMap->GetTileSize_Width();
+					Scene2D_EnemyHpBar->SetPosition(Vector3(static_cast<float>(theEnemy_x - temporaryFloat /2), static_cast<float>(theEnemy_y + m_cMap->GetTileSize_Height() / 2), 0));
+					Scene2D_EnemyHpBar->SetScale(Vector3(temporaryFloat, m_cMap->GetTileSize_Height() / 4, 0.f));
+					Scene2D_EnemyHpBar->RenderUI();
+				}
 			}
 		}
 	}

@@ -136,7 +136,7 @@ bool EntityManager::CheckForCollision(void)
 	colliderThisEnd = entityList.end();
 	for (colliderThis = entityList.begin(); colliderThis != colliderThisEnd; ++colliderThis)
 	{
-		if ((*colliderThis)->HasCollider())
+		if ((*colliderThis)->HasCollider() && !(*colliderThis)->IsDone())
 		{
 			EntityBase *thisEntity = dynamic_cast<EntityBase*>(*colliderThis);
 
@@ -144,12 +144,12 @@ bool EntityManager::CheckForCollision(void)
 			{
 				if (thisEntity->GetPosition().x - thisEntity->GetScale().x / 2 - 16/2 > 64 * 16)
 				{
-					thisEntity->SetIsDone(true);
+					thisEntity->SetIsDone(true); // end of map X corruption
 				}
 				// set based on what can hit the player(specifically the player)
 				if (thePlayerInfo->position.x < thisEntity->GetPosition().x + thisEntity->GetScale().x / 2)
 				{
-					thePlayerInfo->TakeDamage();
+					thePlayerInfo->TakeDamage(); // corruption X player
 				}
 			}
 
@@ -169,9 +169,9 @@ bool EntityManager::CheckForCollision(void)
 							if (thisEntity->GetPosition().x < thatEntity->GetPosition().x + thatEntity->GetScale().x / 2 - 16 / 2)
 							{
 								if (thisEntity->GetType() == EntityBase::E_ENEMY_PROJECTILES)
-									thisEntity->SetIsDead(true);
+									thisEntity->SetIsDead(true); // corruption X Enemy Projectile
 								else
-									thisEntity->SetIsDone(true);
+									thisEntity->SetIsDone(true); // corruption X Enemy
 							}
 
 						}
@@ -181,7 +181,7 @@ bool EntityManager::CheckForCollision(void)
 							{
 								if (thisEntity->GetType() == thisEntity->E_ENEMY_PROJECTILES)
 								{
-									thisEntity->SetType(EntityBase::E_PLAYER_PROJECTILES);
+									thisEntity->SetType(EntityBase::E_PLAYER_PROJECTILES);// Player Slash X Enemy Proj
 									thisEntity->SetDirection(-thisEntity->GetDirection());
 									Create::Projectile("UI_BOX"//change this
 										, thisEntity->GetPosition()
@@ -192,9 +192,9 @@ bool EntityManager::CheckForCollision(void)
 								}
 								else
 								{
-									if (!thisEntity->IsDone())
+									thisEntity->TakeDamage();// Player slash X Enemy
+									if (thisEntity->IsDone()) 
 										thePlayerInfo->AddXP(1);
-									thisEntity->SetIsDone(true);
 									break;
 								}
 							}
@@ -203,21 +203,21 @@ bool EntityManager::CheckForCollision(void)
 						{
 							if (CheckCircleCollision(thisEntity, thatEntity) == true)
 							{
-								thisEntity->SetIsDone(true);
+								thisEntity->SetIsDone(true); // Player proj X Enemy
 								thatEntity->SetIsDead(true);
 								break; // break cuz that enemy is already dead.. no need to check against player
 							}
 						}
 						if ((thisEntity->GetPosition() - thePlayerInfo->position).Length() < thisEntity->GetScale().x / 2 + 16 / 2)// Only run this when enemy is attacking
 						{
-							if (thePlayerInfo->isPogo())
+							if (thePlayerInfo->isPogo()) // Player Pogo X Enemy
 							{
 								thisEntity->SetIsDone(true);
 								break;
 							}
 							//if(thisEntity->)// some anim thing
 							//{
-							//	thePlayerInfo->TakeDamage();
+							//	thePlayerInfo->TakeDamage(); // Enemy atack X Player
 							//}
 							break;
 						}
