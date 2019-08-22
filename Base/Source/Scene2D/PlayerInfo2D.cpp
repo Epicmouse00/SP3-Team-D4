@@ -49,7 +49,8 @@ CPlayerInfo2D::CPlayerInfo2D(void)
 	, dashBounceTime(1)
 	, damageBounceTime(1)
 	, attackBounceTimeLimit(0.5)
-	, rollBounceTimeLimit(0.7)
+	, rollBounceTimeLimit(0.5)
+	, rollBounceTimeLimit2(0.7)
 	, dashBounceTimeLimit(0.9)
 	, damageBounceTimeLimit(1)
 	, stamina(1.f)
@@ -508,7 +509,7 @@ void CPlayerInfo2D::Update(double dt)
 			MoveLeftRight(!isFacingRight(), m_dMoveSpeed);
 	}
 	else if (KeyboardController::GetInstance()->IsKeyPressed('L')
-			&& rollBounceTime > rollBounceTimeLimit
+			&& (rollBounceTime > rollBounceTimeLimit2 && skill[SK_ROLL_COST] || rollBounceTime > rollBounceTimeLimit)
 			&& !isAttacking()
 			&& (isOnGround() || skill[SK_AIR_ROLL]))
 	{
@@ -723,7 +724,7 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 	{
 		// Find the tile number which the player's left side is on
 		checkPosition_X = (int)((position.x - (tileSize_Width >> 1)) / tileSize_Width);
-		if (KeyboardController::GetInstance()->IsKeyPressed('L') && rollBounceTime > rollBounceTimeLimit)
+		if (KeyboardController::GetInstance()->IsKeyPressed('L') && (rollBounceTime > rollBounceTimeLimit2 && skill[SK_ROLL_COST] || rollBounceTime > rollBounceTimeLimit))
 		{
 			if (Roll())
 				SetAnimationStatus(CAnimation::P_ROLL_L1);
@@ -750,7 +751,7 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 	{
 		// Find the tile number which the player's right side is on
 		checkPosition_X = (int)((position.x + (tileSize_Width >> 1)) / tileSize_Width);
-		if (KeyboardController::GetInstance()->IsKeyPressed('L') && rollBounceTime > rollBounceTimeLimit)
+		if (KeyboardController::GetInstance()->IsKeyPressed('L') && (rollBounceTime > rollBounceTimeLimit2 && skill[SK_ROLL_COST] || rollBounceTime > rollBounceTimeLimit))
 		{
 			if (Roll())
 				SetAnimationStatus(CAnimation::P_ROLL_R1);
@@ -1465,7 +1466,6 @@ void CPlayerInfo2D::InitSkill(void)
 	{
 		skill[i] = true;
 	}
-
 	// triple jump
 	// heart 2
 	// heart 3

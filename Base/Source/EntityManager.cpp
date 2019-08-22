@@ -161,7 +161,7 @@ bool EntityManager::CheckForCollision(void)
 				{
 					EntityBase *thatEntity = dynamic_cast<EntityBase*>(*colliderThat);
 
-					if (!thisEntity->IsDead() && !thisEntity->IsDone() && (thisEntity->GetType() == EntityBase::E_ENEMY || thisEntity->GetType() == EntityBase::E_ENEMY_PROJECTILES))
+					if (!thisEntity->IsDead() && (thisEntity->GetType() == EntityBase::E_ENEMY || thisEntity->GetType() == EntityBase::E_ENEMY_PROJECTILES))
 					{
 						if (thatEntity->GetType() == EntityBase::E_CORRUPTION)
 						{
@@ -212,14 +212,24 @@ bool EntityManager::CheckForCollision(void)
 						}
 						if ((thisEntity->GetPosition() - thePlayerInfo->position).Length() < thisEntity->GetScale().x / 2 + 16 / 2)// Only run this when enemy is attacking
 						{
-							if (thePlayerInfo->isPogo()) // Player Pogo X Enemy
+							if((thisEntity->IsAttacking() || thisEntity->GetType() == thisEntity->E_ENEMY_PROJECTILES) && !thePlayerInfo->isRolling())
 							{
-								thisEntity->SetIsDone(true);
-								break;
-							}
-							else if((thisEntity->IsAttacking() || thisEntity->GetType() == thisEntity->E_ENEMY_PROJECTILES) && !thePlayerInfo->isRolling())
-							{
-								thePlayerInfo->TakeDamage(); // Enemy atack X Player
+								if (thisEntity->GetType() == thisEntity->E_ENEMY_PROJECTILES)
+								{
+									thePlayerInfo->TakeDamage(); // Player Pogo(still take dmg) X Projectiles 
+									thisEntity->SetIsDead(true);
+									break;
+								}
+								if (thePlayerInfo->isPogo()) 
+								{
+									thisEntity->SetIsDone(true); // Player Pogo X Enemy (instant kill)
+
+									if (thisEntity->IsDone())
+										thePlayerInfo->AddXP(1);
+									break;
+								}
+								else
+									thePlayerInfo->TakeDamage(); // Enemy atack X Player
 							}
 							break;
 						}
