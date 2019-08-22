@@ -622,7 +622,6 @@ void CScene2D::Update(double dt)
 					theEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x,
 						thePlayerInfo->GetPos().y,
 						0));
-
 				theEnemy[i]->Update();
 			}
 		}
