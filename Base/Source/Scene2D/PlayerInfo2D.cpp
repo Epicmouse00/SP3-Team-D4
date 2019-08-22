@@ -215,6 +215,7 @@ void CPlayerInfo2D::TakeDamage(void)
 	if (damageBounceTime > damageBounceTimeLimit)
 	{
 		--hp;
+		CSoundEngine::GetInstance()->PlayASound("damaged");
 		if (hp < 0)
 			Die();
 		damageBounceTime = 0.f;
@@ -1420,6 +1421,7 @@ void CPlayerInfo2D::InitSound(void) const
 	CSoundEngine::GetInstance()->AddSound("deflect", "Sound//deflect.wav");
 	CSoundEngine::GetInstance()->AddSound("killcrystal", "Sound//killcrystal.wav");
 	CSoundEngine::GetInstance()->AddSound("killaxe", "Sound//killaxe.wav");
+	CSoundEngine::GetInstance()->AddSound("damaged", "Sound//damaged.wav");
 }
 
 bool CPlayerInfo2D::Roll()
