@@ -185,7 +185,7 @@ bool EntityManager::CheckForCollision(void)
 										, thisEntity->GetPosition()
 										, thisEntity->GetScale()
 										, -thisEntity->GetDirection()//cuz he scales by direction
-										, 1.f, 100.f, EntityBase::E_PLAYER_PROJECTILES);
+										, 10.f, 1.f, EntityBase::E_PLAYER_PROJECTILES);
 									thisEntity->SetIsDead(true);
 								}
 								else
@@ -201,10 +201,7 @@ bool EntityManager::CheckForCollision(void)
 						{
 							if (CheckCircleCollision(thisEntity, thatEntity) == true)
 							{
-								if (thisEntity->GetType() == thisEntity->E_ENEMY_PROJECTILES)
-									thisEntity->SetIsDead(true);
-								else
-									thisEntity->SetIsDone(true); // Player proj X Enemy
+								thisEntity->SetIsDone(true); // Player proj X Enemy
 								thatEntity->SetIsDead(true);
 								break; // break cuz that enemy is already dead.. no need to check against player
 							}
