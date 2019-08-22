@@ -45,16 +45,20 @@ private:
 	SpriteEntity* Scene2D_Background;
 	SpriteEntity* Scene2D_TileGround;
 	SpriteEntity* Scene2D_TileDoor;
+	SpriteEntity* Scene2D_TileDoor2;
 	SpriteEntity* Scene2D_RearStructure;
 	SpriteEntity* Scene2D_SpikeL;
 	SpriteEntity* Scene2D_SpikeR;
 	SpriteEntity* Scene2D_SpikeU;
 	SpriteEntity* Scene2D_SpikeD;
 	SpriteEntity* Scene2D_Error;
+	SpriteEntity* Scene2D_Error2;
+	SpriteEntity* Scene2D_LevelUp;
 	SpriteEntity** Scene2D_Hero_Animated;
 	SpriteEntity** Scene2D_Slash_Animated;
 	SpriteEntity* Scene2D_Goodies_TreasureChest;
-
+	SpriteEntity* Scene2D_ShopScreen;
+	SpriteEntity* Scene2D_EnemyHpBar;
 
 	UserInterface* ui;
 	// Handle to the tilemaps
@@ -86,6 +90,8 @@ private:
 	void CreateGoodies(void);
 
 	void LoadMeshes(void);
+
+	bool doorIsOpen;
 };
 
 #endif

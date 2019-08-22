@@ -93,7 +93,7 @@ void CProjectile::Update(double dt)
 		return;
 
 	// Update TimeLife of projectile. Set to inactive if too long
-	if(!type==ENTITY_TYPE::E_CORRUPTION)
+	if (!type == ENTITY_TYPE::E_CORRUPTION)
 		m_fLifetime -= (float)dt;
 
 	if (m_fLifetime < 0.0f)
@@ -103,10 +103,13 @@ void CProjectile::Update(double dt)
 		return;
 	}
 
-	// Update Position
-	position.Set(	position.x + (float)(theDirection.x * dt * m_fSpeed),
-					position.y + (float)(theDirection.y * dt * m_fSpeed),
-					position.z + (float)(theDirection.z * dt * m_fSpeed));
+	if (!isDone)
+	{
+		// Update Position
+		position.Set(position.x + (float)(theDirection.x * dt * m_fSpeed),
+			position.y + (float)(theDirection.y * dt * m_fSpeed),
+			position.z + (float)(theDirection.z * dt * m_fSpeed));
+	}
 }
 
 

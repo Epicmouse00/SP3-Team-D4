@@ -11,7 +11,7 @@ public:
 		SC_PLAY,
 		SC_PAUSE,
 		SC_SKILL_TREE,
-		SC_MENU2,
+		SC_SHOP,
 		SC_TOTAL
 	};
 	UserInterface();
@@ -31,6 +31,8 @@ private:
 
 	SpriteEntity** heartEntity;
 	UIButton* buttonObj[3];
+	SpriteEntity* xpBar;
+	SpriteEntity* xpBlock;
 	SpriteEntity** staminaBar;
 	int barStatus;
 	SpriteEntity* staminaBattery;

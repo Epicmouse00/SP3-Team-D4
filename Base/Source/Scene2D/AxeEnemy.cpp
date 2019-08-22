@@ -9,6 +9,8 @@ CAxeEnemy::CAxeEnemy(void)
 	: theStrategy(NULL)
 	, theMapReference(nullptr)
 {
+	hp = 2;
+	maxHp = 2;
 }
 
 /********************************************************************************
@@ -148,13 +150,27 @@ void CAxeEnemy::Update(void)
 				constrain();
 			}
 			if (isDone)
-				SetAnimationStatus(A_DIE);
-			else if (dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::IDLE)
-				SetAnimationStatus(A_IDLE_1);
-			else if (dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::REPEL)
-				SetAnimationStatus(A_RUN_1);
-			else if (dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::ATTACK)
-				SetAnimationStatus(A_ATTACK_1);
+				SetAnimationStatus(A_DIE_1);
+			else
+				switch (theStrategy->GetType())
+				{
+					case CStrategy::E_STRATEGY_KILL:
+					{
+						if (dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::IDLE)
+							SetAnimationStatus(A_IDLE_1);
+						else if (dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::REPEL)
+							SetAnimationStatus(A_RUN_1);
+						else if (dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::ATTACK)
+							SetAnimationStatus(A_ATTACK_1);
+						break;
+					}
+					case CStrategy::E_STRATEGY_SHOOT:
+					{
+						// code here
+
+						break;
+					}
+				}
 			UpdateAnimationIndex(0.2f);
 		}
 	}

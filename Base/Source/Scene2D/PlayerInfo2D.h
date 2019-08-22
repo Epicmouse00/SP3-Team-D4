@@ -36,6 +36,8 @@ public:
 	void SetTileSize(const int x, const int y);
 	// Set the map pointer to this class
 	void SetMap(CMap* m_cMap);
+	// Get the map pointer to this class
+	CMap* GetMap(void);
 
 	// Returns true if the player is on ground
 	bool isOnGround(void);
@@ -60,6 +62,8 @@ public:
 	void SetUp(const Vector3& up);
 	// Set Hp
 	void SetHp(const int hp);
+	// Take damage
+	void TakeDamage(void);
 	// Set m_dJumpSpeed of the player
 	void SetJumpSpeed(const double m_dJumpSpeed);
 	// Set m_dJumpAcceleration of the player
@@ -87,6 +91,12 @@ public:
 	double GetFallAcceleration(void) const;
 	// Get Stamina of player
 	float GetStamina(void) const;
+	// Get XP of player
+	double GetXP(void) const;
+	void AddXP(double xp);
+	void XPLevelUp(void);
+	// Get Level of player
+	double GetLevel(void) const;
 	// Get Tile Offset for x-axis
 	int GetTileOffset_x(void) const;
 
@@ -202,11 +212,13 @@ private:
 	double attackBounceTime;
 	double rollBounceTime;
 	double dashBounceTime;
+	double damageBounceTime;
 
 	// BounceTime Limit
 	double attackBounceTimeLimit;
 	double rollBounceTimeLimit;
 	double dashBounceTimeLimit;
+	double damageBounceTimeLimit;
 
 	bool Roll();
 
@@ -221,4 +233,30 @@ private:
 
 	// Second Attack
 	bool secondAttack;
+
+	// Experience
+	double XP;
+	double maxXP;
+	double level;
+
+	// Skill Tree
+	enum Skills
+	{
+		SK_DOUBLE_JUMP,
+		SK_DASH_ATTACK,
+		SK_DEFLECT,
+		SK_DOUBLE_ATTACK,
+		SK_CHARGE_ATTACK,
+		SK_FAST_ROLL,
+		SK_HIGH_JUMP,
+		SK_TRIPLE_JUMP,
+		SK_AIR_ROLL,
+		SK_HEART2,
+		SK_ROLL_COST,
+		SK_HEART3,
+		SK_LIFESTEAL,
+		SK_TOTAL
+	};
+	bool skill[SK_TOTAL];
+	void InitSkill(void);
 };

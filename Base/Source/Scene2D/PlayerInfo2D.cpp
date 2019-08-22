@@ -47,14 +47,19 @@ CPlayerInfo2D::CPlayerInfo2D(void)
 	, attackBounceTime(1)
 	, rollBounceTime(1)
 	, dashBounceTime(1)
+	, damageBounceTime(1)
 	, attackBounceTimeLimit(0.5)
 	, rollBounceTimeLimit(0.7)
 	, dashBounceTimeLimit(0.9)
+	, damageBounceTimeLimit(1)
 	, stamina(1.f)
 	, secondAttack(false)
 	, dashPower(0.f)
 	, chargeAttack(0.f)
 	, chargeTime(5.f)
+	, XP(0)
+	, maxXP(10)
+	, level(0)
 {
 }
 
@@ -84,6 +89,7 @@ void CPlayerInfo2D::Init(void)
 	tileSize_Height = 16;
 
 	InitSound();
+	InitSkill();
 }
 
 // Set the boundary for the player info
@@ -104,6 +110,11 @@ void CPlayerInfo2D::SetTileSize(const int x, const int y)
 void CPlayerInfo2D::SetMap(CMap* m_cMap)
 {
 	theMapReference = m_cMap;
+}
+
+CMap * CPlayerInfo2D::GetMap(void)
+{
+	return theMapReference;
 }
 
 // Returns true if the player is on ground
@@ -142,7 +153,7 @@ void CPlayerInfo2D::SetOnFreeFall(bool isOnFreeFall)
 		m_bFallDownwards = true;
 		m_dFallSpeed = 0.0;
 	}
-	if (!isRolling()) // Air roll?
+	if (!isRolling())
 	{
 		if (!isPogo())
 		{
@@ -162,7 +173,10 @@ void CPlayerInfo2D::SetToJumpUpwards(bool isOnJumpUpwards)
 	{
 		m_bJumpUpwards = true;
 		m_bFallDownwards = false;
-		m_dJumpSpeed = 6.0;
+		if (skill[SK_HIGH_JUMP])
+			m_dJumpSpeed = 8.0;
+		else
+			m_dJumpSpeed = 6.0;
 
 		if (isFacingRight())
 			SetAnimationStatus(CAnimation::P_JUMP_R1);
@@ -194,6 +208,18 @@ void CPlayerInfo2D::SetUp(const Vector3& up)
 void CPlayerInfo2D::SetHp(const int hp)
 {
 	this->hp = hp;
+}
+
+void CPlayerInfo2D::TakeDamage(void)
+{
+	if (damageBounceTime > damageBounceTimeLimit)
+	{
+		if (hp != 0)
+			--hp;
+		else
+			Die();
+		damageBounceTime = 0.f;
+	}
 }
 
 // Set m_dJumpAcceleration of the player
@@ -261,6 +287,31 @@ float CPlayerInfo2D::GetStamina(void) const
 	return stamina;
 }
 
+double CPlayerInfo2D::GetXP(void) const
+{
+	return XP;
+}
+
+void CPlayerInfo2D::AddXP(double xp)
+{
+	XP += xp;
+	XPLevelUp();
+}
+
+void CPlayerInfo2D::XPLevelUp(void)
+{
+	if (XP >= maxXP)
+	{
+		XP /= maxXP;
+		++level;
+	}
+}
+
+double CPlayerInfo2D::GetLevel(void) const
+{
+	return level;
+}
+
 // Set Tile Offset for x-axis
 int CPlayerInfo2D::GetTileOffset_x(void) const
 {
@@ -285,7 +336,7 @@ void CPlayerInfo2D::UpdateJumpUpwards(double dt)
 		return;
 	if (m_bDoubleJump && !m_bDoubleJumped)
 	{
-		m_dJumpSpeed = 6.0f;
+		m_dJumpSpeed = 6.0f; // Double Jump is normal height even if skill[SK_HIGH_JUMP]
 		m_bDoubleJumped = true;
 	}
 
@@ -319,8 +370,7 @@ void CPlayerInfo2D::UpdateJumpUpwards(double dt)
 			{
 				if (theMapReference->theScreenMap[i][checkPosition_X] != 1)
 				{
-					if (hp != 0)
-						--hp;
+					TakeDamage();
 				}
 				// Since the new position does not allow the player to move into, then go back to the old position
 				position.y = static_cast<float>((theMapReference->GetNumOfTiles_Height() - i - 1) * tileSize_Height - (tileSize_Height >> 1));
@@ -339,8 +389,7 @@ void CPlayerInfo2D::UpdateJumpUpwards(double dt)
 				if((theMapReference->theScreenMap[i][checkPosition_X] != 1) &&
 					(theMapReference->theScreenMap[i][checkPosition_X + 1] != 1))
 				{
-					if (hp != 0)
-						--hp;
+					TakeDamage();
 				}
 				// Since the new position does not allow the player to move into, then go back to the old position
 				position.y = static_cast<float>((theMapReference->GetNumOfTiles_Height() - i - 1) * tileSize_Height - (tileSize_Height >> 1));
@@ -384,8 +433,7 @@ void CPlayerInfo2D::UpdateFreeFall(double dt)
 			{
 				if(theMapReference->theScreenMap[i][checkPosition_X] != 1)
 				{
-					if (hp != 0)
-						--hp;
+					TakeDamage();
 				}
 				// Since the new position does not allow the player to move into, then go back to the old position
 				position.y = static_cast<float>((theMapReference->GetNumOfTiles_Height() - i) * tileSize_Height + (tileSize_Height >> 1));
@@ -407,8 +455,7 @@ void CPlayerInfo2D::UpdateFreeFall(double dt)
 				if ((theMapReference->theScreenMap[i][checkPosition_X] != 1) &&
 					(theMapReference->theScreenMap[i][checkPosition_X + 1] != 1))
 				{
-					if (hp != 0)
-						--hp;
+					TakeDamage();
 				}
 				// Since the new position does not allow the player to move into, then go back to the old position
 				position.y = static_cast<float>((theMapReference->GetNumOfTiles_Height() - i) * tileSize_Height + (tileSize_Height >> 1));
@@ -431,6 +478,7 @@ void CPlayerInfo2D::Update(double dt)
 	attackBounceTime += dt;
 	rollBounceTime += dt;
 	dashBounceTime += dt;
+	damageBounceTime += dt;
 	// Update the player position
 	//if (KeyboardController::GetInstance()->IsKeyDown('W'))
 	//	MoveUpDown(true, 1.0f);
@@ -451,18 +499,28 @@ void CPlayerInfo2D::Update(double dt)
 	{
 		Attack(!isFacingRight(), 0.5f);
 	}
-	else if (isRolling())
-		MoveLeftRight(!isFacingRight(), m_dRollSpeed);
+	else if (isRolling()
+			&& (isOnGround() || skill[SK_AIR_ROLL]))
+	{
+		if (skill[SK_FAST_ROLL])
+			MoveLeftRight(!isFacingRight(), m_dRollSpeed);
+		else
+			MoveLeftRight(!isFacingRight(), m_dMoveSpeed);
+	}
 	else if (KeyboardController::GetInstance()->IsKeyPressed('L')
 			&& rollBounceTime > rollBounceTimeLimit
-			&& !isAttacking())
+			&& !isAttacking()
+			&& (isOnGround() || skill[SK_AIR_ROLL]))
 	{
 		bool direction = !isFacingRight();
 		if (KeyboardController::GetInstance()->IsKeyDown('A'))
 			direction = true;
 		else if (KeyboardController::GetInstance()->IsKeyDown('D'))
 			direction = false;
-		MoveLeftRight(direction, m_dRollSpeed);
+		if (skill[SK_FAST_ROLL])
+			MoveLeftRight(direction, m_dRollSpeed);
+		else
+			MoveLeftRight(direction, m_dMoveSpeed);
 	}
 	else if (KeyboardController::GetInstance()->IsKeyDown('A')
 		&& !KeyboardController::GetInstance()->IsKeyDown('D')
@@ -539,12 +597,14 @@ void CPlayerInfo2D::Update(double dt)
 
 	if (KeyboardController::GetInstance()->IsKeyDown('K') && isOnGround())
 	{
-		chargeAttack += static_cast<float>(10 * dt);
+		if (skill[SK_CHARGE_ATTACK])
+			chargeAttack += static_cast<float>(10 * dt);
 		if (isCharged())
 		{
 			dashPower = 0.f;
 		}
-		else if (!dashPower
+		else if (skill[SK_DASH_ATTACK]
+			&& !dashPower
 			&& dashBounceTime > dashBounceTimeLimit)
 		{
 			if (StaminaDecrease(0.4))
@@ -560,7 +620,7 @@ void CPlayerInfo2D::Update(double dt)
 	if (position.x - (tileSize_Width >> 1) < 0)
 		position.x = static_cast<float>(tileSize_Width>>1);
 
-	if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumped && isOnAir() && !m_bDoubleJump && isRolling() && !isAttacking())
+	if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumped && isOnAir() && !m_bDoubleJump && isRolling() && !isAttacking() && skill[SK_DOUBLE_JUMP])
 	{
 		m_bJumped = true;
 		m_bDoubleJump = true;
@@ -572,7 +632,7 @@ void CPlayerInfo2D::Update(double dt)
 		m_bJumpKeyHeld = false;
 	}
 
-	if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumpKeyHeld && !m_bDoubleJump && m_bJumped && !isRolling() && !isAttacking())
+	if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumpKeyHeld && !m_bDoubleJump && m_bJumped && !isRolling() && !isAttacking() && skill[SK_DOUBLE_JUMP])
 	{
  		m_bJumpKeyHeld = true;
 		m_bDoubleJump = true;
@@ -655,7 +715,11 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 		(int)ceil(position.y / theMapReference->GetTileSize_Height());
 
 	// Check if the hero can move sideways
-	if (KeyboardController::GetInstance()->IsKeyPressed('L') && (KeyboardController::GetInstance()->IsKeyDown('A') || !isFacingRight() && !KeyboardController::GetInstance()->IsKeyDown('D')) || isRolling() && !isFacingRight())
+	if (KeyboardController::GetInstance()->IsKeyPressed('L')
+		&& (isOnGround() || skill[SK_AIR_ROLL])
+		&& (KeyboardController::GetInstance()->IsKeyDown('A') || !isFacingRight()
+		&& !KeyboardController::GetInstance()->IsKeyDown('D')) || isRolling()
+		&& !isFacingRight())
 	{
 		// Find the tile number which the player's left side is on
 		checkPosition_X = (int)((position.x - (tileSize_Width >> 1)) / tileSize_Width);
@@ -672,14 +736,17 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 				position.x = static_cast<float>((checkPosition_X + 1) * tileSize_Width + (tileSize_Width >> 1));
 				if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] != 1)
 				{
-					if (hp != 0)
-						--hp;
+					TakeDamage();
 					//position.x += 8;
 				}
 			}
 		}
 	}
-	else if (KeyboardController::GetInstance()->IsKeyPressed('L') && (KeyboardController::GetInstance()->IsKeyDown('D') || isFacingRight() && !KeyboardController::GetInstance()->IsKeyDown('A')) || isRolling() && isFacingRight())
+	else if (KeyboardController::GetInstance()->IsKeyPressed('L')
+			&& (isOnGround() || skill[SK_AIR_ROLL])
+			&& (KeyboardController::GetInstance()->IsKeyDown('D') || isFacingRight()
+			&& !KeyboardController::GetInstance()->IsKeyDown('A')) || isRolling()
+			&& isFacingRight())
 	{
 		// Find the tile number which the player's right side is on
 		checkPosition_X = (int)((position.x + (tileSize_Width >> 1)) / tileSize_Width);
@@ -699,8 +766,7 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 				position.x = static_cast<float>((checkPosition_X - 1) * tileSize_Width + (tileSize_Width >> 1));
 				if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] != 1)
 				{
-					if (hp != 0)
-						--hp;
+					TakeDamage();
 					//position.x -= 8;
 				}
 			}
@@ -722,8 +788,7 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 				position.x = static_cast<float>((checkPosition_X + 1) * tileSize_Width + (tileSize_Width >> 1));
 				if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] != 1)
 				{
-					if (hp != 0)
-						--hp;
+					TakeDamage();
 					//position.x += 8;
 				}
 			}
@@ -744,8 +809,7 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 				position.x = static_cast<float>((checkPosition_X - 1) * tileSize_Width + (tileSize_Width >> 1));
 				if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] != 1)
 				{
-					if (hp != 0)
-						--hp;
+					TakeDamage();
 					//position.x -= 8;
 				}
 			}
@@ -815,7 +879,7 @@ void CPlayerInfo2D::Attack(const bool mode, const float timeDiff)
 			attackBounceTime = 0.f;
 		}
 	}
-	else if (secondAttack)
+	else if (secondAttack && skill[SK_DOUBLE_ATTACK])
 	{
 		secondAttack = false;
 		if (!isAttacking())
@@ -833,7 +897,7 @@ void CPlayerInfo2D::Attack(const bool mode, const float timeDiff)
 
 void CPlayerInfo2D::Die()
 {
-	//CSoundEngine::GetInstance()->PlayASound("death");
+	CSoundEngine::GetInstance()->PlayASound("death");
 }
 
 bool CPlayerInfo2D::isCharged(void) const
@@ -1210,7 +1274,7 @@ bool CPlayerInfo2D::Save(const string saveFileName)
 	}
 	else
 	{
-#if(_DEBUG == TRUE)
+#ifdef _DEBUG
 		cout << "PlayerInfo: Unable to save " << saveFileName.c_str() << endl;
 #endif
 		myfile.close();
@@ -1337,7 +1401,12 @@ void CPlayerInfo2D::InitSound(void) const
 
 bool CPlayerInfo2D::Roll()
 {
-	if (StaminaDecrease(0.2f))
+	bool willRoll = false;
+	if (skill[SK_ROLL_COST])
+		willRoll = StaminaDecrease(0.2f);
+	else
+		willRoll = StaminaDecrease(0.3f);
+	if (willRoll)
 	{
 		CSoundEngine::GetInstance()->PlayASound("roll");
 		rollBounceTime = 0;
@@ -1363,4 +1432,26 @@ void CPlayerInfo2D::StaminaRegen(float regen, double dt)
 	stamina += static_cast<float>(dt * regen);
 	if (stamina > 1.f)
 		stamina = 1.f;
+}
+
+void CPlayerInfo2D::InitSkill(void)
+{
+	for (int i = 0; i < SK_TOTAL; ++i)
+	{
+		skill[i] = false;
+	}
+
+	skill[SK_DOUBLE_JUMP] = true;
+	skill[SK_DASH_ATTACK] = true;
+	// deflect
+	skill[SK_DOUBLE_ATTACK] = true;
+	skill[SK_CHARGE_ATTACK] = true;
+	skill[SK_FAST_ROLL] = true;
+	skill[SK_HIGH_JUMP] = true;
+	// triple jump
+	skill[SK_AIR_ROLL] = true;
+	// heart 2
+	skill[SK_ROLL_COST] = true;
+	// heart 3
+	// lifesteal
 }

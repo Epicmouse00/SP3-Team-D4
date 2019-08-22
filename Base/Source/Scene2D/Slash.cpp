@@ -119,7 +119,7 @@ void Slash::Update(double dt)
 		default:
 			break;
 		}
-		UpdateAnimationIndex(0.6f);
+		UpdateAnimationIndex(0.5f);
 	}
 	else
 	{

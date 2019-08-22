@@ -37,6 +37,7 @@ CScene2D::CScene2D()
 	, theAxeEnemy(NULL)
 	, m_iNumEnemy(0)
 	, m_iNumAxeEnemy(0)
+	, doorIsOpen(false)
 {
 }
 
@@ -58,6 +59,8 @@ CScene2D::~CScene2D()
 	Scene2D_TileGround = NULL;
 	delete Scene2D_TileDoor;
 	Scene2D_TileDoor = NULL;
+	delete Scene2D_TileDoor2;
+	Scene2D_TileDoor2 = NULL;
 	delete Scene2D_RearStructure;
 	Scene2D_RearStructure = NULL;
 	delete Scene2D_SpikeL;
@@ -70,6 +73,15 @@ CScene2D::~CScene2D()
 	Scene2D_SpikeD = NULL;
 	delete Scene2D_Error;
 	Scene2D_Error = NULL;
+	delete Scene2D_Error2;
+	Scene2D_Error2 = NULL;
+	delete Scene2D_LevelUp;
+	Scene2D_LevelUp = NULL;
+	delete Scene2D_ShopScreen;
+	Scene2D_ShopScreen = NULL;
+	delete Scene2D_EnemyHpBar;
+	Scene2D_EnemyHpBar = NULL;
+
 
 	for (int i = 0; i < theEnemy[0]->GetFrameTotal(); ++i)
 	{
@@ -230,6 +242,9 @@ void CScene2D::Init()
 	Scene2D_TileDoor = Create::Sprite2DObject("Tile_Door_Close",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_TileDoor2 = Create::Sprite2DObject("Tile_Door_Open",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
 	Scene2D_RearStructure = Create::Sprite2DObject("Tile_BG",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
@@ -245,9 +260,21 @@ void CScene2D::Init()
 	Scene2D_SpikeD = Create::Sprite2DObject("Tile_Spike_Down",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_Error = Create::Sprite2DObject("Tile_Poison_Back",
+	Scene2D_Error = Create::Sprite2DObject("Tile_Null_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Error2 = Create::Sprite2DObject("Tile_Null_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_LevelUp = Create::Sprite2DObject("Tile_LevelUp",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_ShopScreen = Create::Sprite2DObject("Tile_Shop_Screen",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(320.f, 240.f, 0.f));
+	Scene2D_EnemyHpBar = Create::Sprite2DObject("Stamina_Amber",//temp
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(320.f, 240.f, 0.f));
 
 	Scene2D_Hero_Animated = new SpriteEntity*[thePlayerInfo->GetFrameTotal()];
 	Scene2D_Hero_Animated[0] = Create::Sprite2DObject("Lonin_Right_Idle_1",
@@ -446,12 +473,14 @@ void CScene2D::Init()
 			{
 				if (m_cMap->theScreenMap[height][width] == 101)
 				{
+					m_cMap->theScreenMap[height][width] = 0;
 					theEnemy[i] = Create::EnemyEntity(m_cMap, new CStrategy_Shoot(), false
 						, Vector3(static_cast<float>(width * m_cMap->GetTileSize_Width() + (m_cMap->GetTileSize_Width() >> 1)), static_cast<float>(232 - height * m_cMap->GetTileSize_Height())));
 					++i;
 				}
 				if (m_cMap->theScreenMap[height][width] == 102)
 				{
+					m_cMap->theScreenMap[height][width] = 0;
 					theAxeEnemy[i2] = Create::AxeEnemyEntity(m_cMap, new CStrategy_Kill(), false
 						, Vector3(static_cast<float>(width * m_cMap->GetTileSize_Width() + (m_cMap->GetTileSize_Width() >> 1)), static_cast<float>(232 - height * m_cMap->GetTileSize_Height())));
 					++i2;
@@ -506,19 +535,22 @@ void CScene2D::Init()
 	Scene2D_AxeEnemy[4] = Create::Sprite2DObject("Axe_Attack_5",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_AxeEnemy[5] = Create::Sprite2DObject("Axe_Die",
+	Scene2D_AxeEnemy[5] = Create::Sprite2DObject("Axe_Die_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_AxeEnemy[6] = Create::Sprite2DObject("Axe_Idle_1",
+	Scene2D_AxeEnemy[6] = Create::Sprite2DObject("Axe_Die_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_AxeEnemy[7] = Create::Sprite2DObject("Axe_Idle_2",
+	Scene2D_AxeEnemy[7] = Create::Sprite2DObject("Axe_Idle_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_AxeEnemy[8] = Create::Sprite2DObject("Axe_Run_1",
+	Scene2D_AxeEnemy[8] = Create::Sprite2DObject("Axe_Idle_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_AxeEnemy[9] = Create::Sprite2DObject("Axe_Run_2",
+	Scene2D_AxeEnemy[9] = Create::Sprite2DObject("Axe_Run_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_AxeEnemy[10] = Create::Sprite2DObject("Axe_Run_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
 }
@@ -571,20 +603,37 @@ void CScene2D::Update(double dt)
 		for (int i = 0; i < m_iNumEnemy; ++i)
 		{
 			if (!theEnemy[i]->IsDead()) {
-				theEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x,
-					thePlayerInfo->GetPos().y,
-					0));
+				if (!theEnemy[i]->IsDone())
+					theEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x,
+						thePlayerInfo->GetPos().y,
+						0));
+
 				theEnemy[i]->Update();
 			}
 		}
 		for (int i = 0; i < m_iNumAxeEnemy; ++i)
 		{
 			if (!theAxeEnemy[i]->IsDead()) {
-				theAxeEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x - thePlayerInfo->mapOffset_x,
-					thePlayerInfo->GetPos().y,
-					0));
+				if (!theAxeEnemy[i]->IsDone())
+					theAxeEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x,
+						thePlayerInfo->GetPos().y,
+						0));
 				theAxeEnemy[i]->Update();
 			}
+		}
+
+		if (m_cMap->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X] == 3 ||
+			(thePlayerInfo->checkPosition_X + 1 < m_cMap->GetNumOfTiles_Width() && m_cMap->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X + 1] == 3))
+		{
+			if (doorIsOpen)
+				thePlayerInfo->DoorSound();
+			doorIsOpen = false;
+		}
+		else
+		{
+			if (!doorIsOpen)
+				thePlayerInfo->DoorSound();
+			doorIsOpen = true;
 		}
 
 		GraphicsManager::GetInstance()->UpdateLights(dt);
@@ -625,7 +674,8 @@ void CScene2D::Render()
 		RenderEnemy();
 		// Render the player
 		RenderPlayer();
-		temporop->RenderUI();
+		if(!temporop->IsDone())
+			temporop->RenderUI();
 	}
 	ui->Render();
 }
@@ -650,26 +700,24 @@ void CScene2D::RenderTileMap()
 			if (m >= m_cMap->getNumOfTiles_MapWidth())
 				break;
 
-			if ((m_cMap->theScreenMap[i][m] != 0 && m_cMap->theScreenMap[i][m] != 101) && m*m_cMap->GetTileSize_Width() + kiHalfTileWidth < temporop->GetPosition().x + temporop->GetScale().x / 2 - kiHalfTileWidth)
+			if (m_cMap->theScreenMap[i][m] != 0
+				&& (m*m_cMap->GetTileSize_Width() + kiHalfTileWidth < temporop->GetPosition().x + temporop->GetScale().x / 2 - kiHalfTileWidth || temporop->IsDead()))
 			{
 				switch (rand() % 5)
 				{
 				case 0:
-				case 2:
-				case 3:
-				case 4:
+					Scene2D_Error2->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
+						- thePlayerInfo->GetMapFineOffset_x()),
+						static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
+						0.0f));
+					Scene2D_Error2->RenderUI();
+					break;
+				default:
 					Scene2D_Error->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
 						- thePlayerInfo->GetMapFineOffset_x()),
 						static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
 						0.0f));
 					Scene2D_Error->RenderUI();
-					break;
-				case 1:
-					Scene2D_SpikeU->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-						- thePlayerInfo->GetMapFineOffset_x()),
-						static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
-						0.0f));
-					Scene2D_SpikeU->RenderUI();
 					break;
 				}
 			}
@@ -681,22 +729,19 @@ void CScene2D::RenderTileMap()
 															0.0f));
 				Scene2D_TileGround->RenderUI();
 			}
-			//else if (m_cMap->theScreenMap[i][m] == 2)
-			//{
-			//	Scene2D_TileTree->SetPosition(Vector3(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth 
-			//												- thePlayerInfo->GetMapFineOffset_x(),
-			//										  224 - i*m_cMap->GetTileSize_Height() + kiHalfTileHeight,
-			//										  0.0f));
-			//	Scene2D_TileTree->RenderUI();
-			//}
 			else if (m_cMap->theScreenMap[i][m] == 3)
 			{
-				Scene2D_TileDoor->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
+				SpriteEntity* Door = nullptr;
+				if (doorIsOpen)
+					Door = Scene2D_TileDoor;
+				else
+					Door = Scene2D_TileDoor2;
+				Door->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
 					- thePlayerInfo->GetMapFineOffset_x()),
 					static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
 					0.0f));
-				Scene2D_TileDoor->RenderUI();
-			}
+				Door->RenderUI();
+				}
 			else if (m_cMap->theScreenMap[i][m] == 10)
 			{
 				Scene2D_Goodies_TreasureChest->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
@@ -736,6 +781,14 @@ void CScene2D::RenderTileMap()
 					static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
 					0.0f));
 				Scene2D_SpikeD->RenderUI();
+			}
+			else if (m_cMap->theScreenMap[i][m] == 30)
+			{
+				Scene2D_LevelUp->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
+					- thePlayerInfo->GetMapFineOffset_x()),
+					static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
+					0.0f));
+				Scene2D_LevelUp->RenderUI();
 			}
 		}
 	}
@@ -822,6 +875,13 @@ void CScene2D::RenderEnemy(void)
 			{
 				Scene2D_AxeEnemy[theAxeEnemy[i]->GetFrameState()]->SetPosition(Vector3(static_cast<float>(theEnemy_x), static_cast<float>(theEnemy_y), 0));
 				Scene2D_AxeEnemy[theAxeEnemy[i]->GetFrameState()]->RenderUI();
+				if (theAxeEnemy[i]->GetHp() < theAxeEnemy[i]->GetMaxHp())
+				{
+					float temporaryFloat = static_cast<float>(theAxeEnemy[i]->GetHp()) / static_cast<float>(theAxeEnemy[i]->GetMaxHp()) * m_cMap->GetTileSize_Width();
+					Scene2D_EnemyHpBar->SetPosition(Vector3(static_cast<float>(theEnemy_x - temporaryFloat /2), static_cast<float>(theEnemy_y + m_cMap->GetTileSize_Height() / 2), 0));
+					Scene2D_EnemyHpBar->SetScale(Vector3(temporaryFloat, m_cMap->GetTileSize_Height() / 4, 0.f));
+					Scene2D_EnemyHpBar->RenderUI();
+				}
 			}
 		}
 	}
@@ -888,6 +948,10 @@ void CScene2D::LoadMeshes(void)
 		MeshBuilder::GetInstance()->GetMesh("Tile_Spike_Right")->textureID = LoadTGA("Image//Sprites//Tile_Spike_Right.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Tile_Spike_Up", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Tile_Spike_Up")->textureID = LoadTGA("Image//Sprites//Tile_Spike_Up.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_Null_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_Null_1")->textureID = LoadTGA("Image//Sprites//Tile_Null_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Tile_Null_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Tile_Null_2")->textureID = LoadTGA("Image//Sprites//Tile_Null_2.tga");
 	}
 	// Lonin
 	{
@@ -1019,8 +1083,10 @@ void CScene2D::LoadMeshes(void)
 		MeshBuilder::GetInstance()->GetMesh("Axe_Attack_4")->textureID = LoadTGA("Image//Sprites//Axe_Attack_4.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Axe_Attack_5", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Axe_Attack_5")->textureID = LoadTGA("Image//Sprites//Axe_Attack_5.tga");
-		MeshBuilder::GetInstance()->GenerateQuad("Axe_Die", Color(1, 1, 1), 1.f);
-		MeshBuilder::GetInstance()->GetMesh("Axe_Die")->textureID = LoadTGA("Image//Sprites//Axe_Die.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Axe_Die_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Axe_Die_1")->textureID = LoadTGA("Image//Sprites//Axe_Die_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Axe_Die_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Axe_Die_2")->textureID = LoadTGA("Image//Sprites//Axe_Die_2.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Axe_Idle_1", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Axe_Idle_1")->textureID = LoadTGA("Image//Sprites//Axe_Idle_1.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Axe_Idle_2", Color(1, 1, 1), 1.f);
@@ -1062,6 +1128,10 @@ void CScene2D::LoadMeshes(void)
 		MeshBuilder::GetInstance()->GetMesh("Stamina_Red")->textureID = LoadTGA("Image//Sprites//Stamina_Red.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Stamina_Bar", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Stamina_Bar")->textureID = LoadTGA("Image//Sprites//Stamina_Bar.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("XP_Bar", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("XP_Bar")->textureID = LoadTGA("Image//Sprites//XP_Bar.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("XP_Block", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("XP_Block")->textureID = LoadTGA("Image//Sprites//XP_Block.tga");
 
 		MeshBuilder::GetInstance()->GenerateQuad("Heart_1", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Heart_1")->textureID = LoadTGA("Image//Sprites//Heart_1.tga");
