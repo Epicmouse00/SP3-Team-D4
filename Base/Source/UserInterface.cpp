@@ -228,7 +228,7 @@ bool UserInterface::Update(double dt)
 			ChangeScreen(screen);
 			return true;
 		}
-		if (!(thePlayerInfo->GetMap()->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X] == 30 ||
+		if (thePlayerInfo->GetHp()>-1&&!(thePlayerInfo->GetMap()->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X] == 30 ||
 			thePlayerInfo->checkPosition_X + 1 < thePlayerInfo->GetMap()->GetNumOfTiles_Width() && thePlayerInfo->GetMap()->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X + 1] == 30))
 		{
 			screen = SC_PLAY;
@@ -266,6 +266,13 @@ bool UserInterface::Update(double dt)
 		ss << "mapOffset_x: " << thePlayerInfo->mapOffset_x << endl;
 		textObj[0]->SetText(ss.str());
 
+		if (thePlayerInfo->GetHp() < 0)
+		{
+			screen = SC_SHOP;
+			ChangeScreen(screen);
+			return false;
+		}
+
 		if (KeyboardController::GetInstance()->IsKeyPressed('E') && (thePlayerInfo->GetMap()->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X]==30||
 			thePlayerInfo->checkPosition_X + 1 < thePlayerInfo->GetMap()->GetNumOfTiles_Width() && thePlayerInfo->GetMap()->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X + 1] == 30))
 		{
@@ -273,7 +280,7 @@ bool UserInterface::Update(double dt)
 			ChangeScreen(screen);
 			choice = 2;
 			maxChoices = 3;
-			return false;
+			return true;
 		}
 
 		if (KeyboardController::GetInstance()->IsKeyPressed('P'))
@@ -321,7 +328,7 @@ void UserInterface::ChangeScreen(SCREEN_TYPE screenType)
 		buttonObj[0]->SetText("");
 		break;
 	case SC_SHOP:
-		buttonObj[2]->SetText("SHOP");
+		buttonObj[2]->SetText("Game Over?");
 
 		buttonObj[1]->SetText("");
 

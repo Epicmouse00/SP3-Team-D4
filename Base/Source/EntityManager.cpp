@@ -153,8 +153,7 @@ bool EntityManager::CheckForCollision(void)
 				}
 			}
 
-			colliderThatEnd = entityList.end();
-			for (colliderThat = colliderThis; colliderThat != colliderThatEnd; ++colliderThat)
+			for (colliderThat = entityList.begin(); colliderThat != colliderThisEnd; ++colliderThat)
 			{
 				if (colliderThat == colliderThis)
 					continue;
@@ -182,12 +181,11 @@ bool EntityManager::CheckForCollision(void)
 								if (thisEntity->GetType() == thisEntity->E_ENEMY_PROJECTILES)
 								{
 									thisEntity->SetType(EntityBase::E_PLAYER_PROJECTILES);// Player Slash X Enemy Proj
-									thisEntity->SetDirection(-thisEntity->GetDirection());
 									Create::Projectile("UI_BOX"//change this
 										, thisEntity->GetPosition()
 										, thisEntity->GetScale()
-										, -thisEntity->GetDirection()
-										, 10.f, 4.f, EntityBase::E_PLAYER_PROJECTILES);
+										, -thisEntity->GetDirection()//cuz he scales by direction
+										, 10.f, 1.f, EntityBase::E_PLAYER_PROJECTILES);
 									thisEntity->SetIsDead(true);
 								}
 								else
