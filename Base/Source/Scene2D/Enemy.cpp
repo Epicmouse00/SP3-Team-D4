@@ -147,28 +147,28 @@ void CEnemy::Update(void)
 				theStrategy->Update(theDestination, position);
 				constrain();
 			}
-			switch (theStrategy->GetType())
-			{
-				case CStrategy::E_STRATEGY_KILL:
+			if (isDone)
+				SetAnimationStatus(C_DIE_1);
+			else
+				switch (theStrategy->GetType())
 				{
-					if (isDone)
-						SetAnimationStatus(C_DIE_1);
-					else if (dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::IDLE ||
-						dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::REPEL)
-						SetAnimationStatus(C_IDLE_1);
-					else if (dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::ATTACK)
-						SetAnimationStatus(C_ATTACK_1);
-					UpdateAnimationIndex(0.2f);
+					case CStrategy::E_STRATEGY_KILL:
+					{
+						if (dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::IDLE ||
+							dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::REPEL)
+							SetAnimationStatus(C_IDLE_1);
+						else if (dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::ATTACK)
+							SetAnimationStatus(C_ATTACK_1);
+						break;
+					}
+					case CStrategy::E_STRATEGY_SHOOT:
+					{
+						// code here
 
-					break;
+						break;
+					}
 				}
-				case CStrategy::E_STRATEGY_SHOOT:
-				{
-					// code here
-
-					break;
-				}
-			}
+			UpdateAnimationIndex(0.2f);
 		}
 	}
 }

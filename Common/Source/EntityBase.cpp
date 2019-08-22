@@ -42,7 +42,7 @@ void EntityBase::SetIsDead(bool _value)
 }
 void EntityBase::TakeDamage()
 {
-	if (DamageBounceTime > 0.1f)
+	if (DamageBounceTime > 0.2f)
 	{
 		--hp;
 		DamageBounceTime = 0.f;
