@@ -239,6 +239,7 @@ private:
 	// BounceTime Limit
 	double attackBounceTimeLimit;
 	double rollBounceTimeLimit;
+	double rollBounceTimeLimit2;
 	double dashBounceTimeLimit;
 	double damageBounceTimeLimit;
 
