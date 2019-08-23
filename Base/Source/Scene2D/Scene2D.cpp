@@ -875,31 +875,31 @@ void CScene2D::RenderRearTileMap(void)
 			// If we have reached the right side of the Map, then do not display the extra column of tiles.
 			if (m >= m_cRearMap->getNumOfTiles_MapWidth())
 				break;
-
-			if (m_cRearMap->theScreenMap[i][m] == 1)
+			switch (m_cRearMap->theScreenMap[i][m])
 			{
+			case 1:
 				Scene2D_TilePillar_1->SetPosition(Vector3(static_cast<float>(k*m_cRearMap->GetTileSize_Width() + kiHalfTileWidth
 					- thePlayerInfo->GetRearMapFineOffset_x()),
 					static_cast<float>(224 - i * m_cRearMap->GetTileSize_Height() + kiHalfTileHeight),
 					0.0f));
-
 				Scene2D_TilePillar_1->RenderUI();
-			}
-			else if (m_cRearMap->theScreenMap[i][m] == 2)
-			{
+				break;
+			case 2:
 				Scene2D_TilePillar_2->SetPosition(Vector3(static_cast<float>(k*m_cRearMap->GetTileSize_Width() + kiHalfTileWidth
 					- thePlayerInfo->GetRearMapFineOffset_x()),
 					static_cast<float>(224 - i * m_cRearMap->GetTileSize_Height() + kiHalfTileHeight),
 					0.0f));
 				Scene2D_TilePillar_2->RenderUI();
-			}
-			else if (m_cRearMap->theScreenMap[i][m] == 3)
-			{
+				break;
+			case 3:
 				Scene2D_TilePillar_3->SetPosition(Vector3(static_cast<float>(k*m_cRearMap->GetTileSize_Width() + kiHalfTileWidth
 					- thePlayerInfo->GetRearMapFineOffset_x()),
 					static_cast<float>(224 - i * m_cRearMap->GetTileSize_Height() + kiHalfTileHeight),
 					0.0f));
 				Scene2D_TilePillar_3->RenderUI();
+				break;
+			default:
+				break;
 			}
 		}
 	}

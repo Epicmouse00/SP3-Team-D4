@@ -177,15 +177,14 @@ void CPlayerInfo2D::SetOnFreeFall(bool isOnFreeFall)
 		m_bFallDownwards = true;
 		m_dFallSpeed = 0.0;
 	}
-	if (!isRolling())
+	if (!isRolling()
+		&& !isDie()
+		&& !isPogo())
 	{
-		if (!isPogo())
-		{
-			if (isFacingRight() && !isDie())
-				SetAnimationStatus(CAnimation::P_FALL_R1);
-			else
-				SetAnimationStatus(CAnimation::P_FALL_L1);
-		}
+	if (isFacingRight())
+		SetAnimationStatus(CAnimation::P_FALL_R1);
+	else
+		SetAnimationStatus(CAnimation::P_FALL_L1);
 	}
 	UpdateAnimationIndex(1.5f);
 }
@@ -792,11 +791,12 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 		&& (isOnGround() || skill[SK_AIR_ROLL])
 		&& (KeyboardController::GetInstance()->IsKeyDown('A') || !isFacingRight()
 		&& !KeyboardController::GetInstance()->IsKeyDown('D')) || isRolling()
-		&& !isFacingRight())
+		&& !isFacingRight()
+		&& !isDie())
 	{
 		// Find the tile number which the player's left side is on
 		checkPosition_X = (int)((position.x - (tileSize_Width >> 1)) / tileSize_Width);
-		if (KeyboardController::GetInstance()->IsKeyPressed('L') && (rollBounceTime > rollBounceTimeLimit2 && skill[SK_ROLL_COST] || rollBounceTime > rollBounceTimeLimit) && !isDie())
+		if (KeyboardController::GetInstance()->IsKeyPressed('L') && (rollBounceTime > rollBounceTimeLimit2 && skill[SK_ROLL_COST] || rollBounceTime > rollBounceTimeLimit))
 		{
 			if (Roll())
 				SetAnimationStatus(CAnimation::P_ROLL_L1);
@@ -819,11 +819,12 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 			&& (isOnGround() || skill[SK_AIR_ROLL])
 			&& (KeyboardController::GetInstance()->IsKeyDown('D') || isFacingRight()
 			&& !KeyboardController::GetInstance()->IsKeyDown('A')) || isRolling()
-			&& isFacingRight())
+			&& isFacingRight()
+			&& !isDie())
 	{
 		// Find the tile number which the player's right side is on
 		checkPosition_X = (int)((position.x + (tileSize_Width >> 1)) / tileSize_Width);
-		if (KeyboardController::GetInstance()->IsKeyPressed('L') && (rollBounceTime > rollBounceTimeLimit2 && skill[SK_ROLL_COST] || rollBounceTime > rollBounceTimeLimit) && !isDie())
+		if (KeyboardController::GetInstance()->IsKeyPressed('L') && (rollBounceTime > rollBounceTimeLimit2 && skill[SK_ROLL_COST] || rollBounceTime > rollBounceTimeLimit))
 		{
 			if (Roll())
 				SetAnimationStatus(CAnimation::P_ROLL_R1);
