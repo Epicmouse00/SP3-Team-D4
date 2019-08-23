@@ -36,7 +36,7 @@ public:
 	inline void SetHp(const int& _value) { hp = _value; };
 	inline int GetHp(){ return hp; };
 	inline int GetMaxHp(){ return maxHp; };
-	void TakeDamage();
+	bool TakeDamage();
 
 	bool IsDone();
 	bool IsDead();

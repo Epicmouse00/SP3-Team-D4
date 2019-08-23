@@ -65,8 +65,8 @@ UserInterface::UserInterface()
 			Vector3(360.0f, 32.0f, 0.0f));
 
 		xpBar = Create::Sprite2DObject("XP_Bar",
-			Vector3(thePlayerInfo->GetXP() / 2 + 130, 208.f, 0.0f),
-			Vector3(thePlayerInfo->GetXP(), 14.f, 0.0f));
+			Vector3(static_cast<float>(thePlayerInfo->GetXP() / 2 + 130), 208.f, 0.0f),
+			Vector3(static_cast<float>(thePlayerInfo->GetXP()), 14.f, 0.0f));
 
 		xpBlock = Create::Sprite2DObject("XP_Block",
 			Vector3(160.f, 208.f, 0.0f),
@@ -259,7 +259,7 @@ bool UserInterface::Update(double dt)
 		staminaBar[barStatus]->SetScale(Vector3((thePlayerInfo->GetStamina()) * 25, staminaBar[barStatus]->GetScale().y, staminaBar[barStatus]->GetScale().z));
 		staminaBar[barStatus]->SetPosition(Vector3(staminaBar[barStatus]->GetScale().x / 2 + 18, staminaBar[barStatus]->GetPosition().y, staminaBar[barStatus]->GetPosition().z));
 
-		xpBar->SetScale(Vector3((thePlayerInfo->GetXP()) * 6, xpBar->GetScale().y, xpBar->GetScale().z));
+		xpBar->SetScale(Vector3(static_cast<float>((thePlayerInfo->GetXP()) * 6), xpBar->GetScale().y, xpBar->GetScale().z));
 		xpBar->SetPosition(Vector3(xpBar->GetScale().x / 2 + 130, xpBar->GetPosition().y, xpBar->GetPosition().z));
 
 		std::ostringstream ss;
@@ -301,6 +301,11 @@ bool UserInterface::Update(double dt)
 		return true;
 		break;
 	}
+	default:
+	{
+		return false;
+		break;
+	}
 	}
 	return true;
 }
@@ -336,8 +341,8 @@ void UserInterface::ChangeScreen(SCREEN_TYPE screenType)
 
 		buttonObj[0]->SetText("");
 
-		levelUpScreen->SetPosition(Vector3(thePlayerInfo->GetMap()->getScreenWidth()/2, thePlayerInfo->GetMap()->getScreenHeight()/2, 0.0f));
-		levelUpScreen->SetScale(Vector3(thePlayerInfo->GetMap()->getScreenWidth(), thePlayerInfo->GetMap()->getScreenHeight(), 0.0f));
+		levelUpScreen->SetPosition(Vector3(static_cast<float>(thePlayerInfo->GetMap()->getScreenWidth()) / 2, static_cast<float>(thePlayerInfo->GetMap()->getScreenHeight()) / 2, 0.0f));
+		levelUpScreen->SetScale(Vector3(static_cast<float>(thePlayerInfo->GetMap()->getScreenWidth()), static_cast<float>(thePlayerInfo->GetMap()->getScreenHeight()), 0.0f));
 		break;
 	case SC_SHOP:
 		buttonObj[2]->SetText("Game Over?");
@@ -389,7 +394,7 @@ void UserInterface::Render()// this is at the back since it needs to be on top? 
 		UI_Bar->RenderUI();
 		for (int i = 0; i < thePlayerInfo->GetHp(); ++i)
 		{
-			heartEntity[theHeartInfo->GetFrameState()]->SetPosition(Vector3(24 * i + 64, 208, 0));
+			heartEntity[theHeartInfo->GetFrameState()]->SetPosition(Vector3(static_cast<float>(24 * i + 64), 208.f, 0.f));
 			heartEntity[theHeartInfo->GetFrameState()]->RenderUI();
 		}
 		staminaBar[barStatus]->RenderUI();
