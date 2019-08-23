@@ -65,7 +65,7 @@ public:
 	// Set Max Hp
 	void SetMaxHp(const int hp);
 	// Take damage
-	bool TakeDamage(void);
+	bool TakeDamage(int damage = 1);
 	// Set m_dJumpSpeed of the player
 	void SetJumpSpeed(const double m_dJumpSpeed);
 	// Set m_dJumpAcceleration of the player
@@ -97,11 +97,11 @@ public:
 	float GetStamina(void) const;
 	// Get XP of player
 	double GetXP(void) const;
-	void AddXP(double xp);
+	void AddXP(double xp = 1);
 	void XPLevelUp(void);
 	// Get lifesteal of player
 	double GetLifesteal(void) const;
-	void AddLifesteal(int lifesteal);
+	void AddLifesteal(int lifesteal = 1);
 	void LifestealLifeUp(void);
 	// Get Level of player
 	double GetLevel(void) const;

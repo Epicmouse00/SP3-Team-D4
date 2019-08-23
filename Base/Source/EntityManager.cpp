@@ -217,8 +217,8 @@ bool EntityManager::CheckForCollision(void)
 
 						if (thisEntity->IsDone())
 						{
-							thePlayerInfo->AddXP(1);
-							thePlayerInfo->AddLifesteal(1);
+							thePlayerInfo->AddXP();
+							thePlayerInfo->AddLifesteal();
 						}
 						continue;
 					}
@@ -230,10 +230,15 @@ bool EntityManager::CheckForCollision(void)
 				{
 					if ((thisEntity->GetPosition() - theSlashInfo->position).Length() < thisEntity->GetScale().x / 2 + thePlayerInfo->GetMap()->GetTileSize_Width() / 2 * 3 / 2)//hitbox X 1.5
 					{
-						if (thisEntity->TakeDamage())// Player slash X Enemy
-							thePlayerInfo->AddLifesteal(1);
+						int damage = 1;
+						if (theSlashInfo->isCharge())
+						{
+							damage = 3;
+						}
+						if (thisEntity->TakeDamage(damage)) // Player slash X Enemy
+							thePlayerInfo->AddLifesteal();
 						if (thisEntity->IsDone())
-							thePlayerInfo->AddXP(1);
+							thePlayerInfo->AddXP();
 					}
 				}
 			}
@@ -268,9 +273,9 @@ bool EntityManager::CheckForCollision(void)
 								else if (thisEntity->GetType() == EntityBase::E_ENEMY)
 								{
 									if (thisEntity->TakeDamage()) // Player proj X Enemy
-										thePlayerInfo->AddLifesteal(1);
+										thePlayerInfo->AddLifesteal();
 									if (thisEntity->IsDone())
-										thePlayerInfo->AddXP(1);
+										thePlayerInfo->AddXP();
 								}
 								thatEntity->SetIsDead(true);
 								break; // break cuz that enemy is already dead.. no need to check against player

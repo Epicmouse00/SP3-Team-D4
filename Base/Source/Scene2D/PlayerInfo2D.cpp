@@ -238,11 +238,11 @@ void CPlayerInfo2D::SetMaxHp(const int hp)
 	this->maxhp = hp;
 }
 
-bool CPlayerInfo2D::TakeDamage(void)
+bool CPlayerInfo2D::TakeDamage(int damage)
 {
 	if (damageBounceTime > damageBounceTimeLimit)
 	{
-		--hp;
+		hp -= damage;
 		CSoundEngine::GetInstance()->PlayASound("damaged");
 		if (hp <= 0)
 			Die();
