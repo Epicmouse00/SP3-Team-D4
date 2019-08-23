@@ -51,4 +51,5 @@ private:
 	int numberOfEnemies;
 	int numberOfAxeEnemies;
 	bool LoadFile(const string mapName);
+	bool AddFile(const string mapName);
 };
