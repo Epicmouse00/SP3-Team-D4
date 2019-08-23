@@ -25,6 +25,8 @@ CPlayerInfo2D::CPlayerInfo2D(void)
 	, m_bJumpKeyHeld(false)
 	, m_bDoubleJump(false)
 	, m_bDoubleJumped(false)
+	, m_bTripleJump(false)
+	, m_bTripleJumped(false)
 	, m_bFallDownwards(false)
 	, m_dFallSpeed(0.0)
 	, m_dFallAcceleration(-4.0)
@@ -404,6 +406,11 @@ void CPlayerInfo2D::UpdateJumpUpwards(double dt)
 		m_dJumpSpeed = 6.0f; // Double Jump is normal height even if skill[SK_HIGH_JUMP]
 		m_bDoubleJumped = true;
 	}
+	else if (m_bTripleJump && !m_bTripleJumped && skill[SK_TRIPLE_JUMP])
+	{
+		m_dJumpSpeed = 6.0f;
+		m_bTripleJumped = true;
+	}
 
 	// Record current position before jump
 	int currentPosition_Y = theMapReference->GetNumOfTiles_Height() - (int)ceil((float)position.y / tileSize_Height);
@@ -507,6 +514,8 @@ void CPlayerInfo2D::UpdateFreeFall(double dt)
 				m_bJumped = false;
 				m_bDoubleJump = false;
 				m_bDoubleJumped = false;
+				m_bTripleJump = false;
+				m_bTripleJumped = false;
 				break;
 			}
 		}
@@ -529,6 +538,8 @@ void CPlayerInfo2D::UpdateFreeFall(double dt)
 				m_bJumped = false;
 				m_bDoubleJump = false;
 				m_bDoubleJumped = false;
+				m_bTripleJump = false;
+				m_bTripleJumped = false;
 				break;
 			}
 		}
@@ -703,6 +714,12 @@ void CPlayerInfo2D::Update(double dt)
 		{
 			m_bJumpKeyHeld = true;
 			m_bDoubleJump = true;
+			SetToJumpUpwards(true);
+		}
+		else if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumpKeyHeld && !m_bTripleJump && m_bDoubleJumped && !isRolling() && !isAttacking() && skill[SK_TRIPLE_JUMP])
+		{
+			m_bJumpKeyHeld = true;
+			m_bTripleJump = true;
 			SetToJumpUpwards(true);
 		}
 
@@ -1039,6 +1056,8 @@ bool CPlayerInfo2D::isOnAir(void)
 	m_bJumped = false;
 	m_bDoubleJump = false;
 	m_bDoubleJumped = false;
+	m_bTripleJump = false;
+	m_bTripleJumped = false;
 	return false;
 }
 

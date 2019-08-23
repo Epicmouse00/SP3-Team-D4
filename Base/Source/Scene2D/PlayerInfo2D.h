@@ -226,6 +226,9 @@ private:
 	bool m_bJumpKeyHeld;
 	bool m_bDoubleJump;
 	bool m_bDoubleJumped;
+
+	bool m_bTripleJump;
+	bool m_bTripleJumped;
 	
 	bool m_bFallDownwards;
 	double m_dFallSpeed;
