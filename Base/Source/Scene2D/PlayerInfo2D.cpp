@@ -322,6 +322,11 @@ float CPlayerInfo2D::GetStamina(void) const
 	return stamina;
 }
 
+float CPlayerInfo2D::GetDashPower(void) const
+{
+	return dashPower;
+}
+
 double CPlayerInfo2D::GetXP(void) const
 {
 	return XP;

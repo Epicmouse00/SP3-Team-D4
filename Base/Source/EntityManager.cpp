@@ -223,7 +223,7 @@ bool EntityManager::CheckForCollision(void)
 						continue;
 					}
 					else
-						if (thisEntity->IsAttacking())
+						if (thisEntity->IsAttacking() && !(thePlayerInfo->GetDashPower())) //invincible while dashing (still take dmg X proj)
 							thePlayerInfo->TakeDamage(); // Enemy atack X Player
 				}
 				if (theSlashInfo->GetFrameState() != Slash::S_TOTAL)

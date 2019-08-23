@@ -95,6 +95,8 @@ public:
 	double GetFallAcceleration(void) const;
 	// Get Stamina of player
 	float GetStamina(void) const;
+	// Get Dashpower of player
+	float GetDashPower(void) const;
 	// Get XP of player
 	double GetXP(void) const;
 	void AddXP(double xp = 1);
