@@ -12,6 +12,7 @@ UserInterface::UserInterface()
 	, screen(SC_MAIN)
 	, theHeartInfo(NULL)
 	, barStatus(0)
+	, selectionIndex(0)
 {
 	theHeartInfo = Hearts::GetInstance();
 	theHeartInfo->Init();
@@ -74,7 +75,37 @@ UserInterface::UserInterface()
 
 		levelUpScreen = Create::Sprite2DObject("Level_Up_Screen",
 			Vector3(halfWindowWidth, halfWindowHeight, 0.f),
-			Vector3(1.f, 1.f, 1.f));
+			Vector3(360.f, 224.f, 1.f));
+
+		skillScreenFrames = new SpriteEntity*[13];
+
+		skillScreenFrames[0] = Create::Sprite2DObject("Skill_Unlocked_Frame",
+			Vector3(halfWindowWidth - 102, halfWindowHeight + 23, 0.f),
+			Vector3(24.f, 24.f, 0.f));
+
+		for (int i = 1; i < 5; ++i)
+		{
+			skillScreenFrames[i] = Create::Sprite2DObject("Skill_Unlocked_Frame",
+				Vector3((halfWindowWidth - 63) + (i - 1) * 51, halfWindowHeight + 62, 0.f),
+				Vector3(24.f, 24.f, 0.f));
+		}
+
+		for (int i = 5; i < 9; ++i)
+		{
+			skillScreenFrames[i] = Create::Sprite2DObject("Skill_Unlocked_Frame",
+				Vector3((halfWindowWidth - 51) + (i - 5) * 51, halfWindowHeight + 23, 0.f),
+				Vector3(24.f, 24.f, 0.f));
+		}
+
+		for (int i = 9; i < 13; ++i)
+		{
+			skillScreenFrames[i] = Create::Sprite2DObject("Skill_Unlocked_Frame",
+				Vector3((halfWindowWidth - 63) + (i - 9) * 51, halfWindowHeight - 16, 0.f),
+				Vector3(24.f, 24.f, 0.f));
+		}
+		skillSelectedFrame = Create::Sprite2DObject("Skill_Selected_Frame",
+			Vector3(skillScreenFrames[selectionIndex]->GetPosition()),
+			Vector3(24.f, 24.f, 0.f));
 	}
 
 	float fontSize = 16.0f;
@@ -114,9 +145,17 @@ UserInterface::~UserInterface()
 	xpBar = NULL;
 	delete levelUpScreen;
 	levelUpScreen = NULL;
+	for (int i = 0; i < 13; ++i)
+	{
+		delete skillScreenFrames[i];
+		skillScreenFrames[i] = NULL;
+	}
+	delete skillSelectedFrame;
+	skillSelectedFrame = NULL;
 	for (int i = 0; i < 3; ++i)
 	{
 		delete buttonObj[i];
+		buttonObj[i] = NULL;
 	}
 	for (int i = 0; i < 2; ++i)
 	{
@@ -210,10 +249,67 @@ bool UserInterface::Update(double dt)
 	}
 	case SC_SKILL_TREE:
 	{
-		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RIGHT) || KeyboardController::GetInstance()->IsKeyPressed(VK_LEFT))
+		if (KeyboardController::GetInstance()->IsKeyPressed('A'))
 		{
-			screen = SC_SHOP;
-			ChangeScreen(screen);
+			if (selectionIndex != 0)
+			{
+				if (selectionIndex != 1 && selectionIndex != 5 && selectionIndex != 9)
+				{
+					selectionIndex -= 1;
+				}
+				else
+				{
+					selectionIndex = 0;
+				}
+			}
+			return true;
+		}
+		else if (KeyboardController::GetInstance()->IsKeyPressed('D'))
+		{
+			if (selectionIndex != 4 && selectionIndex != 8 && selectionIndex != 12)
+			{
+				if (selectionIndex != 0)
+				{
+					selectionIndex += 1;
+				}
+				else
+				{
+					selectionIndex = 5;
+				}
+			}
+
+			return true;
+		}
+		else if (KeyboardController::GetInstance()->IsKeyPressed('W'))
+		{
+			if (selectionIndex == 0 || selectionIndex > 4)
+			{
+				if (selectionIndex != 0)
+				{
+					selectionIndex -= 4;
+				}
+				else
+				{
+					selectionIndex = 1;
+				}
+			}
+
+			return true;
+		}
+		else if (KeyboardController::GetInstance()->IsKeyPressed('S'))
+		{
+			if (selectionIndex == 0 || selectionIndex < 9)
+			{
+				if (selectionIndex != 0)
+				{
+					selectionIndex += 4;
+				}
+				else
+				{
+					selectionIndex = 9;
+				}
+			}
+
 			return true;
 		}
 		if (!(thePlayerInfo->GetMap()->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X] == 30 ||
@@ -341,8 +437,8 @@ void UserInterface::ChangeScreen(SCREEN_TYPE screenType)
 
 		buttonObj[0]->SetText("");
 
+
 		levelUpScreen->SetPosition(Vector3(static_cast<float>(thePlayerInfo->GetMap()->getScreenWidth()) / 2, static_cast<float>(thePlayerInfo->GetMap()->getScreenHeight()) / 2, 0.0f));
-		levelUpScreen->SetScale(Vector3(static_cast<float>(thePlayerInfo->GetMap()->getScreenWidth()), static_cast<float>(thePlayerInfo->GetMap()->getScreenHeight()), 0.0f));
 		break;
 	case SC_SHOP:
 		buttonObj[2]->SetText("Game Over?");
@@ -415,6 +511,14 @@ void UserInterface::Render()// this is at the back since it needs to be on top? 
 		buttonObj[1]->RenderUI();
 		buttonObj[2]->RenderUI();
 		levelUpScreen->RenderUI();
+		for (int i = 0; i < 13; ++i)
+		{
+			if (thePlayerInfo->getSkill(i) == true)
+			{
+				skillScreenFrames[i]->RenderUI();
+			}
+		}
+		skillSelectedFrame->RenderUI();
 		break;
 	case SC_SHOP:
 		buttonObj[0]->RenderUI();

@@ -40,6 +40,8 @@ private:
 	TextEntity* textObj[2];
 	SpriteEntity* levelUpScreen;
 	SpriteEntity** skillScreenFrames;
+	SpriteEntity* skillSelectedFrame;
+	int selectionIndex;
 
 	CPlayerInfo2D* thePlayerInfo;
 	Hearts* theHeartInfo;
