@@ -680,6 +680,9 @@ void CScene2D::Update(double dt)
 			doorIsOpen = true;
 		}
 
+		if (temporop->GetPosition().x > static_cast<float>(thePlayerInfo->GetMapOffset_x() + m_cMap->getScreenWidth() / 2))
+			temporop->SetPosition(Vector3(static_cast<float>(thePlayerInfo->GetMapOffset_x() + m_cMap->getScreenWidth() / 2),temporop->GetPosition().y, 0.f));
+
 		GraphicsManager::GetInstance()->UpdateLights(dt);
 	}
 }
@@ -745,7 +748,7 @@ void CScene2D::RenderTileMap()
 				break;
 
 			if (m_cMap->theScreenMap[i][m] != 0
-				&& (m*m_cMap->GetTileSize_Width() + kiHalfTileWidth < temporop->GetPosition().x + temporop->GetScale().x / 2 - kiHalfTileWidth || temporop->IsDead()))
+				&& (m*m_cMap->GetTileSize_Width() + kiHalfTileWidth < temporop->GetPosition().x + temporop->GetScale().x / 2 - kiHalfTileWidth))
 			{
 				switch (rand() % 5)
 				{
