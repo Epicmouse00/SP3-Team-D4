@@ -180,6 +180,9 @@ public:
 	void DeflectSound(void) const;
 	void KillSound(int type) const;
 
+	// Setting screen state
+	void setScreenState(int type);
+
 	bool getSecondAttack(void) const;
 
 	bool getSkill(int skill) const;
@@ -268,6 +271,18 @@ private:
 
 	int lifesteal;
 	int lifestealLimit;
+
+	// Screen state
+	enum SCREEN_TYPE
+	{
+		SC_MAIN,
+		SC_PLAY,
+		SC_PAUSE,
+		SC_SKILL_TREE,
+		SC_SHOP,
+		SC_TOTAL
+	};
+	int screenState;
 
 	// Second Attack
 	bool secondAttack;

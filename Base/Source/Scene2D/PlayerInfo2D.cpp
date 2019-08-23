@@ -55,6 +55,7 @@ CPlayerInfo2D::CPlayerInfo2D(void)
 	, dashBounceTimeLimit(0.9)
 	, damageBounceTimeLimit(1)
 	, stamina(1.f)
+	, screenState(SC_MAIN)
 	, secondAttack(false)
 	, dashPower(0.f)
 	, chargeAttack(0.f)
@@ -549,7 +550,7 @@ void CPlayerInfo2D::Update(double dt)
 	//	MoveUpDown(true, 1.0f);
 	//if (KeyboardController::GetInstance()->IsKeyDown('S'))
 	//	MoveUpDown(false, 1.0f);
-	if (!isDie())
+	if (!isDie() && screenState != SC_SKILL_TREE)
 	{
 		if (dashPower && !KeyboardController::GetInstance()->IsKeyDown('K'))
 		{
@@ -1475,6 +1476,11 @@ void CPlayerInfo2D::KillSound(int type) const
 	default:
 		break;
 	}
+}
+
+void CPlayerInfo2D::setScreenState(int type)
+{
+	screenState = type;
 }
 
 bool CPlayerInfo2D::getSecondAttack(void) const
