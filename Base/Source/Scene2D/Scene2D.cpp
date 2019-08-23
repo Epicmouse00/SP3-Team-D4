@@ -255,6 +255,7 @@ void CScene2D::Init()
 	Scene2D_Background = Create::Sprite2DObject("SCENE2D_BKGROUND",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(360.0f, 240.0f, 0.0f), true);
+	Scene2D_Background->SetType(EntityBase::E_DONTRENDER);
 	Scene2D_TileGround = Create::Sprite2DObject("Tile_1111",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
@@ -710,11 +711,11 @@ void CScene2D::Render()
 	GraphicsManager::GetInstance()->DetachCamera();
 
 	if (ui->GetScreenStatus()) {
-		// Render the required entities
-		EntityManager::GetInstance()->RenderUI();
-
+		Scene2D_Background->RenderUI();
 		// Render the rear tile map
 		RenderRearTileMap();
+		// Render the required entities
+		EntityManager::GetInstance()->RenderUI();
 		// Render the tile map
 		RenderTileMap();
 		// Render the Enemy
@@ -922,6 +923,13 @@ void CScene2D::RenderEnemy(void)
 			{
 				Scene2D_Enemy[theEnemy[i]->GetFrameState()]->SetPosition(Vector3(static_cast<float>(theEnemy_x), static_cast<float>(theEnemy_y), 0));
 				Scene2D_Enemy[theEnemy[i]->GetFrameState()]->RenderUI();
+				if (theEnemy[i]->GetHp() < theEnemy[i]->GetMaxHp())
+				{
+					float temporaryFloat = static_cast<float>(theEnemy[i]->GetHp()) / static_cast<float>(theEnemy[i]->GetMaxHp()) * m_cMap->GetTileSize_Width();
+					Scene2D_EnemyHpBar->SetPosition(Vector3(static_cast<float>(theEnemy_x - temporaryFloat / 2), static_cast<float>(theEnemy_y + m_cMap->GetTileSize_Height() / 2), 0));
+					Scene2D_EnemyHpBar->SetScale(Vector3(temporaryFloat, m_cMap->GetTileSize_Height() / 4, 0.f));
+					Scene2D_EnemyHpBar->RenderUI();
+				}
 			}
 		}
 	}
