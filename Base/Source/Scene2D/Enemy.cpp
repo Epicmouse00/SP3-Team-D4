@@ -247,7 +247,7 @@ void CEnemy::constrain()
 			}
 		}
 	}
-	else if (!theStrategy->GetUD() < 0) // Down
+	else if (!(theStrategy->GetUD() < 0)) // Down
 	{
 		int checkPosition_X = (int)((position.x - (theMapReference->GetTileSize_Width() >> 1)) / theMapReference->GetTileSize_Width());
 		int checkPosition_Y = theMapReference->GetNumOfTiles_Height() -

@@ -125,7 +125,26 @@ CMap * CPlayerInfo2D::GetMap(void)
 bool CPlayerInfo2D::isOnGround(void)
 {
 	if (m_bJumpUpwards == false && m_bFallDownwards == false)
+	{
+		int checkPosition_X = (int)((position.x - (tileSize_Width >> 1)) / tileSize_Width);
+		int checkPosition_Y = theMapReference->GetNumOfTiles_Height() -
+			(int)ceil(position.y / tileSize_Height);
+
+		if (((int)(position.x - (tileSize_Width >> 1)) % tileSize_Width) == 0)
+		{
+			if (theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X] >= 20 && theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X] <= 23)
+				TakeDamage();
+		}
+		else
+		{
+			if (theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X] >= 20 &&
+				theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X] <= 23 ||
+				theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X + 1] >= 20 &&
+				theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X + 1] <= 23)
+				TakeDamage();
+		}
 		return true;
+	}
 
 	return false;
 }
