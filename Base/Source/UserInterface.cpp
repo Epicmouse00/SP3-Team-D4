@@ -12,6 +12,7 @@ UserInterface::UserInterface()
 	, screen(SC_MAIN)
 	, theHeartInfo(NULL)
 	, barStatus(0)
+	, selectionIndex(0)
 {
 	theHeartInfo = Hearts::GetInstance();
 	theHeartInfo->Init();
@@ -65,8 +66,8 @@ UserInterface::UserInterface()
 			Vector3(360.0f, 32.0f, 0.0f));
 
 		xpBar = Create::Sprite2DObject("XP_Bar",
-			Vector3(thePlayerInfo->GetXP() / 2 + 130, 208.f, 0.0f),
-			Vector3(thePlayerInfo->GetXP(), 14.f, 0.0f));
+			Vector3(static_cast<float>(thePlayerInfo->GetXP() / 2 + 130), 208.f, 0.0f),
+			Vector3(static_cast<float>(thePlayerInfo->GetXP()), 14.f, 0.0f));
 
 		xpBlock = Create::Sprite2DObject("XP_Block",
 			Vector3(160.f, 208.f, 0.0f),
@@ -74,7 +75,37 @@ UserInterface::UserInterface()
 
 		levelUpScreen = Create::Sprite2DObject("Level_Up_Screen",
 			Vector3(halfWindowWidth, halfWindowHeight, 0.f),
-			Vector3(1.f, 1.f, 1.f));
+			Vector3(360.f, 224.f, 1.f));
+
+		skillUnlockedFrames = new SpriteEntity*[13];
+
+		skillUnlockedFrames[0] = Create::Sprite2DObject("Skill_Unlocked_Frame",
+			Vector3(halfWindowWidth - 102, halfWindowHeight + 23, 0.f),
+			Vector3(24.f, 24.f, 0.f));
+
+		for (int i = 1; i < 5; ++i)
+		{
+			skillUnlockedFrames[i] = Create::Sprite2DObject("Skill_Unlocked_Frame",
+				Vector3((halfWindowWidth - 63) + (i - 1) * 51, halfWindowHeight + 62, 0.f),
+				Vector3(24.f, 24.f, 0.f));
+		}
+
+		for (int i = 5; i < 9; ++i)
+		{
+			skillUnlockedFrames[i] = Create::Sprite2DObject("Skill_Unlocked_Frame",
+				Vector3((halfWindowWidth - 51) + (i - 5) * 51, halfWindowHeight + 23, 0.f),
+				Vector3(24.f, 24.f, 0.f));
+		}
+
+		for (int i = 9; i < 13; ++i)
+		{
+			skillUnlockedFrames[i] = Create::Sprite2DObject("Skill_Unlocked_Frame",
+				Vector3((halfWindowWidth - 63) + (i - 9) * 51, halfWindowHeight - 16, 0.f),
+				Vector3(24.f, 24.f, 0.f));
+		}
+		skillSelectedFrame = Create::Sprite2DObject("Skill_Selected_Frame",
+			Vector3(skillUnlockedFrames[selectionIndex]->GetPosition()),
+			Vector3(24.f, 24.f, 0.f));
 	}
 
 	float fontSize = 16.0f;
@@ -114,9 +145,17 @@ UserInterface::~UserInterface()
 	xpBar = NULL;
 	delete levelUpScreen;
 	levelUpScreen = NULL;
+	for (int i = 0; i < 13; ++i)
+	{
+		delete skillUnlockedFrames[i];
+		skillUnlockedFrames[i] = NULL;
+	}
+	delete skillSelectedFrame;
+	skillSelectedFrame = NULL;
 	for (int i = 0; i < 3; ++i)
 	{
 		delete buttonObj[i];
+		buttonObj[i] = NULL;
 	}
 	for (int i = 0; i < 2; ++i)
 	{
@@ -210,14 +249,69 @@ bool UserInterface::Update(double dt)
 	}
 	case SC_SKILL_TREE:
 	{
-		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RIGHT) || KeyboardController::GetInstance()->IsKeyPressed(VK_LEFT))
+		if (KeyboardController::GetInstance()->IsKeyPressed('A'))
 		{
-			screen = SC_SHOP;
-			ChangeScreen(screen);
-			return true;
+			if (selectionIndex != 0)
+			{
+				if (selectionIndex != 1 && selectionIndex != 5 && selectionIndex != 9)
+				{
+					selectionIndex -= 1;
+				}
+				else
+				{
+					selectionIndex = 0;
+				}
+			}
 		}
-		if (!(thePlayerInfo->GetMap()->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X] == 30 ||
-			thePlayerInfo->checkPosition_X+1 < thePlayerInfo->GetMap()->GetNumOfTiles_Width() && thePlayerInfo->GetMap()->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X + 1] == 30))
+		else if (KeyboardController::GetInstance()->IsKeyPressed('D'))
+		{
+			if (selectionIndex != 4 && selectionIndex != 8 && selectionIndex != 12)
+			{
+				if (selectionIndex != 0)
+				{
+					selectionIndex += 1;
+				}
+				else
+				{
+					selectionIndex = 5;
+				}
+			}
+		}
+		else if (KeyboardController::GetInstance()->IsKeyPressed('W'))
+		{
+			if (selectionIndex == 0 || selectionIndex > 4)
+			{
+				if (selectionIndex != 0)
+				{
+					selectionIndex -= 4;
+				}
+				else
+				{
+					selectionIndex = 1;
+				}
+			}
+		}
+		else if (KeyboardController::GetInstance()->IsKeyPressed('S'))
+		{
+			if (selectionIndex == 0 || selectionIndex < 9)
+			{
+				if (selectionIndex != 0)
+				{
+					selectionIndex += 4;
+				}
+				else
+				{
+					selectionIndex = 9;
+				}
+			}
+		}
+		skillSelectedFrame->SetPosition(skillUnlockedFrames[selectionIndex]->GetPosition());
+		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN))
+		{
+			thePlayerInfo->setSkill(selectionIndex, true);
+		}
+
+		if (KeyboardController::GetInstance()->IsKeyPressed('E'))
 		{
 			screen = SC_PLAY;
 			ChangeScreen(screen);
@@ -259,7 +353,7 @@ bool UserInterface::Update(double dt)
 		staminaBar[barStatus]->SetScale(Vector3((thePlayerInfo->GetStamina()) * 25, staminaBar[barStatus]->GetScale().y, staminaBar[barStatus]->GetScale().z));
 		staminaBar[barStatus]->SetPosition(Vector3(staminaBar[barStatus]->GetScale().x / 2 + 18, staminaBar[barStatus]->GetPosition().y, staminaBar[barStatus]->GetPosition().z));
 
-		xpBar->SetScale(Vector3((thePlayerInfo->GetXP()) * 6, xpBar->GetScale().y, xpBar->GetScale().z));
+		xpBar->SetScale(Vector3(static_cast<float>((thePlayerInfo->GetXP()) * 6), xpBar->GetScale().y, xpBar->GetScale().z));
 		xpBar->SetPosition(Vector3(xpBar->GetScale().x / 2 + 130, xpBar->GetPosition().y, xpBar->GetPosition().z));
 
 		std::ostringstream ss;
@@ -301,7 +395,13 @@ bool UserInterface::Update(double dt)
 		return true;
 		break;
 	}
+	default:
+	{
+		return false;
+		break;
 	}
+	}
+	return true;
 }
 
 void UserInterface::ChangeScreen(SCREEN_TYPE screenType)
@@ -314,10 +414,12 @@ void UserInterface::ChangeScreen(SCREEN_TYPE screenType)
 		buttonObj[1]->SetText("Load");
 
 		buttonObj[0]->SetText("Exit");
+		thePlayerInfo->setScreenState(SC_MAIN);
 		break;
 	case SC_PLAY:
 		CSoundEngine::GetInstance()->PlayBGM("bgm");
-		CPlayerInfo2D::GetInstance()->Heal();
+		CPlayerInfo2D::GetInstance()->Heal(false);
+		thePlayerInfo->setScreenState(SC_PLAY);
 		break;
 	case SC_PAUSE:
 		CSoundEngine::GetInstance()->PlayBGM("bgmwalk");
@@ -326,6 +428,7 @@ void UserInterface::ChangeScreen(SCREEN_TYPE screenType)
 		buttonObj[1]->SetText("Save");
 
 		buttonObj[0]->SetText("Load");
+		thePlayerInfo->setScreenState(SC_PAUSE);
 		break;
 	case SC_SKILL_TREE:
 		CSoundEngine::GetInstance()->PlayBGM("bgmmii");
@@ -335,8 +438,9 @@ void UserInterface::ChangeScreen(SCREEN_TYPE screenType)
 
 		buttonObj[0]->SetText("");
 
-		levelUpScreen->SetPosition(Vector3(thePlayerInfo->GetMap()->getScreenWidth()/2, thePlayerInfo->GetMap()->getScreenHeight()/2, 0.0f));
-		levelUpScreen->SetScale(Vector3(thePlayerInfo->GetMap()->getScreenWidth(), thePlayerInfo->GetMap()->getScreenHeight(), 0.0f));
+		levelUpScreen->SetPosition(Vector3(static_cast<float>(thePlayerInfo->GetMap()->getScreenWidth()) / 2, static_cast<float>(thePlayerInfo->GetMap()->getScreenHeight()) / 2, 0.0f));
+		
+		thePlayerInfo->setScreenState(SC_SKILL_TREE);
 		break;
 	case SC_SHOP:
 		buttonObj[2]->SetText("Game Over?");
@@ -344,6 +448,8 @@ void UserInterface::ChangeScreen(SCREEN_TYPE screenType)
 		buttonObj[1]->SetText("");
 
 		buttonObj[0]->SetText("");
+
+		thePlayerInfo->setScreenState(SC_SHOP);
 		break;
 	}
 }
@@ -388,7 +494,7 @@ void UserInterface::Render()// this is at the back since it needs to be on top? 
 		UI_Bar->RenderUI();
 		for (int i = 0; i < thePlayerInfo->GetHp(); ++i)
 		{
-			heartEntity[theHeartInfo->GetFrameState()]->SetPosition(Vector3(24 * i + 64, 208, 0));
+			heartEntity[theHeartInfo->GetFrameState()]->SetPosition(Vector3(static_cast<float>(24 * i + 64), 208.f, 0.f));
 			heartEntity[theHeartInfo->GetFrameState()]->RenderUI();
 		}
 		staminaBar[barStatus]->RenderUI();
@@ -409,6 +515,14 @@ void UserInterface::Render()// this is at the back since it needs to be on top? 
 		buttonObj[1]->RenderUI();
 		buttonObj[2]->RenderUI();
 		levelUpScreen->RenderUI();
+		for (int i = 0; i < 13; ++i)
+		{
+			if (thePlayerInfo->getSkill(i) == true)
+			{
+				skillUnlockedFrames[i]->RenderUI();
+			}
+		}
+		skillSelectedFrame->RenderUI();
 		break;
 	case SC_SHOP:
 		buttonObj[0]->RenderUI();

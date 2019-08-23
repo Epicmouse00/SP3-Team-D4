@@ -40,15 +40,17 @@ void EntityBase::SetIsDead(bool _value)
 {
 	isDead = _value;
 }
-void EntityBase::TakeDamage()
+bool EntityBase::TakeDamage(int damage)
 {
 	if (DamageBounceTime > 0.2f)
 	{
-		--hp;
+		hp -= damage;
 		DamageBounceTime = 0.f;
+		if (hp <= 0)
+			SetIsDone(true);
+		return true;
 	}
-	if (!hp)
-		SetIsDone(true);
+	return false;
 }
 bool EntityBase::IsDone()
 {

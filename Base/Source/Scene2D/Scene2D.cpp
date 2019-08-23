@@ -214,12 +214,12 @@ void CScene2D::Init()
 	//MeshBuilder::GetInstance()->GetMesh("sprite")->textureID = LoadTGA("Image//spritesheet.tga");
 
 	// Create entities into the scene
-	Create::Entity("reference", Vector3(0.0f, 0.0f, 0.0f)); // Reference
-	Create::Sprite2DObject("crosshair", Vector3(0.0f, 0.0f, 0.0f), Vector3(10.0f, 10.0f, 10.0f));
+	//Create::Entity("reference", Vector3(0.0f, 0.0f, 0.0f)); // Reference
+	//Create::Sprite2DObject("crosshair", Vector3(0.0f, 0.0f, 0.0f), Vector3(10.0f, 10.0f, 10.0f));
 
 	// Initialise and load the tile map
 	m_cMap = new CMap();
-	m_cMap->Init(Application::GetInstance().GetWindowHeight(), Application::GetInstance().GetWindowWidth(), 15, 64, 240, 1024);
+	m_cMap->Init(Application::GetInstance().GetWindowHeight()-16, Application::GetInstance().GetWindowWidth(), 15, 64, 240, 1024);
 	m_cMap->LoadMap("Image//MapDesign.csv");
 
 	// Create the Goodies
@@ -254,7 +254,7 @@ void CScene2D::Init()
 	// Create the background image
 	Scene2D_Background = Create::Sprite2DObject("SCENE2D_BKGROUND",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(360.0f, 240.0f, 0.0f), true);
+		Vector3(360.0f, 240.0f, 0.0f));
 	Scene2D_TileGround = Create::Sprite2DObject("Tile_1111",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
@@ -428,6 +428,18 @@ void CScene2D::Init()
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
 	Scene2D_Hero_Animated[39] = Create::Sprite2DObject("Lonin_Left_Roll_4",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[40] = Create::Sprite2DObject("Lonin_Right_Roll_4",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[41] = Create::Sprite2DObject("Lonin_Right_Roll_3",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[42] = Create::Sprite2DObject("Lonin_Left_Roll_4",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[43] = Create::Sprite2DObject("Lonin_Left_Roll_3",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
 
@@ -926,7 +938,7 @@ void CScene2D::RenderEnemy(void)
 				{
 					float temporaryFloat = static_cast<float>(theEnemy[i]->GetHp()) / static_cast<float>(theEnemy[i]->GetMaxHp()) * m_cMap->GetTileSize_Width();
 					Scene2D_EnemyHpBar->SetPosition(Vector3(static_cast<float>(theEnemy_x - temporaryFloat / 2), static_cast<float>(theEnemy_y + m_cMap->GetTileSize_Height() / 2), 0));
-					Scene2D_EnemyHpBar->SetScale(Vector3(temporaryFloat, m_cMap->GetTileSize_Height() / 4, 0.f));
+					Scene2D_EnemyHpBar->SetScale(Vector3(temporaryFloat, static_cast<float>(m_cMap->GetTileSize_Height() / 4), 0.f));
 					Scene2D_EnemyHpBar->RenderUI();
 				}
 			}
@@ -948,7 +960,7 @@ void CScene2D::RenderEnemy(void)
 				{
 					float temporaryFloat = static_cast<float>(theAxeEnemy[i]->GetHp()) / static_cast<float>(theAxeEnemy[i]->GetMaxHp()) * m_cMap->GetTileSize_Width();
 					Scene2D_EnemyHpBar->SetPosition(Vector3(static_cast<float>(theEnemy_x - temporaryFloat /2), static_cast<float>(theEnemy_y + m_cMap->GetTileSize_Height() / 2), 0));
-					Scene2D_EnemyHpBar->SetScale(Vector3(temporaryFloat, m_cMap->GetTileSize_Height() / 4, 0.f));
+					Scene2D_EnemyHpBar->SetScale(Vector3(temporaryFloat, static_cast<float>(m_cMap->GetTileSize_Height() / 4), 0.f));
 					Scene2D_EnemyHpBar->RenderUI();
 				}
 			}

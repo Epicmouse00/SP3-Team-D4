@@ -266,6 +266,7 @@ void CAxeEnemy::constrain()
 			}
 		}
 	}
+
 	else // Down
 	{
 		int checkPosition_X = (int)((position.x - (theMapReference->GetTileSize_Width() >> 1)) / theMapReference->GetTileSize_Width());

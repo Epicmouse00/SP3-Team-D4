@@ -65,7 +65,7 @@ public:
 	// Set Max Hp
 	void SetMaxHp(const int hp);
 	// Take damage
-	void TakeDamage(void);
+	bool TakeDamage(int damage = 1);
 	// Set m_dJumpSpeed of the player
 	void SetJumpSpeed(const double m_dJumpSpeed);
 	// Set m_dJumpAcceleration of the player
@@ -95,10 +95,16 @@ public:
 	double GetFallAcceleration(void) const;
 	// Get Stamina of player
 	float GetStamina(void) const;
+	// Get Dashpower of player
+	float GetDashPower(void) const;
 	// Get XP of player
 	double GetXP(void) const;
-	void AddXP(double xp);
+	void AddXP(double xp = 1);
 	void XPLevelUp(void);
+	// Get lifesteal of player
+	double GetLifesteal(void) const;
+	void AddLifesteal(int lifesteal = 1);
+	void LifestealLifeUp(void);
 	// Get Level of player
 	double GetLevel(void) const;
 	// Get Tile Offset for x-axis
@@ -127,7 +133,7 @@ public:
 
 	void Attack(const bool mode, const float timeDiff);
 	void Die();
-	void Heal();
+	void Heal(bool sound = true, int life = 3);
 
 	bool isCharged(void) const;
 
@@ -174,9 +180,13 @@ public:
 	void DeflectSound(void) const;
 	void KillSound(int type) const;
 
+	// Setting screen state
+	void setScreenState(int type);
+
 	bool getSecondAttack(void) const;
 
 	bool getSkill(int skill) const;
+	void setSkill(int skill, bool state);
 
 	enum Skills
 	{
@@ -258,6 +268,21 @@ private:
 
 	float chargeAttack;
 	float chargeTime;
+
+	int lifesteal;
+	int lifestealLimit;
+
+	// Screen state
+	enum SCREEN_TYPE
+	{
+		SC_MAIN,
+		SC_PLAY,
+		SC_PAUSE,
+		SC_SKILL_TREE,
+		SC_SHOP,
+		SC_TOTAL
+	};
+	int screenState;
 
 	// Second Attack
 	bool secondAttack;

@@ -39,7 +39,9 @@ private:
 	SpriteEntity* UI_Bar;
 	TextEntity* textObj[2];
 	SpriteEntity* levelUpScreen;
-	SpriteEntity** skillScreenFrames;
+	SpriteEntity** skillUnlockedFrames;
+	SpriteEntity* skillSelectedFrame;
+	int selectionIndex;
 
 	CPlayerInfo2D* thePlayerInfo;
 	Hearts* theHeartInfo;

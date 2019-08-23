@@ -24,7 +24,7 @@ void EntityManager::Update(double _dt)
 	{
 		if ((*it)->IsDead())
 		{
-			if (!(*it)->GetType() == EntityBase::E_ENEMY)
+			if (!((*it)->GetType() == EntityBase::E_ENEMY))
 				delete *it;
 			it = entityList.erase(it);
 		}
@@ -56,7 +56,6 @@ void EntityManager::RenderUI()
 	end = entityList.end();
 	for (it = entityList.begin(); it != end; ++it)
 	{
-		if (!((*it)->GetType() == EntityBase::E_TOTAL))
 		(*it)->RenderUI();
 	}
 }
@@ -174,7 +173,7 @@ bool EntityManager::CheckForCollision(void)
 				else
 				{
 					if ((thePlayerInfo->GetMap()->theScreenMap[checkPosition_Y][checkPosition_X] > 0) ||
-						(thePlayerInfo->GetMap()->theScreenMap[checkPosition_Y][checkPosition_X + 1] > 0))
+						(checkPosition_X + 1 < thePlayerInfo->GetMap()->GetNumOfTiles_Width() && (thePlayerInfo->GetMap()->theScreenMap[checkPosition_Y][checkPosition_X + 1] > 0)))
 					{
 						thisEntity->SetIsDead(true); // projectiles X walls 2
 						continue;
@@ -184,7 +183,8 @@ bool EntityManager::CheckForCollision(void)
 				{
 					if ((thisEntity->GetPosition() - theSlashInfo->position).Length() < thisEntity->GetScale().x / 2 + thePlayerInfo->GetMap()->GetTileSize_Width() / 2 * 3 / 2)//hitbox X 1.5
 					{
-						if (thisEntity->GetType() == thisEntity->E_ENEMY_PROJECTILES && thePlayerInfo->getSkill(CPlayerInfo2D::SK_DEFLECT))
+						if (thisEntity->GetType() == thisEntity->E_ENEMY_PROJECTILES && thePlayerInfo->getSkill(CPlayerInfo2D::SK_DEFLECT) &&
+							(thisEntity->GetPosition() - theSlashInfo->position).Length() < thisEntity->GetScale().x / 2)
 						{
 							thisEntity->SetType(EntityBase::E_PLAYER_PROJECTILES);// Player Slash X Enemy Proj
 							Create::Projectile("Crystal_Projectile_2"
@@ -216,20 +216,29 @@ bool EntityManager::CheckForCollision(void)
 						thisEntity->SetIsDone(true); // Player Pogo X Enemy (instant kill)
 
 						if (thisEntity->IsDone())
-							thePlayerInfo->AddXP(1);
+						{
+							thePlayerInfo->AddXP();
+							thePlayerInfo->AddLifesteal();
+						}
 						continue;
 					}
 					else
-						if (thisEntity->IsAttacking())
+						if (thisEntity->IsAttacking() && !(thePlayerInfo->GetDashPower())) //invincible while dashing (still take dmg X proj)
 							thePlayerInfo->TakeDamage(); // Enemy atack X Player
 				}
 				if (theSlashInfo->GetFrameState() != Slash::S_TOTAL)
 				{
 					if ((thisEntity->GetPosition() - theSlashInfo->position).Length() < thisEntity->GetScale().x / 2 + thePlayerInfo->GetMap()->GetTileSize_Width() / 2 * 3 / 2)//hitbox X 1.5
 					{
-						thisEntity->TakeDamage();// Player slash X Enemy
+						int damage = 1;
+						if (theSlashInfo->isCharge())
+						{
+							damage = 3;
+						}
+						if (thisEntity->TakeDamage(damage)) // Player slash X Enemy
+							thePlayerInfo->AddLifesteal();
 						if (thisEntity->IsDone())
-							thePlayerInfo->AddXP(1);
+							thePlayerInfo->AddXP();
 					}
 				}
 			}
@@ -263,9 +272,10 @@ bool EntityManager::CheckForCollision(void)
 									thisEntity->SetIsDead(true);
 								else if (thisEntity->GetType() == EntityBase::E_ENEMY)
 								{
-									thisEntity->TakeDamage(); // Player proj X Enemy
+									if (thisEntity->TakeDamage()) // Player proj X Enemy
+										thePlayerInfo->AddLifesteal();
 									if (thisEntity->IsDone())
-										thePlayerInfo->AddXP(1);
+										thePlayerInfo->AddXP();
 								}
 								thatEntity->SetIsDead(true);
 								break; // break cuz that enemy is already dead.. no need to check against player
