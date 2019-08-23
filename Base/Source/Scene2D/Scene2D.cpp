@@ -768,7 +768,8 @@ void CScene2D::RenderTileMap()
 			m = thePlayerInfo->GetTileOffset_x() + k;
 
 			// If we have reached the right side of the Map, then do not display the extra column of tiles.
-			if (m >= m_cMap->getNumOfTiles_MapWidth())
+			if (m >= m_cMap->getNumOfTiles_MapWidth()
+				|| m > thePlayerInfo->GetTileOffset_x() + m_cMap->getScreenWidth()/m_cMap->GetTileSize_Width() + 1)
 				break;
 
 			Vector3 tempPos = Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
@@ -856,7 +857,8 @@ void CScene2D::RenderRearTileMap(void)
 			m = thePlayerInfo->GetRearTileOffset_x() + k;
 
 			// If we have reached the right side of the Map, then do not display the extra column of tiles.
-			if (m >= m_cRearMap->getNumOfTiles_MapWidth())
+			if (m >= m_cRearMap->getNumOfTiles_MapWidth()
+				|| m > thePlayerInfo->GetRearTileOffset_x() + m_cRearMap->getScreenWidth() / m_cRearMap->GetTileSize_Width() + 1)
 				break;
 
 			Vector3 tempPosition = Vector3(static_cast<float>(k*m_cRearMap->GetTileSize_Width() + kiHalfTileWidth
