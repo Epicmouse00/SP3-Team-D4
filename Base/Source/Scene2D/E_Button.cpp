@@ -52,7 +52,7 @@ void E_Button::Update(double dt)
 	if (CPlayerInfo2D::GetInstance()->GetMap()->theScreenMap[CPlayerInfo2D::GetInstance()->checkPosition_Y][CPlayerInfo2D::GetInstance()->checkPosition_X] == 30 ||
 		(CPlayerInfo2D::GetInstance()->checkPosition_X + 1 < CPlayerInfo2D::GetInstance()->GetMap()->GetNumOfTiles_Width() && CPlayerInfo2D::GetInstance()->GetMap()->theScreenMap[CPlayerInfo2D::GetInstance()->checkPosition_Y][CPlayerInfo2D::GetInstance()->checkPosition_X + 1] == 30))
 	{
-		if (GetFrameState() != B_TOTAL)
+		if (GetFrameState() == B_TOTAL)
 			SetAnimationStatus(B_1);
 		UpdateAnimationIndex(0.3f);
 		position = CPlayerInfo2D::GetInstance()->GetPos();
