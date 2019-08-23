@@ -96,6 +96,9 @@ CScene2D::~CScene2D()
 	delete Scene2D_E;
 	Scene2D_E = NULL;
 
+	delete theButtonInfo;
+	theButtonInfo = NULL;
+
 	for (int i = 0; i < theEnemy[0]->GetFrameTotal(); ++i)
 	{
 		delete Scene2D_Enemy[i];
