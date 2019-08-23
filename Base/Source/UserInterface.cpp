@@ -66,11 +66,11 @@ UserInterface::UserInterface()
 			Vector3(360.0f, 32.0f, 0.0f));
 
 		xpBar = Create::Sprite2DObject("XP_Bar",
-			Vector3(static_cast<float>(thePlayerInfo->GetXP() / 2 + 130), 208.f, 0.0f),
+			Vector3(static_cast<float>(thePlayerInfo->GetXP() / 2 + 150), 208.f, 0.0f),
 			Vector3(static_cast<float>(thePlayerInfo->GetXP()), 14.f, 0.0f));
 
 		xpBlock = Create::Sprite2DObject("XP_Block",
-			Vector3(160.f, 208.f, 0.0f),
+			Vector3(180.f, 208.f, 0.0f),
 			Vector3(64.f, 16.f, 0.0f));
 
 		levelUpScreen = Create::Sprite2DObject("Level_Up_Screen",
@@ -361,7 +361,7 @@ bool UserInterface::Update(double dt)
 		staminaBar[barStatus]->SetPosition(Vector3(staminaBar[barStatus]->GetScale().x / 2 + 18, staminaBar[barStatus]->GetPosition().y));
 
 		xpBar->SetScale(Vector3(static_cast<float>((thePlayerInfo->GetXP()) * 6), xpBar->GetScale().y));
-		xpBar->SetPosition(Vector3(xpBar->GetScale().x / 2 + 130, xpBar->GetPosition().y));
+		xpBar->SetPosition(Vector3(xpBar->GetScale().x / 2 + 150, xpBar->GetPosition().y));
 
 		std::ostringstream ss;
 		ss.precision(5);
@@ -500,7 +500,7 @@ void UserInterface::Render()// this is at the back since it needs to be on top? 
 		UI_Bar->RenderUI();
 		for (int i = 0; i < thePlayerInfo->GetHp(); ++i)
 		{
-			heartEntity[theHeartInfo->GetFrameState()]->SetPosition(Vector3(static_cast<float>(24 * i + 64), 208.f, 0.f));
+			heartEntity[theHeartInfo->GetFrameState()]->SetPosition(Vector3(static_cast<float>(32 * i + 64), 208.f, 0.f));
 			heartEntity[theHeartInfo->GetFrameState()]->RenderUI();
 		}
 		staminaBar[barStatus]->RenderUI();
