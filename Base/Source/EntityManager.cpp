@@ -24,7 +24,7 @@ void EntityManager::Update(double _dt)
 	{
 		if ((*it)->IsDead())
 		{
-			if (!(*it)->GetType() == EntityBase::E_ENEMY)
+			if (!((*it)->GetType() == EntityBase::E_ENEMY))
 				delete *it;
 			it = entityList.erase(it);
 		}
@@ -56,7 +56,6 @@ void EntityManager::RenderUI()
 	end = entityList.end();
 	for (it = entityList.begin(); it != end; ++it)
 	{
-		if (!((*it)->GetType() == EntityBase::E_TOTAL))
 		(*it)->RenderUI();
 	}
 }
@@ -184,7 +183,8 @@ bool EntityManager::CheckForCollision(void)
 				{
 					if ((thisEntity->GetPosition() - theSlashInfo->position).Length() < thisEntity->GetScale().x / 2 + thePlayerInfo->GetMap()->GetTileSize_Width() / 2 * 3 / 2)//hitbox X 1.5
 					{
-						if (thisEntity->GetType() == thisEntity->E_ENEMY_PROJECTILES && thePlayerInfo->getSkill(CPlayerInfo2D::SK_DEFLECT))
+						if (thisEntity->GetType() == thisEntity->E_ENEMY_PROJECTILES && thePlayerInfo->getSkill(CPlayerInfo2D::SK_DEFLECT) &&
+							(thisEntity->GetPosition() - theSlashInfo->position).Length() < thisEntity->GetScale().x / 2)
 						{
 							thisEntity->SetType(EntityBase::E_PLAYER_PROJECTILES);// Player Slash X Enemy Proj
 							Create::Projectile("Crystal_Projectile_2"

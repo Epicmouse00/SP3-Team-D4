@@ -12,3 +12,5 @@
 /Debug/Base.pdb
 /Debug/Common.lib
 /Debug/Common.pdb
+Base/Base.vcxproj
+Common/Common.vcxproj
