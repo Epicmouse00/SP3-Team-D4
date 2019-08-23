@@ -34,7 +34,7 @@ public:
 	int getNumberOfEnemies(void);
 	int getNumberOfAxeEnemies(void);
 	vector<vector<int> > theScreenMap;
-
+	bool AddFile(const string mapName);
 private:
 	int theScreen_Height;			// The map's height
 	int theScreen_Width;			// The map's width
@@ -51,5 +51,5 @@ private:
 	int numberOfEnemies;
 	int numberOfAxeEnemies;
 	bool LoadFile(const string mapName);
-	bool AddFile(const string mapName);
+	
 };
