@@ -43,8 +43,8 @@ void EntityManager::Render()
 	std::list<EntityBase*>::iterator it, end;
 	end = entityList.end();
 	for (it = entityList.begin(); it != end; ++it)
-	{
-		(*it)->Render();
+	{	
+			(*it)->Render();
 	}
 }
 
@@ -56,6 +56,7 @@ void EntityManager::RenderUI()
 	end = entityList.end();
 	for (it = entityList.begin(); it != end; ++it)
 	{
+		if (!((*it)->GetType() == EntityBase::E_DONTRENDER))
 		(*it)->RenderUI();
 	}
 }
