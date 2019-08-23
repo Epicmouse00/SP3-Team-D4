@@ -173,7 +173,7 @@ bool EntityManager::CheckForCollision(void)
 				else
 				{
 					if ((thePlayerInfo->GetMap()->theScreenMap[checkPosition_Y][checkPosition_X] > 0) ||
-						(thePlayerInfo->checkPosition_X + 1 < thePlayerInfo->GetMap()->GetNumOfTiles_Width() && (thePlayerInfo->GetMap()->theScreenMap[checkPosition_Y][checkPosition_X + 1] > 0)))
+						(checkPosition_X + 1 < thePlayerInfo->GetMap()->GetNumOfTiles_Width() && (thePlayerInfo->GetMap()->theScreenMap[checkPosition_Y][checkPosition_X + 1] > 0)))
 					{
 						thisEntity->SetIsDead(true); // projectiles X walls 2
 						continue;
