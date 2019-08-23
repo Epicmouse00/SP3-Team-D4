@@ -306,6 +306,11 @@ bool UserInterface::Update(double dt)
 			}
 		}
 		skillSelectedFrame->SetPosition(skillUnlockedFrames[selectionIndex]->GetPosition());
+		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN))
+		{
+			thePlayerInfo->setSkill(selectionIndex, true);
+		}
+
 		if (KeyboardController::GetInstance()->IsKeyPressed('E'))
 		{
 			screen = SC_PLAY;
@@ -433,7 +438,7 @@ void UserInterface::ChangeScreen(SCREEN_TYPE screenType)
 
 		buttonObj[0]->SetText("");
 
-		levelUpScreen->SetPosition(Vector3(static_cast<float>(thePlayerInfo->GetMap()->getScreenWidth()) / 2, static_cast<float>(thePlayerInfo->GetMap()->getScreenHeight()) / 2 - 8, 0.0f));
+		levelUpScreen->SetPosition(Vector3(static_cast<float>(thePlayerInfo->GetMap()->getScreenWidth()) / 2, static_cast<float>(thePlayerInfo->GetMap()->getScreenHeight()) / 2, 0.0f));
 		
 		thePlayerInfo->setScreenState(SC_SKILL_TREE);
 		break;
