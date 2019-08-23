@@ -213,7 +213,7 @@ void CAxeEnemy::constrain()
 
 		if (checkPosition_X >= 0)
 		{
-			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
+			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] > 0)
 			{
 				position.x = static_cast<float>((checkPosition_X + 1) * theMapReference->GetTileSize_Width() + (theMapReference->GetTileSize_Width() >> 1));
 				if (!theStrategy->GetIsOnAir())
@@ -230,7 +230,7 @@ void CAxeEnemy::constrain()
 
 		if (checkPosition_X < theMapReference->GetNumOfTiles_Width())
 		{
-			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
+			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] > 0)
 			{
 				position.x = static_cast<float>((checkPosition_X - 1) * theMapReference->GetTileSize_Width() + (theMapReference->GetTileSize_Width() >> 1));
 				if (!theStrategy->GetIsOnAir())

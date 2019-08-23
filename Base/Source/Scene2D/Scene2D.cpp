@@ -221,7 +221,7 @@ void CScene2D::Init()
 	m_cMap = new CMap();
 	m_cMap->Init(Application::GetInstance().GetWindowHeight()-16, Application::GetInstance().GetWindowWidth(), 15, 64, 240, 1024);
 	m_cMap->LoadMap("Image//MapDesign.csv");
-	size_t numberOfCopies = 2;
+	size_t numberOfCopies = 10;
 	Math::InitRNG();
 	for (size_t i = 0; i < numberOfCopies; ++i)
 	{
