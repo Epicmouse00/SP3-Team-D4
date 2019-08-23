@@ -38,6 +38,8 @@
     <ClCompile Include="Source\WeaponInfo\WeaponInfo.cpp" />
     <ClCompile Include="Source\Scene2D\Strategy_Shoot.cpp" />
     <ClCompile Include="Source\Scene2D\AxeEnemy.cpp" />
+    <ClCompile Include="Source\Scene2D\E_Button.cpp" />
+    <ClCompile Include="Source\Scene2D\AnimationButton.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Application.h" />
@@ -76,6 +78,8 @@
     <ClInclude Include="Source\WeaponInfo\WeaponInfo.h" />
     <ClInclude Include="Source\Scene2D\Strategy_Shoot.h" />
     <ClInclude Include="Source\Scene2D\AxeEnemy.h" />
+    <ClInclude Include="Source\Scene2D\E_Button.h" />
+    <ClInclude Include="Source\Scene2D\AnimationButton.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Shader\Texture.fragmentshader" />

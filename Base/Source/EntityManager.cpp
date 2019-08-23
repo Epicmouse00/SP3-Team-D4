@@ -142,10 +142,6 @@ bool EntityManager::CheckForCollision(void)
 
 			if (thisEntity->GetType() == EntityBase::E_CORRUPTION)
 			{
-				if (thisEntity->GetPosition().x - thisEntity->GetScale().x / 2 - thePlayerInfo->GetMap()->GetTileSize_Width() / 2 > thePlayerInfo->GetMap()->GetNumOfTiles_Width() * thePlayerInfo->GetMap()->GetTileSize_Width())
-				{
-					thisEntity->SetIsDone(true); // end of map X corruption
-				}
 				if (thePlayerInfo->position.x < thisEntity->GetPosition().x + thisEntity->GetScale().x / 2)
 				{
 					thePlayerInfo->TakeDamage(); // corruption X player

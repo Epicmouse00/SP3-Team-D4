@@ -12,6 +12,7 @@
 #include "../UserInterface.h"
 #include "PlayerInfo2D.h"
 #include "Slash.h"
+#include "E_Button.h"
 #include "Enemy.h"
 #include "AxeEnemy.h"
 
@@ -61,6 +62,7 @@ private:
 	SpriteEntity** Scene2D_Slash_Animated;
 	SpriteEntity* Scene2D_Goodies_TreasureChest;
 	SpriteEntity* Scene2D_EnemyHpBar;
+	SpriteEntity** Scene2D_E;
 
 	UserInterface* ui;
 	// Handle to the tilemaps
@@ -70,6 +72,7 @@ private:
 	// This class stores all information about the player / avatar
 	CPlayerInfo2D* thePlayerInfo;
 	Slash* theSlashInfo;
+	E_Button* theButtonInfo;
 
 	// The enemies
 	CEnemy** theEnemy;

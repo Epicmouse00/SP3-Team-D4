@@ -103,13 +103,10 @@ void CProjectile::Update(double dt)
 		return;
 	}
 
-	if (!isDone)
-	{
 		// Update Position
 		position.Set(position.x + (float)(theDirection.x * dt * m_fSpeed),
 			position.y + (float)(theDirection.y * dt * m_fSpeed),
 			position.z + (float)(theDirection.z * dt * m_fSpeed));
-	}
 }
 
 

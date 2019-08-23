@@ -33,6 +33,7 @@ CScene2D::CScene2D()
 	, m_cRearMap(NULL)
 	, thePlayerInfo(NULL)
 	, theSlashInfo(NULL)
+	, theButtonInfo(NULL)
 	, theEnemy(NULL)
 	, theAxeEnemy(NULL)
 	, m_iNumEnemy(0)
@@ -86,6 +87,17 @@ CScene2D::~CScene2D()
 	delete Scene2D_EnemyHpBar;
 	Scene2D_EnemyHpBar = NULL;
 
+
+	for (int i = 0; i < theButtonInfo->GetFrameTotal(); ++i)
+	{
+		delete Scene2D_E[i];
+		Scene2D_E[i] = NULL;
+	}
+	delete Scene2D_E;
+	Scene2D_E = NULL;
+
+	delete theButtonInfo;
+	theButtonInfo = NULL;
 
 	for (int i = 0; i < theEnemy[0]->GetFrameTotal(); ++i)
 	{
@@ -232,6 +244,9 @@ void CScene2D::Init()
 	theSlashInfo = Slash::GetInstance();
 	theSlashInfo->Init();
 
+	theButtonInfo = E_Button::GetInstance();
+	theButtonInfo->Init();
+
 	// Setup the 2D entities
 	float halfWindowWidth = Application::GetInstance().GetWindowWidth() / 2.0f;
 	float halfWindowHeight = Application::GetInstance().GetWindowHeight() / 2.0f;
@@ -286,6 +301,14 @@ void CScene2D::Init()
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(320.f, 240.f, 0.f));
 
+	Scene2D_E = new SpriteEntity*[theButtonInfo->GetFrameTotal()];
+	Scene2D_E[0] = Create::Sprite2DObject("E_Button_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_E[1] = Create::Sprite2DObject("E_Button_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	
 	Scene2D_Hero_Animated = new SpriteEntity*[thePlayerInfo->GetFrameTotal()];
 	Scene2D_Hero_Animated[0] = Create::Sprite2DObject("Lonin_Right_Idle_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
@@ -608,6 +631,7 @@ void CScene2D::Update(double dt)
 		// Update the thePlayerInfo
 		thePlayerInfo->Update(dt);
 		theSlashInfo->Update(dt);
+		theButtonInfo->Update(dt);
 		// Update the enemies
 		for (int i = 0; i < m_iNumEnemy; ++i)
 		{
@@ -655,6 +679,9 @@ void CScene2D::Update(double dt)
 				thePlayerInfo->DoorSound();
 			doorIsOpen = true;
 		}
+
+		if (temporop->GetPosition().x > static_cast<float>(thePlayerInfo->GetMapOffset_x() + m_cMap->getScreenWidth() / 2))
+			temporop->SetPosition(Vector3(static_cast<float>(thePlayerInfo->GetMapOffset_x() + m_cMap->getScreenWidth() / 2),temporop->GetPosition().y, 0.f));
 
 		GraphicsManager::GetInstance()->UpdateLights(dt);
 	}
@@ -721,7 +748,7 @@ void CScene2D::RenderTileMap()
 				break;
 
 			if (m_cMap->theScreenMap[i][m] != 0
-				&& (m*m_cMap->GetTileSize_Width() + kiHalfTileWidth < temporop->GetPosition().x + temporop->GetScale().x / 2 - kiHalfTileWidth || temporop->IsDead()))
+				&& (m*m_cMap->GetTileSize_Width() + kiHalfTileWidth < temporop->GetPosition().x + temporop->GetScale().x / 2 - kiHalfTileWidth))
 			{
 				switch (rand() % 5)
 				{
@@ -871,6 +898,11 @@ void CScene2D::RenderPlayer()
 	{
 		Scene2D_Slash_Animated[theSlashInfo->GetFrameState()]->SetPosition(Vector3(theSlashInfo->GetPos().x - thePlayerInfo->GetMapOffset_x(), theSlashInfo->GetPos().y, theSlashInfo->GetPos().z));
 		Scene2D_Slash_Animated[theSlashInfo->GetFrameState()]->RenderUI();
+	}
+	if (theButtonInfo->GetFrameState() != E_Button::B_TOTAL)
+	{
+		Scene2D_E[theButtonInfo->GetFrameState()]->SetPosition(Vector3(theButtonInfo->GetPos().x - thePlayerInfo->GetMapOffset_x(), theButtonInfo->GetPos().y, theButtonInfo->GetPos().z));
+		Scene2D_E[theButtonInfo->GetFrameState()]->RenderUI();
 	}
 }
 
@@ -1183,6 +1215,11 @@ void CScene2D::LoadMeshes(void)
 		MeshBuilder::GetInstance()->GetMesh("Heart_3")->textureID = LoadTGA("Image//Sprites//Heart_3.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Heart_4", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Heart_4")->textureID = LoadTGA("Image//Sprites//Heart_4.tga");
+
+		MeshBuilder::GetInstance()->GenerateQuad("E_Button_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("E_Button_1")->textureID = LoadTGA("Image//Sprites//E_Button_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("E_Button_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("E_Button_2")->textureID = LoadTGA("Image//Sprites//E_Button_2.tga");
 	}
 	// Title Screen
 	{
