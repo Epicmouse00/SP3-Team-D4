@@ -43,7 +43,7 @@ void CStrategy_Shoot::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition)
 		++bounce;
 		if (bounce > 59)
 		{
-			bounce -= Math::RandIntMinMax(10, 60);
+			bounce -= Math::RandIntMinMax(20, 60);
 			Vector3 direction = (PlayerPosition - theEnemyPosition).Normalized();
 			Create::Projectile("Crystal_Projectile_1", theEnemyPosition, Vector3(10, 10, 10), direction, 1.5f, 100, EntityBase::E_ENEMY_PROJECTILES);
 		}

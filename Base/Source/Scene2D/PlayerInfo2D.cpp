@@ -73,7 +73,7 @@ CPlayerInfo2D::~CPlayerInfo2D(void)
 void CPlayerInfo2D::Init(void)
 {
 	// Set the default values
-	defaultPosition.Set(0,0,0);
+	defaultPosition.Set(0, 0, 0);
 	defaultTarget.Set(0,0,0);
 	defaultUp.Set(0,1,0);
 

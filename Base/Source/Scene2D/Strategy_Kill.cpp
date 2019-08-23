@@ -23,6 +23,13 @@ CStrategy_Kill::~CStrategy_Kill()
 ********************************************************************************/
 void CStrategy_Kill::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition)
 {
+	// Gravity
+	if (isOnAir)
+	{
+		theEnemyPosition.y += static_cast<float>(m);
+		m -= 0.5;
+	}
+
 	// Decide which state to change to
 	int distanceHeroToEnemy = CalculateDistance(PlayerPosition, theEnemyPosition);
 	if (distanceHeroToEnemy < AI_STATE_ATTACK*AI_STATE_ATTACK)
@@ -45,7 +52,7 @@ void CStrategy_Kill::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition)
 		++bounce;
 		if (theEnemyPosition.x < 16 || theEnemyPosition.x > (theMapReference->GetNumOfTiles_Width() - 1) * theMapReference->GetTileSize_Width())
 			n = -n;
-		if (bounce < 16)
+		if (bounce < 17)
 			theEnemyPosition.x = theEnemyPosition.x + n;
 		break;
 	case ATTACK:

@@ -25,8 +25,13 @@ public:
 	void SetType(const STRATEGY_TYPE& _value) { type = _value; };
 	STRATEGY_TYPE GetType();
 
-	int GetLR();
-	int GetUD();
+	double GetLR();
+	double GetUD();
+
+	void SetUD(double d);
+
+	bool GetIsOnAir();
+	void SetIsOnAir(bool b);
 
 	void Init(CMap* m_cMap);
 
@@ -41,6 +46,7 @@ protected:
 	STRATEGY_TYPE type;
 
 	int bounce;
-	int m; // Up Down
-	int n; // Left Right
+	double m; // Up Down
+	double n; // Left Right
+	bool isOnAir;
 };

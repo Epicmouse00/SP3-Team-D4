@@ -8,6 +8,7 @@ CStrategy::CStrategy()
 	bounce = 0;
 	m = 0;
 	n = 0;
+	isOnAir = false;
 }
 
 CStrategy::~CStrategy()
@@ -35,12 +36,27 @@ CStrategy::STRATEGY_TYPE CStrategy::GetType()
 	return type;
 }
 
-int CStrategy::GetLR()
+double CStrategy::GetLR()
 {
 	return n;
 }
 
-int CStrategy::GetUD()
+double CStrategy::GetUD()
 {
 	return m;
+}
+
+void CStrategy::SetUD(double d)
+{
+	m = d;
+}
+
+bool CStrategy::GetIsOnAir()
+{
+	return isOnAir;
+}
+
+void CStrategy::SetIsOnAir(bool b)
+{
+	isOnAir = b;
 }

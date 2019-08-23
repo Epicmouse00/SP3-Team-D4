@@ -215,6 +215,11 @@ void CAxeEnemy::constrain()
 			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
 			{
 				position.x = static_cast<float>((checkPosition_X + 1) * theMapReference->GetTileSize_Width() + (theMapReference->GetTileSize_Width() >> 1));
+				if (!theStrategy->GetIsOnAir())
+				{
+					theStrategy->SetUD(6);
+					theStrategy->SetIsOnAir(true);
+				}
 			}
 		}
 	}
@@ -227,6 +232,11 @@ void CAxeEnemy::constrain()
 			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
 			{
 				position.x = static_cast<float>((checkPosition_X - 1) * theMapReference->GetTileSize_Width() + (theMapReference->GetTileSize_Width() >> 1));
+				if (!theStrategy->GetIsOnAir())
+				{
+					theStrategy->SetUD(6);
+					theStrategy->SetIsOnAir(true);
+				}
 			}
 		}
 
@@ -240,40 +250,49 @@ void CAxeEnemy::constrain()
 
 		if (((int)(position.x - (theMapReference->GetTileSize_Width() >> 1)) % theMapReference->GetTileSize_Width()) == 0)
 		{
-			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
+			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] > 0)
 			{
 				position.y = static_cast<float>((theMapReference->GetNumOfTiles_Height() - checkPosition_Y - 1) * theMapReference->GetTileSize_Height() - (theMapReference->GetTileSize_Height() >> 1));
+				theStrategy->SetUD(0);
 			}
 		}
 		else
 		{
-			if ((theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1) ||
-				(theMapReference->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 1))
+			if ((theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] > 0) ||
+				(theMapReference->theScreenMap[checkPosition_Y][checkPosition_X + 1] > 0))
 			{
 				position.y = static_cast<float>((theMapReference->GetNumOfTiles_Height() - checkPosition_Y - 1) * theMapReference->GetTileSize_Height() - (theMapReference->GetTileSize_Height() >> 1));
+				theStrategy->SetUD(0);
 			}
 		}
 	}
-	else if (!theStrategy->GetUD() < 0) // Down
+	else // Down
 	{
 		int checkPosition_X = (int)((position.x - (theMapReference->GetTileSize_Width() >> 1)) / theMapReference->GetTileSize_Width());
-		int checkPosition_Y = theMapReference->GetNumOfTiles_Height() -
-			(int)ceil((float)(position.y) / theMapReference->GetTileSize_Height());
+		int checkPosition_Y = theMapReference->GetNumOfTiles_Height() - (int)ceil((float)(position.y) / theMapReference->GetTileSize_Height());
 
 		if (((int)(position.x - (theMapReference->GetTileSize_Width() >> 1)) % theMapReference->GetTileSize_Width()) == 0)
 		{
-			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1)
+			if (theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X] > 0)
 			{
-				position.y = static_cast<float>((theMapReference->GetNumOfTiles_Height() - checkPosition_Y) * theMapReference->GetTileSize_Height() + (theMapReference->GetTileSize_Height() >> 1));
+				position.y = static_cast<float>((theMapReference->GetNumOfTiles_Height() - checkPosition_Y -1) * theMapReference->GetTileSize_Height() + (theMapReference->GetTileSize_Height() >> 1));
+				theStrategy->SetIsOnAir(false);
+				if (theStrategy->GetUD())
+					theStrategy->SetUD(0);
 			}
+			else theStrategy->SetIsOnAir(true);
 		}
 		else
 		{
-			if ((theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] == 1) ||
-				(theMapReference->theScreenMap[checkPosition_Y][checkPosition_X + 1] == 1))
+			if ((theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X] > 0) ||
+				(theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X + 1] > 0))
 			{
-				position.y = static_cast<float>((theMapReference->GetNumOfTiles_Height() - checkPosition_Y) * theMapReference->GetTileSize_Height() + (theMapReference->GetTileSize_Height() >> 1));
+				position.y = static_cast<float>((theMapReference->GetNumOfTiles_Height() - checkPosition_Y -1) * theMapReference->GetTileSize_Height() + (theMapReference->GetTileSize_Height() >> 1));
+				theStrategy->SetIsOnAir(false);
+				if (theStrategy->GetUD())
+					theStrategy->SetUD(0);
 			}
+			else theStrategy->SetIsOnAir(true);
 		}
 	}
 }

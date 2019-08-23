@@ -530,7 +530,7 @@ void CScene2D::Init()
 	}
 	temporop = Create::Projectile("Corrupt_temp", Vector3(static_cast<float>(-m_cMap->getScreenWidth()) / 2, static_cast<float>(m_cMap->getScreenHeight()) / 2, 0)
 		, Vector3(static_cast<float>(m_cMap->getScreenWidth()), static_cast<float>(m_cMap->getScreenHeight()), 0), Vector3(1, 0, 0)
-		, 1.f, 30.f, EntityBase::ENTITY_TYPE::E_CORRUPTION);
+		, 1.f, 0.f, EntityBase::ENTITY_TYPE::E_CORRUPTION);
 
 	Scene2D_Enemy = new SpriteEntity*[theEnemy[0]->GetFrameTotal()]; // Enemy stuff
 	Scene2D_Enemy[0] = Create::Sprite2DObject("Crystal_Attack_1",
