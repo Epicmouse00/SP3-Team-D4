@@ -219,7 +219,7 @@ void CScene2D::Init()
 
 	// Initialise and load the tile map
 	m_cMap = new CMap();
-	m_cMap->Init(Application::GetInstance().GetWindowHeight(), Application::GetInstance().GetWindowWidth(), 15, 64, 240, 1024);
+	m_cMap->Init(Application::GetInstance().GetWindowHeight()-16, Application::GetInstance().GetWindowWidth(), 15, 64, 240, 1024);
 	m_cMap->LoadMap("Image//MapDesign.csv");
 
 	// Create the Goodies

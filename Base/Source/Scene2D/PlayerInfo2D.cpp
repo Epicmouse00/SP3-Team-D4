@@ -130,7 +130,7 @@ bool CPlayerInfo2D::isOnGround(void)
 		int checkPosition_Y = theMapReference->GetNumOfTiles_Height() -
 			(int)ceil(position.y / tileSize_Height);
 
-		if (((int)(position.x - (tileSize_Width >> 1)) % tileSize_Width) == 0)
+		if (((int)(position.x - (tileSize_Width >> 1)) % tileSize_Width) == 0 || position >= theMapReference->getMapWidth() - theMapReference->GetTileSize_Width()/2)
 		{
 			if (theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X] >= 20 && theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X] <= 23)
 				TakeDamage();
@@ -1055,9 +1055,9 @@ void CPlayerInfo2D::Constrain(void)
 	//	if (mapOffset_x + theMapReference->getScreenWidth() > theMapReference->GetNumOfTiles_Width() * theMapReference->GetTileSize_Width())
 	//		mapOffset_x = theMapReference->GetNumOfTiles_Width() * theMapReference->GetTileSize_Width() - theMapReference->getScreenWidth();
 	//}
-	if (position.y > maxBoundary.y - tileSize_Height) // for y-scrolling
+	if (position.y > maxBoundary.y - (tileSize_Height>>1)) // for y-scrolling
 	{
-		position.y = maxBoundary.y - (tileSize_Height >> 1);
+		position.y = maxBoundary.y - (tileSize_Height>>1);
 	}
 	//if (position.x <= minBoundary.x + mapOffset_x)
 	//{
