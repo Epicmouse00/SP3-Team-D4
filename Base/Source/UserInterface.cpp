@@ -302,6 +302,7 @@ bool UserInterface::Update(double dt)
 		break;
 	}
 	}
+	return true;
 }
 
 void UserInterface::ChangeScreen(SCREEN_TYPE screenType)
