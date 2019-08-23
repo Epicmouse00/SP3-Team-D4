@@ -181,7 +181,7 @@ void CPlayerInfo2D::SetOnFreeFall(bool isOnFreeFall)
 	{
 		if (!isPogo())
 		{
-			if (isFacingRight())
+			if (isFacingRight() && !isDie())
 				SetAnimationStatus(CAnimation::P_FALL_R1);
 			else
 				SetAnimationStatus(CAnimation::P_FALL_L1);
@@ -202,7 +202,7 @@ void CPlayerInfo2D::SetToJumpUpwards(bool isOnJumpUpwards)
 		else
 			m_dJumpSpeed = 6.0;
 
-		if (isFacingRight())
+		if (isFacingRight() && !isDie())
 			SetAnimationStatus(CAnimation::P_JUMP_R1);
 		else
 			SetAnimationStatus(CAnimation::P_JUMP_L1);
@@ -637,7 +637,7 @@ void CPlayerInfo2D::Update(double dt)
 		{
 			UpdateAnimationIndex(1.f);
 		}
-		else if (isOnGround()) // Idle
+		else if (isOnGround() && !isDie()) // Idle
 		{
 			if (isCharged())
 			{
@@ -658,7 +658,7 @@ void CPlayerInfo2D::Update(double dt)
 
 			UpdateAnimationIndex(0.1f);
 		}
-		else
+		if (isDie())
 		{
 			UpdateAnimationIndex(1.f);
 		}
@@ -722,7 +722,7 @@ void CPlayerInfo2D::Update(double dt)
 				SetOnFreeFall(true);
 			}
 		}
-		if (KeyboardController::GetInstance()->IsKeyPressed('K') && !isOnGround())
+		if (KeyboardController::GetInstance()->IsKeyPressed('K') && !isOnGround() && !isDie())
 		{
 			if (isFacingRight())
 				SetAnimationStatus(CAnimation::P_POGO_R1);
@@ -796,7 +796,7 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 	{
 		// Find the tile number which the player's left side is on
 		checkPosition_X = (int)((position.x - (tileSize_Width >> 1)) / tileSize_Width);
-		if (KeyboardController::GetInstance()->IsKeyPressed('L') && (rollBounceTime > rollBounceTimeLimit2 && skill[SK_ROLL_COST] || rollBounceTime > rollBounceTimeLimit))
+		if (KeyboardController::GetInstance()->IsKeyPressed('L') && (rollBounceTime > rollBounceTimeLimit2 && skill[SK_ROLL_COST] || rollBounceTime > rollBounceTimeLimit) && !isDie())
 		{
 			if (Roll())
 				SetAnimationStatus(CAnimation::P_ROLL_L1);
@@ -823,7 +823,7 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 	{
 		// Find the tile number which the player's right side is on
 		checkPosition_X = (int)((position.x + (tileSize_Width >> 1)) / tileSize_Width);
-		if (KeyboardController::GetInstance()->IsKeyPressed('L') && (rollBounceTime > rollBounceTimeLimit2 && skill[SK_ROLL_COST] || rollBounceTime > rollBounceTimeLimit))
+		if (KeyboardController::GetInstance()->IsKeyPressed('L') && (rollBounceTime > rollBounceTimeLimit2 && skill[SK_ROLL_COST] || rollBounceTime > rollBounceTimeLimit) && !isDie())
 		{
 			if (Roll())
 				SetAnimationStatus(CAnimation::P_ROLL_R1);
@@ -850,7 +850,7 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 	{
 		// Find the tile number which the player's left side is on
 		checkPosition_X = (int)((position.x - (tileSize_Width >> 1)) / tileSize_Width);
-		if (isOnGround() && !isAttacking())
+		if (isOnGround() && !isAttacking() && !isDie())
 			SetAnimationStatus(CAnimation::P_RUN_L1);
 
 		if (checkPosition_X >= 0)
@@ -871,7 +871,7 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 	{
 		// Find the tile number which the player's right side is on
 		checkPosition_X = (int)((position.x + (tileSize_Width >> 1)) / tileSize_Width);
-		if (isOnGround() && !isAttacking())
+		if (isOnGround() && !isAttacking() && !isDie())
 			SetAnimationStatus(CAnimation::P_RUN_R1);
 
 		if (checkPosition_X < theMapReference->GetNumOfTiles_Width())
@@ -926,7 +926,7 @@ void CPlayerInfo2D::MoveLeftRight(const bool mode, const float timeDiff)
 
 void CPlayerInfo2D::Attack(const bool mode, const float timeDiff)
 {
-	if (attackBounceTime > attackBounceTimeLimit)
+	if (attackBounceTime > attackBounceTimeLimit && !isDie())
 	{
 		if (!KeyboardController::GetInstance()->IsKeyDown('W') && !KeyboardController::GetInstance()->IsKeyDown('S'))
 			secondAttack = true;
@@ -952,7 +952,7 @@ void CPlayerInfo2D::Attack(const bool mode, const float timeDiff)
 			attackBounceTime = 0.f;
 		}
 	}
-	else if (secondAttack && skill[SK_DOUBLE_ATTACK])
+	else if (secondAttack && skill[SK_DOUBLE_ATTACK] && !isDie())
 	{
 		secondAttack = false;
 		if (!isAttacking())
