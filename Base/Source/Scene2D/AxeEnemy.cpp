@@ -167,12 +167,13 @@ void CAxeEnemy::Update(void)
 				{
 					case CStrategy::E_STRATEGY_KILL:
 					{
-						if (dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::IDLE
-							|| dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::PATROL)
+						int tempstate = dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState();
+						if (tempstate == CStrategy_Kill::IDLE
+							|| tempstate == CStrategy_Kill::PATROL)
 							SetAnimationStatus(A_IDLE_1);
-						else if (dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::REPEL)
+						else if (tempstate == CStrategy_Kill::REPEL)
 							SetAnimationStatus(A_RUN_1);
-						else if (dynamic_cast<CStrategy_Kill*>(theStrategy)->GetState() == CStrategy_Kill::ATTACK && !isAttacking())
+						else if (tempstate == CStrategy_Kill::ATTACK && !isAttacking())
 							SetAnimationStatus(A_ATTACK_1);
 						break;
 					}

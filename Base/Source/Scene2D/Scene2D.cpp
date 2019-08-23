@@ -703,7 +703,7 @@ void CScene2D::Update(double dt)
 		}
 
 		if (temporop->GetPosition().x > static_cast<float>(thePlayerInfo->GetMapOffset_x() + m_cMap->getScreenWidth() / 2))
-			temporop->SetPosition(Vector3(static_cast<float>(thePlayerInfo->GetMapOffset_x() + m_cMap->getScreenWidth() / 2),temporop->GetPosition().y, 0.f));
+			temporop->SetPosition(Vector3(static_cast<float>(thePlayerInfo->GetMapOffset_x() + m_cMap->getScreenWidth() / 2),temporop->GetPosition().y));
 
 		GraphicsManager::GetInstance()->UpdateLights(dt);
 	}
@@ -759,32 +759,33 @@ void CScene2D::RenderTileMap()
 {
 	int m = 0;
 	thePlayerInfo->UpdateMapFineOffset();
-	for (int i = 0; i < m_cMap->getNumOfTiles_MapHeight(); i++)
+	int NumOfTilesMapHeight = m_cMap->getNumOfTiles_MapHeight();
+	int NumOfTilesMapWidth = m_cMap->getNumOfTiles_MapWidth();
+	for (int i = 0; i < NumOfTilesMapHeight; ++i)
 	{
-		for (int k = 0; k < m_cMap->getNumOfTiles_MapWidth()+1; k++)
+		for (int k = 0; k < NumOfTilesMapWidth + 1; ++k)
 		{
 			m = thePlayerInfo->GetTileOffset_x() + k;
 
 			// If we have reached the right side of the Map, then do not display the extra column of tiles.
 			if (m >= m_cMap->getNumOfTiles_MapWidth())
 				break;
+
+			Vector3 tempPos = Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
+									- thePlayerInfo->GetMapFineOffset_x()),
+									static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight));
+
 			if (m_cMap->theScreenMap[i][m] != 0
 				&& (m*m_cMap->GetTileSize_Width() + kiHalfTileWidth < temporop->GetPosition().x + temporop->GetScale().x / 2 - kiHalfTileWidth))
 			{
 				switch (rand() % 5)
 				{
 				case 0:
-					Scene2D_Error2->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-						- thePlayerInfo->GetMapFineOffset_x()),
-						static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
-						0.0f));
+					Scene2D_Error2->SetPosition(tempPos);
 					Scene2D_Error2->RenderUI();
 					break;
 				default:
-					Scene2D_Error->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-						- thePlayerInfo->GetMapFineOffset_x()),
-						static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
-						0.0f));
+					Scene2D_Error->SetPosition(tempPos);
 					Scene2D_Error->RenderUI();
 					break;
 				}
@@ -794,10 +795,7 @@ void CScene2D::RenderTileMap()
 				switch (m_cMap->theScreenMap[i][m])
 				{
 				case 1:
-					Scene2D_TileGround->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-						- thePlayerInfo->GetMapFineOffset_x()),
-						static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
-						0.0f));
+					Scene2D_TileGround->SetPosition(tempPos);
 					Scene2D_TileGround->RenderUI();
 					break;
 				case 3:
@@ -808,53 +806,32 @@ void CScene2D::RenderTileMap()
 						Door = Scene2D_TileDoor2;
 					else
 						Door = Scene2D_TileDoor;
-					Door->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-						- thePlayerInfo->GetMapFineOffset_x()),
-						static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
-						0.0f));
+					Door->SetPosition(tempPos);
 					Door->RenderUI();
 					break;
 				}
 				case 10:
-					Scene2D_Goodies_TreasureChest->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-						- thePlayerInfo->GetMapFineOffset_x()),
-						static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
-						0.0f));
+					Scene2D_Goodies_TreasureChest->SetPosition(tempPos);
 					Scene2D_Goodies_TreasureChest->RenderUI();
 					break;
 				case 20:
-					Scene2D_SpikeL->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-						- thePlayerInfo->GetMapFineOffset_x()),
-						static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
-						0.0f));
+					Scene2D_SpikeL->SetPosition(tempPos);
 					Scene2D_SpikeL->RenderUI();
 					break;
 				case 21:
-					Scene2D_SpikeR->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-						- thePlayerInfo->GetMapFineOffset_x()),
-						static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
-						0.0f));
+					Scene2D_SpikeR->SetPosition(tempPos);
 					Scene2D_SpikeR->RenderUI();
 					break;
 				case 22:
-					Scene2D_SpikeU->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-						- thePlayerInfo->GetMapFineOffset_x()),
-						static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
-						0.0f));
+					Scene2D_SpikeU->SetPosition(tempPos);
 					Scene2D_SpikeU->RenderUI();
 					break;
 				case 23:
-					Scene2D_SpikeD->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-						- thePlayerInfo->GetMapFineOffset_x()),
-						static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
-						0.0f));
+					Scene2D_SpikeD->SetPosition(tempPos);
 					Scene2D_SpikeD->RenderUI();
 					break;
 				case 30:
-					Scene2D_LevelUp->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-						- thePlayerInfo->GetMapFineOffset_x()),
-						static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
-						0.0f));
+					Scene2D_LevelUp->SetPosition(tempPos);
 					Scene2D_LevelUp->RenderUI();
 					break;
 				default:
@@ -870,36 +847,34 @@ void CScene2D::RenderRearTileMap(void)
 {
 	int m = 0;
 	thePlayerInfo->UpdateRearMap();
-	for (int i = 0; i < m_cRearMap->GetNumOfTiles_Height(); ++i)
+	int NumOfTiles_Height = m_cRearMap->GetNumOfTiles_Height();
+	int NumOfTiles_Width = m_cRearMap->GetNumOfTiles_Width();
+	for (int i = 0; i < NumOfTiles_Height; ++i)
 	{
-		for (int k = 0; k < m_cRearMap->GetNumOfTiles_Width() + 1; ++k)
+		for (int k = 0; k < NumOfTiles_Width + 1; ++k)
 		{
 			m = thePlayerInfo->GetRearTileOffset_x() + k;
 
 			// If we have reached the right side of the Map, then do not display the extra column of tiles.
 			if (m >= m_cRearMap->getNumOfTiles_MapWidth())
 				break;
+
+			Vector3 tempPosition = Vector3(static_cast<float>(k*m_cRearMap->GetTileSize_Width() + kiHalfTileWidth
+				- thePlayerInfo->GetRearMapFineOffset_x()),
+				static_cast<float>(224 - i * m_cRearMap->GetTileSize_Height() + kiHalfTileHeight));
+
 			switch (m_cRearMap->theScreenMap[i][m])
 			{
 			case 1:
-				Scene2D_TilePillar_1->SetPosition(Vector3(static_cast<float>(k*m_cRearMap->GetTileSize_Width() + kiHalfTileWidth
-					- thePlayerInfo->GetRearMapFineOffset_x()),
-					static_cast<float>(224 - i * m_cRearMap->GetTileSize_Height() + kiHalfTileHeight),
-					0.0f));
+				Scene2D_TilePillar_1->SetPosition(tempPosition);
 				Scene2D_TilePillar_1->RenderUI();
 				break;
 			case 2:
-				Scene2D_TilePillar_2->SetPosition(Vector3(static_cast<float>(k*m_cRearMap->GetTileSize_Width() + kiHalfTileWidth
-					- thePlayerInfo->GetRearMapFineOffset_x()),
-					static_cast<float>(224 - i * m_cRearMap->GetTileSize_Height() + kiHalfTileHeight),
-					0.0f));
+				Scene2D_TilePillar_2->SetPosition(tempPosition);
 				Scene2D_TilePillar_2->RenderUI();
 				break;
 			case 3:
-				Scene2D_TilePillar_3->SetPosition(Vector3(static_cast<float>(k*m_cRearMap->GetTileSize_Width() + kiHalfTileWidth
-					- thePlayerInfo->GetRearMapFineOffset_x()),
-					static_cast<float>(224 - i * m_cRearMap->GetTileSize_Height() + kiHalfTileHeight),
-					0.0f));
+				Scene2D_TilePillar_3->SetPosition(tempPosition);
 				Scene2D_TilePillar_3->RenderUI();
 				break;
 			default:
@@ -915,17 +890,21 @@ void CScene2D::RenderPlayer()
 	//	Scene2D_Hero->RenderUI();
 
 	// Display the player
-	Scene2D_Hero_Animated[thePlayerInfo->GetFrameState()]->SetPosition(Vector3(thePlayerInfo->GetPos().x-thePlayerInfo->GetMapOffset_x(), thePlayerInfo->GetPos().y,0));
-	Scene2D_Hero_Animated[thePlayerInfo->GetFrameState()]->RenderUI();
-	if (theSlashInfo->GetFrameState() != Slash::S_TOTAL)
+	int playerFrameState = thePlayerInfo->GetFrameState();
+	int playerMapOffsetX = thePlayerInfo->GetMapOffset_x();
+	Scene2D_Hero_Animated[playerFrameState]->SetPosition(Vector3(thePlayerInfo->GetPos().x - playerMapOffsetX, thePlayerInfo->GetPos().y));
+	Scene2D_Hero_Animated[playerFrameState]->RenderUI();
+	int slashFrameState = theSlashInfo->GetFrameState();
+	if (slashFrameState != Slash::S_TOTAL)
 	{
-		Scene2D_Slash_Animated[theSlashInfo->GetFrameState()]->SetPosition(Vector3(theSlashInfo->GetPos().x - thePlayerInfo->GetMapOffset_x(), theSlashInfo->GetPos().y, theSlashInfo->GetPos().z));
-		Scene2D_Slash_Animated[theSlashInfo->GetFrameState()]->RenderUI();
+		Scene2D_Slash_Animated[slashFrameState]->SetPosition(Vector3(theSlashInfo->GetPos().x - playerMapOffsetX, theSlashInfo->GetPos().y));
+		Scene2D_Slash_Animated[slashFrameState]->RenderUI();
 	}
-	if (theButtonInfo->GetFrameState() != E_Button::B_TOTAL)
+	int buttonFrameState = theButtonInfo->GetFrameState();
+	if (buttonFrameState != E_Button::B_TOTAL)
 	{
-		Scene2D_E[theButtonInfo->GetFrameState()]->SetPosition(Vector3(theButtonInfo->GetPos().x - thePlayerInfo->GetMapOffset_x(), theButtonInfo->GetPos().y, theButtonInfo->GetPos().z));
-		Scene2D_E[theButtonInfo->GetFrameState()]->RenderUI();
+		Scene2D_E[buttonFrameState]->SetPosition(Vector3(theButtonInfo->GetPos().x - playerMapOffsetX, theButtonInfo->GetPos().y));
+		Scene2D_E[buttonFrameState]->RenderUI();
 	}
 }
 
@@ -938,13 +917,14 @@ void CScene2D::RenderEnemy(void)
 		if (theEnemy[i] != nullptr) {
 			int theEnemy_x = theEnemy[i]->GetPos_x() - thePlayerInfo->mapOffset_x;
 			int theEnemy_y = theEnemy[i]->GetPos_y();
+			int enemyFrameState = theEnemy[i]->GetFrameState();
 
 			if (((theEnemy_x >= 0) && (theEnemy_x < m_cMap->GetNumOfTiles_Width()*m_cMap->GetTileSize_Width())) &&
 				((theEnemy_y >= 0) && (theEnemy_y < m_cMap->GetNumOfTiles_Height()*m_cMap->GetTileSize_Height())) &&
-				theEnemy[i]->GetFrameState() != CEnemy::C_TOTAL)
+				enemyFrameState != CEnemy::C_TOTAL)
 			{
-				Scene2D_Enemy[theEnemy[i]->GetFrameState()]->SetPosition(Vector3(static_cast<float>(theEnemy_x), static_cast<float>(theEnemy_y), 0));
-				Scene2D_Enemy[theEnemy[i]->GetFrameState()]->RenderUI();
+				Scene2D_Enemy[enemyFrameState]->SetPosition(Vector3(static_cast<float>(theEnemy_x), static_cast<float>(theEnemy_y), 0));
+				Scene2D_Enemy[enemyFrameState]->RenderUI();
 				if (theEnemy[i]->GetHp() < theEnemy[i]->GetMaxHp())
 				{
 					float temporaryFloat = static_cast<float>(theEnemy[i]->GetHp()) / static_cast<float>(theEnemy[i]->GetMaxHp()) * m_cMap->GetTileSize_Width();
@@ -960,13 +940,14 @@ void CScene2D::RenderEnemy(void)
 		if (theAxeEnemy[i] != nullptr) {
 			int theEnemy_x = theAxeEnemy[i]->GetPos_x() - thePlayerInfo->mapOffset_x;
 			int theEnemy_y = theAxeEnemy[i]->GetPos_y();
+			int enemyFrameState = theAxeEnemy[i]->GetFrameState();
 
 			if (((theEnemy_x >= 0) && (theEnemy_x < m_cMap->GetNumOfTiles_Width()*m_cMap->GetTileSize_Width())) &&
 				((theEnemy_y >= 0) && (theEnemy_y < m_cMap->GetNumOfTiles_Height()*m_cMap->GetTileSize_Height())) &&
-				theAxeEnemy[i]->GetFrameState() != CAxeEnemy::A_TOTAL)
+				enemyFrameState != CAxeEnemy::A_TOTAL)
 			{
-				Scene2D_AxeEnemy[theAxeEnemy[i]->GetFrameState()]->SetPosition(Vector3(static_cast<float>(theEnemy_x), static_cast<float>(theEnemy_y), 0));
-				Scene2D_AxeEnemy[theAxeEnemy[i]->GetFrameState()]->RenderUI();
+				Scene2D_AxeEnemy[enemyFrameState]->SetPosition(Vector3(static_cast<float>(theEnemy_x), static_cast<float>(theEnemy_y), 0));
+				Scene2D_AxeEnemy[enemyFrameState]->RenderUI();
 				if (theAxeEnemy[i]->GetHp() < theAxeEnemy[i]->GetMaxHp())
 				{
 					float temporaryFloat = static_cast<float>(theAxeEnemy[i]->GetHp()) / static_cast<float>(theAxeEnemy[i]->GetMaxHp()) * m_cMap->GetTileSize_Width();
