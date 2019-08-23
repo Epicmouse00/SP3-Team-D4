@@ -221,6 +221,7 @@ bool UserInterface::Update(double dt)
 		{
 			screen = SC_PLAY;
 			ChangeScreen(screen);
+			CPlayerInfo2D::GetInstance()->Heal();
 			return true;
 		}
 		return true;
@@ -316,6 +317,7 @@ void UserInterface::ChangeScreen(SCREEN_TYPE screenType)
 		break;
 	case SC_PLAY:
 		CSoundEngine::GetInstance()->PlayBGM("bgm");
+		CPlayerInfo2D::GetInstance()->Heal();
 		break;
 	case SC_PAUSE:
 		CSoundEngine::GetInstance()->PlayBGM("bgmwalk");

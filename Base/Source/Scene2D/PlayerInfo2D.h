@@ -62,6 +62,8 @@ public:
 	void SetUp(const Vector3& up);
 	// Set Hp
 	void SetHp(const int hp);
+	// Set Max Hp
+	void SetMaxHp(const int hp);
 	// Take damage
 	void TakeDamage(void);
 	// Set m_dJumpSpeed of the player
@@ -81,6 +83,8 @@ public:
 	Vector3 GetUp(void) const;
 	// Get Hp
 	int GetHp(void) const;
+	// Get Max Hp
+	int GetMaxHp(void) const;
 	// Get Jump Speed of the player
 	double GetJumpSpeed(void) const;
 	// Get Jump Acceleration of the player
@@ -123,6 +127,7 @@ public:
 
 	void Attack(const bool mode, const float timeDiff);
 	void Die();
+	void Heal();
 
 	bool isCharged(void) const;
 
@@ -198,7 +203,7 @@ private:
 	Vector3 target, up;
 	Vector3 maxBoundary, minBoundary;
 	int tileSize_Width, tileSize_Height;
-	int hp;
+	int hp, maxhp;
 
 	double m_dSpeed, m_dMoveSpeed, m_dRollSpeed;
 	double m_dAcceleration;
