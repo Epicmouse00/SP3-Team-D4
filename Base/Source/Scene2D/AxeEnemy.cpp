@@ -9,8 +9,8 @@ CAxeEnemy::CAxeEnemy(void)
 	: theStrategy(NULL)
 	, theMapReference(nullptr)
 {
-	hp = 1;
-	maxHp = 1;
+	hp = 2;
+	maxHp = 2;
 }
 
 /********************************************************************************

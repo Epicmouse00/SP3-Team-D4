@@ -1568,11 +1568,7 @@ void CPlayerInfo2D::InitSkill(void)
 {
 	for (int i = 0; i < SK_TOTAL; ++i)
 	{
-		skill[i] = false;
+		skill[i] = true;
 	}
-	skill[0] = true;
 	// triple jump
-	// heart 2
-	// heart 3
-	// lifesteal
 }

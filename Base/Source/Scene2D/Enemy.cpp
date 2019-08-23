@@ -9,8 +9,8 @@ CEnemy::CEnemy(void)
 	: theStrategy(NULL)
 	, theMapReference(nullptr)
 {
-	hp = 2;
-	maxHp = 2;
+	hp = 1;
+	maxHp = 1;
 }
 
 /********************************************************************************
