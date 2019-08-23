@@ -23,11 +23,13 @@
     <ClCompile Include="Source\Projectile\Projectile.cpp" />
     <ClCompile Include="Source\Scene2D\Animation.cpp" />
     <ClCompile Include="Source\Scene2D\AnimationAxe.cpp" />
+    <ClCompile Include="Source\Scene2D\AnimationButton.cpp" />
     <ClCompile Include="Source\Scene2D\AnimationCrystal.cpp" />
     <ClCompile Include="Source\Scene2D\AnimationHearts.cpp" />
     <ClCompile Include="Source\Scene2D\AnimationSlash.cpp" />
     <ClCompile Include="Source\Scene2D\AxeEnemy.cpp" />
     <ClCompile Include="Source\Scene2D\Enemy.cpp" />
+    <ClCompile Include="Source\Scene2D\E_Button.cpp" />
     <ClCompile Include="Source\Scene2D\Goodies.cpp" />
     <ClCompile Include="Source\Scene2D\GoodiesFactory.cpp" />
     <ClCompile Include="Source\Scene2D\Hearts.cpp" />
@@ -61,11 +63,13 @@
     <ClInclude Include="Source\Projectile\Projectile.h" />
     <ClInclude Include="Source\Scene2D\Animation.h" />
     <ClInclude Include="Source\Scene2D\AnimationAxe.h" />
+    <ClInclude Include="Source\Scene2D\AnimationButton.h" />
     <ClInclude Include="Source\Scene2D\AnimationCrystal.h" />
     <ClInclude Include="Source\Scene2D\AnimationHearts.h" />
     <ClInclude Include="Source\Scene2D\AnimationSlash.h" />
     <ClInclude Include="Source\Scene2D\AxeEnemy.h" />
     <ClInclude Include="Source\Scene2D\Enemy.h" />
+    <ClInclude Include="Source\Scene2D\E_Button.h" />
     <ClInclude Include="Source\Scene2D\Goodies.h" />
     <ClInclude Include="Source\Scene2D\GoodiesFactory.h" />
     <ClInclude Include="Source\Scene2D\Hearts.h" />
