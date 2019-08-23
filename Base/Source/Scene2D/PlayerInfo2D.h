@@ -187,6 +187,7 @@ public:
 
 	bool getSkill(int skill) const;
 	void setSkill(int skill, bool state);
+	void InitSkill(bool active = false);
 
 	enum Skills
 	{
@@ -297,5 +298,4 @@ private:
 
 	// Skill Tree
 	bool skill[SK_TOTAL];
-	void InitSkill(void);
 };

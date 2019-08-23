@@ -1584,11 +1584,10 @@ void CPlayerInfo2D::StaminaRegen(float regen, double dt)
 		stamina = 1.f;
 }
 
-void CPlayerInfo2D::InitSkill(void)
+void CPlayerInfo2D::InitSkill(bool active)
 {
 	for (int i = 0; i < SK_TOTAL; ++i)
 	{
-		skill[i] = true;
+		skill[i] = active;
 	}
-	// triple jump
 }

@@ -202,6 +202,12 @@ bool UserInterface::Update(double dt)
 			case 2:
 				screen = SC_PLAY;
 				ChangeScreen(screen);
+				// Press F to at main menu to get all skills
+				{
+					if (KeyboardController::GetInstance()->IsKeyDown('F'))
+						thePlayerInfo->InitSkill(true);
+				}
+				CPlayerInfo2D::GetInstance()->Heal(false);
 				return true;
 				break;
 			case 1:
@@ -419,7 +425,6 @@ void UserInterface::ChangeScreen(SCREEN_TYPE screenType)
 		break;
 	case SC_PLAY:
 		CSoundEngine::GetInstance()->PlayBGM("bgm");
-		CPlayerInfo2D::GetInstance()->Heal(false);
 		thePlayerInfo->setScreenState(SC_PLAY);
 		break;
 	case SC_PAUSE:
