@@ -1395,6 +1395,11 @@ bool CPlayerInfo2D::getSkill(int skill) const
 	return this->skill[skill];
 }
 
+void CPlayerInfo2D::setSkill(int skill, bool state)
+{
+	this->skill[skill] = state;
+}
+
 void CPlayerInfo2D::InitSound(void) const
 {
 	CSoundEngine::GetInstance()->Init();

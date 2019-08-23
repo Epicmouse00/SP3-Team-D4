@@ -172,6 +172,7 @@ public:
 	bool getSecondAttack(void) const;
 
 	bool getSkill(int skill) const;
+	void setSkill(int skill, bool state);
 
 	enum Skills
 	{
