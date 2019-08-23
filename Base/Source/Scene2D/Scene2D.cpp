@@ -430,6 +430,18 @@ void CScene2D::Init()
 	Scene2D_Hero_Animated[39] = Create::Sprite2DObject("Lonin_Left_Roll_4",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[40] = Create::Sprite2DObject("Lonin_Right_Roll_4",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[41] = Create::Sprite2DObject("Lonin_Right_Roll_3",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[42] = Create::Sprite2DObject("Lonin_Left_Roll_4",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_Hero_Animated[43] = Create::Sprite2DObject("Lonin_Left_Roll_3",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
 
 	Scene2D_Slash_Animated = new SpriteEntity*[theSlashInfo->GetFrameTotal()];
 	Scene2D_Slash_Animated[0] = Create::Sprite2DObject("Slash_Up_1",

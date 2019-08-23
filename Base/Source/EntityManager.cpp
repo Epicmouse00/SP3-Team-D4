@@ -216,7 +216,10 @@ bool EntityManager::CheckForCollision(void)
 						thisEntity->SetIsDone(true); // Player Pogo X Enemy (instant kill)
 
 						if (thisEntity->IsDone())
+						{
 							thePlayerInfo->AddXP(1);
+							thePlayerInfo->AddLifesteal(1);
+						}
 						continue;
 					}
 					else
@@ -229,7 +232,10 @@ bool EntityManager::CheckForCollision(void)
 					{
 						thisEntity->TakeDamage();// Player slash X Enemy
 						if (thisEntity->IsDone())
+						{
 							thePlayerInfo->AddXP(1);
+							thePlayerInfo->AddLifesteal(1);
+						}
 					}
 				}
 			}
@@ -265,7 +271,10 @@ bool EntityManager::CheckForCollision(void)
 								{
 									thisEntity->TakeDamage(); // Player proj X Enemy
 									if (thisEntity->IsDone())
+									{
 										thePlayerInfo->AddXP(1);
+										thePlayerInfo->AddLifesteal(1);
+									}
 								}
 								thatEntity->SetIsDead(true);
 								break; // break cuz that enemy is already dead.. no need to check against player

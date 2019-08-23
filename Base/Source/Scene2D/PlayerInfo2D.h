@@ -99,6 +99,10 @@ public:
 	double GetXP(void) const;
 	void AddXP(double xp);
 	void XPLevelUp(void);
+	// Get lifesteal of player
+	double GetLifesteal(void) const;
+	void AddLifesteal(int lifesteal);
+	void LifestealLifeUp(void);
 	// Get Level of player
 	double GetLevel(void) const;
 	// Get Tile Offset for x-axis
@@ -127,7 +131,7 @@ public:
 
 	void Attack(const bool mode, const float timeDiff);
 	void Die();
-	void Heal();
+	void Heal(bool sound = true, int life = 3);
 
 	bool isCharged(void) const;
 
@@ -258,6 +262,9 @@ private:
 
 	float chargeAttack;
 	float chargeTime;
+
+	int lifesteal;
+	int lifestealLimit;
 
 	// Second Attack
 	bool secondAttack;

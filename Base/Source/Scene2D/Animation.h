@@ -44,6 +44,10 @@ public:
 		P_ROLL_L2,
 		P_ROLL_L3,
 		P_ROLL_L4,
+		P_DIE_R1,
+		P_DIE_R2,
+		P_DIE_L1,
+		P_DIE_L2,
 		P_TOTAL
 	};
 	CAnimation();
@@ -62,6 +66,7 @@ public:
 	bool isRolling(void) const;
 	bool isAttacking(void) const;
 	bool isPogo(void) const;
+	bool isDie(void) const;
 
 private:
 	int frameState;

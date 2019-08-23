@@ -317,7 +317,7 @@ void UserInterface::ChangeScreen(SCREEN_TYPE screenType)
 		break;
 	case SC_PLAY:
 		CSoundEngine::GetInstance()->PlayBGM("bgm");
-		CPlayerInfo2D::GetInstance()->Heal();
+		CPlayerInfo2D::GetInstance()->Heal(false);
 		break;
 	case SC_PAUSE:
 		CSoundEngine::GetInstance()->PlayBGM("bgmwalk");
