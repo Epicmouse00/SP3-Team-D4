@@ -2,9 +2,9 @@
 #define APPLICATION_H
 
 #include "timer.h"
-#include <irrKlang.h>
+//#include <irrKlang.h>
 
-using namespace irrklang;
+//using namespace irrklang;
 
 struct GLFWwindow;
 

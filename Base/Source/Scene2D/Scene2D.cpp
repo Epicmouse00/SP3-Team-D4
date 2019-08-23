@@ -83,8 +83,6 @@ CScene2D::~CScene2D()
 	Scene2D_Error2 = NULL;
 	delete Scene2D_LevelUp;
 	Scene2D_LevelUp = NULL;
-	delete Scene2D_ShopScreen;
-	Scene2D_ShopScreen = NULL;
 	delete Scene2D_EnemyHpBar;
 	Scene2D_EnemyHpBar = NULL;
 
@@ -284,9 +282,6 @@ void CScene2D::Init()
 	Scene2D_LevelUp = Create::Sprite2DObject("Tile_LevelUp",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
-	Scene2D_ShopScreen = Create::Sprite2DObject("Tile_Shop_Screen",
-		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(320.f, 240.f, 0.f));
 	Scene2D_EnemyHpBar = Create::Sprite2DObject("Stamina_Amber",//temp
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(320.f, 240.f, 0.f));
@@ -613,11 +608,16 @@ void CScene2D::Update(double dt)
 		// Update the thePlayerInfo
 		thePlayerInfo->Update(dt);
 		theSlashInfo->Update(dt);
-
 		// Update the enemies
 		for (int i = 0; i < m_iNumEnemy; ++i)
 		{
-			if (!theEnemy[i]->IsDead()) {
+			if (theEnemy[i] != nullptr) {
+				if (theEnemy[i]->IsDead())
+				{
+					delete theEnemy[i];
+					theEnemy[i] = nullptr;
+					continue;
+				}
 				if (!theEnemy[i]->IsDone())
 					theEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x,
 						thePlayerInfo->GetPos().y,
@@ -627,7 +627,13 @@ void CScene2D::Update(double dt)
 		}
 		for (int i = 0; i < m_iNumAxeEnemy; ++i)
 		{
-			if (!theAxeEnemy[i]->IsDead()) {
+			if (theAxeEnemy[i] != nullptr) {
+				if (theAxeEnemy[i]->IsDead())
+				{
+					delete theAxeEnemy[i];
+					theAxeEnemy[i] = nullptr;
+					continue;
+				}
 				if (!theAxeEnemy[i]->IsDone())
 					theAxeEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x,
 						thePlayerInfo->GetPos().y,
@@ -746,10 +752,11 @@ void CScene2D::RenderTileMap()
 			else if (m_cMap->theScreenMap[i][m] == 3)
 			{
 				SpriteEntity* Door = nullptr;
-				if (doorIsOpen)
-					Door = Scene2D_TileDoor;
-				else
+				if (thePlayerInfo->checkPosition_Y == i && thePlayerInfo->checkPosition_X == m ||
+					(thePlayerInfo->checkPosition_X + 1 < m_cMap->GetNumOfTiles_Width() && thePlayerInfo->checkPosition_Y == i && thePlayerInfo->checkPosition_X + 1 == m))
 					Door = Scene2D_TileDoor2;
+				else
+					Door = Scene2D_TileDoor;
 				Door->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
 					- thePlayerInfo->GetMapFineOffset_x()),
 					static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
@@ -873,7 +880,7 @@ void CScene2D::RenderEnemy(void)
 	// Render the enemies
 	for (int i = 0; i < m_iNumEnemy; ++i)
 	{
-		if (!theEnemy[i]->IsDead()) {
+		if (theEnemy[i] != nullptr) {
 			int theEnemy_x = theEnemy[i]->GetPos_x() - thePlayerInfo->mapOffset_x;
 			int theEnemy_y = theEnemy[i]->GetPos_y();
 
@@ -888,7 +895,7 @@ void CScene2D::RenderEnemy(void)
 	}
 	for (int i = 0; i < m_iNumAxeEnemy; ++i)
 	{
-		if (!theAxeEnemy[i]->IsDead()) {
+		if (theAxeEnemy[i] != nullptr) {
 			int theEnemy_x = theAxeEnemy[i]->GetPos_x() - thePlayerInfo->mapOffset_x;
 			int theEnemy_y = theAxeEnemy[i]->GetPos_y();
 
@@ -1161,6 +1168,12 @@ void CScene2D::LoadMeshes(void)
 		MeshBuilder::GetInstance()->GetMesh("XP_Bar")->textureID = LoadTGA("Image//Sprites//XP_Bar.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("XP_Block", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("XP_Block")->textureID = LoadTGA("Image//Sprites//XP_Block.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Level_Up_Screen", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Level_Up_Screen")->textureID = LoadTGA("Image//Level_Up_Screen.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Skill_Selected_Frame", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Skill_Selected_Frame")->textureID = LoadTGA("Image//Sprites//Skill_Selected_Frame.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Skill_Unlocked_Frame", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Skill_Unlocked_Frame")->textureID = LoadTGA("Image//Sprites//Skill_Unlocked_Frame.tga");
 
 		MeshBuilder::GetInstance()->GenerateQuad("Heart_1", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Heart_1")->textureID = LoadTGA("Image//Sprites//Heart_1.tga");

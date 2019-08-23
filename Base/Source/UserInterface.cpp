@@ -71,6 +71,10 @@ UserInterface::UserInterface()
 		xpBlock = Create::Sprite2DObject("XP_Block",
 			Vector3(160.f, 208.f, 0.0f),
 			Vector3(64.f, 16.f, 0.0f));
+
+		levelUpScreen = Create::Sprite2DObject("Level_Up_Screen",
+			Vector3(halfWindowWidth, halfWindowHeight, 0.f),
+			Vector3(1.f, 1.f, 1.f));
 	}
 
 	float fontSize = 16.0f;
@@ -108,6 +112,8 @@ UserInterface::~UserInterface()
 	staminaBattery = NULL;
 	delete xpBar;
 	xpBar = NULL;
+	delete levelUpScreen;
+	levelUpScreen = NULL;
 	for (int i = 0; i < 3; ++i)
 	{
 		delete buttonObj[i];
@@ -228,7 +234,7 @@ bool UserInterface::Update(double dt)
 			ChangeScreen(screen);
 			return true;
 		}
-		if (thePlayerInfo->GetHp()>-1&&!(thePlayerInfo->GetMap()->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X] == 30 ||
+		if (thePlayerInfo->GetHp()>0&&!(thePlayerInfo->GetMap()->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X] == 30 ||
 			thePlayerInfo->checkPosition_X + 1 < thePlayerInfo->GetMap()->GetNumOfTiles_Width() && thePlayerInfo->GetMap()->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X + 1] == 30))
 		{
 			screen = SC_PLAY;
@@ -266,7 +272,7 @@ bool UserInterface::Update(double dt)
 		ss << "mapOffset_x: " << thePlayerInfo->mapOffset_x << endl;
 		textObj[0]->SetText(ss.str());
 
-		if (thePlayerInfo->GetHp() < 0)
+		if (thePlayerInfo->GetHp() <= 0)
 		{
 			screen = SC_SHOP;
 			ChangeScreen(screen);
@@ -326,6 +332,9 @@ void UserInterface::ChangeScreen(SCREEN_TYPE screenType)
 		buttonObj[1]->SetText("");
 
 		buttonObj[0]->SetText("");
+
+		levelUpScreen->SetPosition(Vector3(thePlayerInfo->GetMap()->getScreenWidth()/2, thePlayerInfo->GetMap()->getScreenHeight()/2, 0.0f));
+		levelUpScreen->SetScale(Vector3(thePlayerInfo->GetMap()->getScreenWidth(), thePlayerInfo->GetMap()->getScreenHeight(), 0.0f));
 		break;
 	case SC_SHOP:
 		buttonObj[2]->SetText("Game Over?");
@@ -397,6 +406,7 @@ void UserInterface::Render()// this is at the back since it needs to be on top? 
 		buttonObj[0]->RenderUI();
 		buttonObj[1]->RenderUI();
 		buttonObj[2]->RenderUI();
+		levelUpScreen->RenderUI();
 		break;
 	case SC_SHOP:
 		buttonObj[0]->RenderUI();

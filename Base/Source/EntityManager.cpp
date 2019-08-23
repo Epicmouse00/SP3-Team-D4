@@ -24,8 +24,8 @@ void EntityManager::Update(double _dt)
 	{
 		if ((*it)->IsDead())
 		{
-			// Delete if done
-			delete *it;
+			if (!(*it)->GetType() == EntityBase::E_ENEMY)
+				delete *it;
 			it = entityList.erase(it);
 		}
 		else
@@ -142,17 +142,100 @@ bool EntityManager::CheckForCollision(void)
 
 			if (thisEntity->GetType() == EntityBase::E_CORRUPTION)
 			{
-				if (thisEntity->GetPosition().x - thisEntity->GetScale().x / 2 - 16/2 > 64 * 16)
+				if (thisEntity->GetPosition().x - thisEntity->GetScale().x / 2 - thePlayerInfo->GetMap()->GetTileSize_Width() / 2 > thePlayerInfo->GetMap()->GetNumOfTiles_Width() * thePlayerInfo->GetMap()->GetTileSize_Width())
 				{
 					thisEntity->SetIsDone(true); // end of map X corruption
 				}
-				// set based on what can hit the player(specifically the player)
 				if (thePlayerInfo->position.x < thisEntity->GetPosition().x + thisEntity->GetScale().x / 2)
 				{
 					thePlayerInfo->TakeDamage(); // corruption X player
 				}
 			}
+			if (!thisEntity->IsDead() && (thisEntity->GetType() == EntityBase::E_PLAYER_PROJECTILES || thisEntity->GetType() == EntityBase::E_ENEMY_PROJECTILES))
+			{
+				int checkPosition_X = (int)((thisEntity->GetPosition().x - (thePlayerInfo->GetMap()->GetTileSize_Width() >> 1)) / thePlayerInfo->GetMap()->GetTileSize_Width());
+				int checkPosition_Y = thePlayerInfo->GetMap()->GetNumOfTiles_Height() -
+					(int)ceil((float)((thisEntity->GetPosition().y + (thePlayerInfo->GetMap()->GetTileSize_Height() >> 1)) / thePlayerInfo->GetMap()->GetTileSize_Height()));
 
+				if (thisEntity->GetPosition().x > thePlayerInfo->GetMap()->getNumOfTiles_MapWidth() * thePlayerInfo->GetMap()->GetTileSize_Width() ||
+					thisEntity->GetPosition().x < 0 ||
+					thisEntity->GetPosition().y > thePlayerInfo->GetMap()->getNumOfTiles_MapHeight() * thePlayerInfo->GetMap()->GetTileSize_Height() ||
+					thisEntity->GetPosition().y < 0)
+				{
+					thisEntity->SetIsDead(true); // projectiles X World limits
+					continue;
+				}
+
+				if (((int)(thisEntity->GetPosition().x - (thePlayerInfo->GetMap()->GetTileSize_Width() >> 1)) % thePlayerInfo->GetMap()->GetTileSize_Width()) == 0)
+				{
+					if (thePlayerInfo->GetMap()->theScreenMap[checkPosition_Y][checkPosition_X] > 0)
+					{
+						thisEntity->SetIsDead(true); // projectiles X walls
+						continue;
+					}
+				}
+				else
+				{
+					if ((thePlayerInfo->GetMap()->theScreenMap[checkPosition_Y][checkPosition_X] > 0) ||
+						(thePlayerInfo->GetMap()->theScreenMap[checkPosition_Y][checkPosition_X + 1] > 0))
+					{
+						thisEntity->SetIsDead(true); // projectiles X walls 2
+						continue;
+					}
+				}
+				if (theSlashInfo->GetFrameState() != Slash::S_TOTAL)
+				{
+					if ((thisEntity->GetPosition() - theSlashInfo->position).Length() < thisEntity->GetScale().x / 2 + thePlayerInfo->GetMap()->GetTileSize_Width() / 2 * 3 / 2)//hitbox X 1.5
+					{
+						if (thisEntity->GetType() == thisEntity->E_ENEMY_PROJECTILES && thePlayerInfo->getSkill(CPlayerInfo2D::SK_DEFLECT))
+						{
+							thisEntity->SetType(EntityBase::E_PLAYER_PROJECTILES);// Player Slash X Enemy Proj
+							Create::Projectile("Crystal_Projectile_2"
+								, thisEntity->GetPosition()
+								, thisEntity->GetScale()
+								, -thisEntity->GetDirection()//cuz he scales by direction
+								, 1.f, 100.f, EntityBase::E_PLAYER_PROJECTILES);
+							thisEntity->SetIsDead(true);
+							thePlayerInfo->DeflectSound();
+							continue;
+						}
+					}
+				}
+				if ((thisEntity->GetPosition() - thePlayerInfo->position).Length() < thisEntity->GetScale().x / 2 + thePlayerInfo->GetMap()->GetTileSize_Width() / 2)// Only run this when enemy is attacking
+				{
+					if (thisEntity->GetType() == thisEntity->E_ENEMY_PROJECTILES && !thePlayerInfo->isRolling())
+					{
+						thePlayerInfo->TakeDamage(); // Player ~Pogo~(still take dmg) X Projectiles 
+						thisEntity->SetIsDead(true);
+					}
+				}
+			}
+			if (thisEntity->GetType() == thisEntity->E_ENEMY)// Only run this when enemy is attacking
+			{
+				if (!thePlayerInfo->isRolling() && (thisEntity->GetPosition() - thePlayerInfo->position).Length() < thisEntity->GetScale().x / 2 + thePlayerInfo->GetMap()->GetTileSize_Width() / 2)
+				{
+					if (thePlayerInfo->isPogo())
+					{
+						thisEntity->SetIsDone(true); // Player Pogo X Enemy (instant kill)
+
+						if (thisEntity->IsDone())
+							thePlayerInfo->AddXP(1);
+						continue;
+					}
+					else
+						if (thisEntity->IsAttacking())
+							thePlayerInfo->TakeDamage(); // Enemy atack X Player
+				}
+				if (theSlashInfo->GetFrameState() != Slash::S_TOTAL)
+				{
+					if ((thisEntity->GetPosition() - theSlashInfo->position).Length() < thisEntity->GetScale().x / 2 + thePlayerInfo->GetMap()->GetTileSize_Width() / 2 * 3 / 2)//hitbox X 1.5
+					{
+						thisEntity->TakeDamage();// Player slash X Enemy
+						if (thisEntity->IsDone())
+							thePlayerInfo->AddXP(1);
+					}
+				}
+			}
 			for (colliderThat = entityList.begin(); colliderThat != colliderThisEnd; ++colliderThat)
 			{
 				if (colliderThat == colliderThis)
@@ -161,67 +244,35 @@ bool EntityManager::CheckForCollision(void)
 				{
 					EntityBase *thatEntity = dynamic_cast<EntityBase*>(*colliderThat);
 
-					if (!thisEntity->IsDead() && !thisEntity->IsDone() && (thisEntity->GetType() == EntityBase::E_ENEMY || thisEntity->GetType() == EntityBase::E_ENEMY_PROJECTILES))
+					if (!thisEntity->IsDead())
 					{
 						if (thatEntity->GetType() == EntityBase::E_CORRUPTION)
 						{
-							if (thisEntity->GetPosition().x < thatEntity->GetPosition().x + thatEntity->GetScale().x / 2 - 16 / 2)
+							if (thisEntity->GetPosition().x < thatEntity->GetPosition().x + thatEntity->GetScale().x / 2 - thePlayerInfo->GetMap()->GetTileSize_Width() / 2)
 							{
 								if (thisEntity->GetType() == EntityBase::E_ENEMY_PROJECTILES)
 									thisEntity->SetIsDead(true); // corruption X Enemy Projectile
-								else
+								else if (thisEntity->GetType() == EntityBase::E_ENEMY)
 									thisEntity->SetIsDone(true); // corruption X Enemy
 							}
 
 						}
-						if (theSlashInfo->GetFrameState() != Slash::S_TOTAL)
-						{
-							if ((thisEntity->GetPosition() - theSlashInfo->position).Length() < thisEntity->GetScale().x / 2 + 16 / 2 * 3 / 2)//hitbox X 1.5
-							{
-								if (thisEntity->GetType() == thisEntity->E_ENEMY_PROJECTILES && thePlayerInfo->getSkill(CPlayerInfo2D::SK_DEFLECT))
-								{
-									thisEntity->SetType(EntityBase::E_PLAYER_PROJECTILES);// Player Slash X Enemy Proj
-									Create::Projectile("Crystal_Projectile_2"
-										, thisEntity->GetPosition()
-										, thisEntity->GetScale()
-										, -thisEntity->GetDirection()//cuz he scales by direction
-										, 1.f, 100.f, EntityBase::E_PLAYER_PROJECTILES);
-									thisEntity->SetIsDead(true);
-									thePlayerInfo->DeflectSound();
-								}
-								else
-								{
-									thisEntity->TakeDamage();// Player slash X Enemy
-									if (thisEntity->IsDone())
-										thePlayerInfo->AddXP(1);
-									break;
-								}
-							}
-						}
+						
 						if (thatEntity->GetType() == EntityBase::E_PLAYER_PROJECTILES)
 						{
 							if (CheckCircleCollision(thisEntity, thatEntity) == true)
 							{
 								if (thisEntity->GetType() == thisEntity->E_ENEMY_PROJECTILES)
 									thisEntity->SetIsDead(true);
-								else
-									thisEntity->SetIsDone(true); // Player proj X Enemy
+								else if (thisEntity->GetType() == EntityBase::E_ENEMY)
+								{
+									thisEntity->TakeDamage(); // Player proj X Enemy
+									if (thisEntity->IsDone())
+										thePlayerInfo->AddXP(1);
+								}
 								thatEntity->SetIsDead(true);
 								break; // break cuz that enemy is already dead.. no need to check against player
 							}
-						}
-						if ((thisEntity->GetPosition() - thePlayerInfo->position).Length() < thisEntity->GetScale().x / 2 + 16 / 2)// Only run this when enemy is attacking
-						{
-							if (thePlayerInfo->isPogo()) // Player Pogo X Enemy
-							{
-								thisEntity->SetIsDone(true);
-								break;
-							}
-							else if(thisEntity->IsAttacking() || thisEntity->GetType() == thisEntity->E_ENEMY_PROJECTILES)
-							{
-								thePlayerInfo->TakeDamage(); // Enemy atack X Player
-							}
-							break;
 						}
 					}
 				}
