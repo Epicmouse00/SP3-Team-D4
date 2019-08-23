@@ -344,17 +344,18 @@ bool UserInterface::Update(double dt)
 		// Heart update
 		theHeartInfo->Update(dt);
 		barStatus = 0;
-		if (thePlayerInfo->GetStamina() < 0.7f)
+		float staminatemp = thePlayerInfo->GetStamina();
+		if (staminatemp < 0.7f)
 		{
 			barStatus = 1;
-			if (thePlayerInfo->GetStamina() < 0.4f)
+			if (staminatemp < 0.4f)
 				barStatus = 2;
 		}
-		staminaBar[barStatus]->SetScale(Vector3((thePlayerInfo->GetStamina()) * 25, staminaBar[barStatus]->GetScale().y, staminaBar[barStatus]->GetScale().z));
-		staminaBar[barStatus]->SetPosition(Vector3(staminaBar[barStatus]->GetScale().x / 2 + 18, staminaBar[barStatus]->GetPosition().y, staminaBar[barStatus]->GetPosition().z));
+		staminaBar[barStatus]->SetScale(Vector3((staminatemp) * 25, staminaBar[barStatus]->GetScale().y));
+		staminaBar[barStatus]->SetPosition(Vector3(staminaBar[barStatus]->GetScale().x / 2 + 18, staminaBar[barStatus]->GetPosition().y));
 
-		xpBar->SetScale(Vector3(static_cast<float>((thePlayerInfo->GetXP()) * 6), xpBar->GetScale().y, xpBar->GetScale().z));
-		xpBar->SetPosition(Vector3(xpBar->GetScale().x / 2 + 130, xpBar->GetPosition().y, xpBar->GetPosition().z));
+		xpBar->SetScale(Vector3(static_cast<float>((thePlayerInfo->GetXP()) * 6), xpBar->GetScale().y));
+		xpBar->SetPosition(Vector3(xpBar->GetScale().x / 2 + 130, xpBar->GetPosition().y));
 
 		std::ostringstream ss;
 		ss.precision(5);

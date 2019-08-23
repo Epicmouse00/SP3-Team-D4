@@ -134,37 +134,46 @@ bool EntityManager::CheckForCollision(void)
 	std::list<EntityBase*>::iterator colliderThat, colliderThatEnd;
 
 	colliderThisEnd = entityList.end();
+
+	CMap* thePlayerInfoGetMap = thePlayerInfo->GetMap(); // Remove lag
+	int TileSize_Width = thePlayerInfoGetMap->GetTileSize_Width();
+	int TileSize_Height = thePlayerInfoGetMap->GetTileSize_Height();
+
 	for (colliderThis = entityList.begin(); colliderThis != colliderThisEnd; ++colliderThis)
 	{
 		if ((*colliderThis)->HasCollider() && !(*colliderThis)->IsDone())
 		{
 			EntityBase *thisEntity = dynamic_cast<EntityBase*>(*colliderThis);
 
-			if (thisEntity->GetType() == EntityBase::E_CORRUPTION)
+			int thisEntityGetType = thisEntity->GetType(); // Remove lag
+			Vector3 thisEntityGetPosition = thisEntity->GetPosition();
+			Vector3 thisEntityGetScale = thisEntity->GetScale();
+
+			if (thisEntityGetType == EntityBase::E_CORRUPTION)
 			{
-				if (thePlayerInfo->position.x < thisEntity->GetPosition().x + thisEntity->GetScale().x / 2)
+				if (thePlayerInfo->position.x < thisEntityGetPosition.x + thisEntityGetScale.x / 2)
 				{
 					thePlayerInfo->TakeDamage(); // corruption X player
 				}
 			}
-			if (!thisEntity->IsDead() && (thisEntity->GetType() == EntityBase::E_PLAYER_PROJECTILES || thisEntity->GetType() == EntityBase::E_ENEMY_PROJECTILES))
+			if (!thisEntity->IsDead() && (thisEntityGetType == EntityBase::E_PLAYER_PROJECTILES || thisEntityGetType == EntityBase::E_ENEMY_PROJECTILES))
 			{
-				int checkPosition_X = (int)((thisEntity->GetPosition().x - (thePlayerInfo->GetMap()->GetTileSize_Width() >> 1)) / thePlayerInfo->GetMap()->GetTileSize_Width());
-				int checkPosition_Y = thePlayerInfo->GetMap()->GetNumOfTiles_Height() -
-					(int)ceil((float)((thisEntity->GetPosition().y + (thePlayerInfo->GetMap()->GetTileSize_Height() >> 1)) / thePlayerInfo->GetMap()->GetTileSize_Height()));
+				int checkPosition_X = (int)((thisEntityGetPosition.x - (TileSize_Width >> 1)) / TileSize_Width);
+				int checkPosition_Y = thePlayerInfoGetMap->GetNumOfTiles_Height() -
+					(int)ceil((float)((thisEntityGetPosition.y + (TileSize_Height >> 1)) / TileSize_Height));
 
-				if (thisEntity->GetPosition().x > thePlayerInfo->GetMap()->getNumOfTiles_MapWidth() * thePlayerInfo->GetMap()->GetTileSize_Width() ||
-					thisEntity->GetPosition().x < 0 ||
-					thisEntity->GetPosition().y > thePlayerInfo->GetMap()->getNumOfTiles_MapHeight() * thePlayerInfo->GetMap()->GetTileSize_Height() ||
-					thisEntity->GetPosition().y < 0)
+				if (thisEntityGetPosition.x > thePlayerInfoGetMap->getNumOfTiles_MapWidth() * TileSize_Width ||
+					thisEntityGetPosition.x < 0 ||
+					thisEntityGetPosition.y > thePlayerInfoGetMap->getNumOfTiles_MapHeight() * TileSize_Height ||
+					thisEntityGetPosition.y < 0)
 				{
 					thisEntity->SetIsDead(true); // projectiles X World limits
 					continue;
 				}
 
-				if (((int)(thisEntity->GetPosition().x - (thePlayerInfo->GetMap()->GetTileSize_Width() >> 1)) % thePlayerInfo->GetMap()->GetTileSize_Width()) == 0)
+				if (((int)(thisEntityGetPosition.x - (TileSize_Width >> 1)) % TileSize_Width) == 0)
 				{
-					if (thePlayerInfo->GetMap()->theScreenMap[checkPosition_Y][checkPosition_X] > 0)
+					if (thePlayerInfoGetMap->theScreenMap[checkPosition_Y][checkPosition_X] > 0)
 					{
 						thisEntity->SetIsDead(true); // projectiles X walls
 						continue;
@@ -172,8 +181,8 @@ bool EntityManager::CheckForCollision(void)
 				}
 				else
 				{
-					if ((thePlayerInfo->GetMap()->theScreenMap[checkPosition_Y][checkPosition_X] > 0) ||
-						(checkPosition_X + 1 < thePlayerInfo->GetMap()->GetNumOfTiles_Width() && (thePlayerInfo->GetMap()->theScreenMap[checkPosition_Y][checkPosition_X + 1] > 0)))
+					if ((thePlayerInfoGetMap->theScreenMap[checkPosition_Y][checkPosition_X] > 0) ||
+						(checkPosition_X + 1 < thePlayerInfoGetMap->GetNumOfTiles_Width() && (thePlayerInfoGetMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] > 0)))
 					{
 						thisEntity->SetIsDead(true); // projectiles X walls 2
 						continue;
@@ -181,15 +190,15 @@ bool EntityManager::CheckForCollision(void)
 				}
 				if (theSlashInfo->GetFrameState() != Slash::S_TOTAL)
 				{
-					if ((thisEntity->GetPosition() - theSlashInfo->position).Length() < thisEntity->GetScale().x / 2 + thePlayerInfo->GetMap()->GetTileSize_Width() / 2 * 3 / 2)//hitbox X 1.5
+					if ((thisEntityGetPosition - theSlashInfo->position).Length() < thisEntityGetScale.x / 2 + TileSize_Width / 2 * 3 / 2)//hitbox X 1.5
 					{
-						if (thisEntity->GetType() == thisEntity->E_ENEMY_PROJECTILES && thePlayerInfo->getSkill(CPlayerInfo2D::SK_DEFLECT) &&
-							(thisEntity->GetPosition() - theSlashInfo->position).Length() < thisEntity->GetScale().x / 2)
+						if (thisEntityGetType == thisEntity->E_ENEMY_PROJECTILES && thePlayerInfo->getSkill(CPlayerInfo2D::SK_DEFLECT) &&
+							(thisEntityGetPosition - theSlashInfo->position).Length() < thisEntityGetScale.x / 2)
 						{
 							thisEntity->SetType(EntityBase::E_PLAYER_PROJECTILES);// Player Slash X Enemy Proj
 							Create::Projectile("Crystal_Projectile_2"
-								, thisEntity->GetPosition()
-								, thisEntity->GetScale()
+								, thisEntityGetPosition
+								, thisEntityGetScale
 								, -thisEntity->GetDirection()//cuz he scales by direction
 								, 1.f, 100.f, EntityBase::E_PLAYER_PROJECTILES);
 							thisEntity->SetIsDead(true);
@@ -198,18 +207,18 @@ bool EntityManager::CheckForCollision(void)
 						}
 					}
 				}
-				if ((thisEntity->GetPosition() - thePlayerInfo->position).Length() < thisEntity->GetScale().x / 2 + thePlayerInfo->GetMap()->GetTileSize_Width() / 2)// Only run this when enemy is attacking
+				if ((thisEntityGetPosition - thePlayerInfo->position).Length() < thisEntityGetScale.x / 2 + TileSize_Width / 2)// Only run this when enemy is attacking
 				{
-					if (thisEntity->GetType() == thisEntity->E_ENEMY_PROJECTILES && !thePlayerInfo->isRolling())
+					if (thisEntityGetType == thisEntity->E_ENEMY_PROJECTILES && !thePlayerInfo->isRolling())
 					{
 						thePlayerInfo->TakeDamage(); // Player ~Pogo~(still take dmg) X Projectiles 
 						thisEntity->SetIsDead(true);
 					}
 				}
 			}
-			if (thisEntity->GetType() == thisEntity->E_ENEMY)// Only run this when enemy is attacking
+			if (thisEntityGetType == thisEntity->E_ENEMY)// Only run this when enemy is attacking
 			{
-				if (!thePlayerInfo->isRolling() && (thisEntity->GetPosition() - thePlayerInfo->position).Length() < thisEntity->GetScale().x / 2 + thePlayerInfo->GetMap()->GetTileSize_Width() / 2)
+				if (!thePlayerInfo->isRolling() && (thisEntityGetPosition - thePlayerInfo->position).Length() < thisEntityGetScale.x / 2 + TileSize_Width / 2)
 				{
 					if (thePlayerInfo->isPogo())
 					{
@@ -228,7 +237,7 @@ bool EntityManager::CheckForCollision(void)
 				}
 				if (theSlashInfo->GetFrameState() != Slash::S_TOTAL)
 				{
-					if ((thisEntity->GetPosition() - theSlashInfo->position).Length() < thisEntity->GetScale().x / 2 + thePlayerInfo->GetMap()->GetTileSize_Width() / 2 * 3 / 2)//hitbox X 1.5
+					if ((thisEntityGetPosition - theSlashInfo->position).Length() < thisEntityGetScale.x / 2 + TileSize_Width / 2 * 3 / 2)//hitbox X 1.5
 					{
 						int damage = 1;
 						if (theSlashInfo->isCharge())
@@ -254,11 +263,11 @@ bool EntityManager::CheckForCollision(void)
 					{
 						if (thatEntity->GetType() == EntityBase::E_CORRUPTION)
 						{
-							if (thisEntity->GetPosition().x < thatEntity->GetPosition().x + thatEntity->GetScale().x / 2 - thePlayerInfo->GetMap()->GetTileSize_Width() / 2)
+							if (thisEntityGetPosition.x < thatEntity->GetPosition().x + thatEntity->GetScale().x / 2 - TileSize_Width / 2)
 							{
-								if (thisEntity->GetType() == EntityBase::E_ENEMY_PROJECTILES)
+								if (thisEntityGetType == EntityBase::E_ENEMY_PROJECTILES)
 									thisEntity->SetIsDead(true); // corruption X Enemy Projectile
-								else if (thisEntity->GetType() == EntityBase::E_ENEMY)
+								else if (thisEntityGetType == EntityBase::E_ENEMY)
 									thisEntity->SetIsDone(true); // corruption X Enemy
 							}
 
@@ -268,9 +277,9 @@ bool EntityManager::CheckForCollision(void)
 						{
 							if (CheckCircleCollision(thisEntity, thatEntity) == true)
 							{
-								if (thisEntity->GetType() == thisEntity->E_ENEMY_PROJECTILES)
+								if (thisEntityGetType == thisEntity->E_ENEMY_PROJECTILES)
 									thisEntity->SetIsDead(true);
-								else if (thisEntity->GetType() == EntityBase::E_ENEMY)
+								else if (thisEntityGetType == EntityBase::E_ENEMY)
 								{
 									if (thisEntity->TakeDamage()) // Player proj X Enemy
 										thePlayerInfo->AddLifesteal();
