@@ -12,7 +12,6 @@ public:
 		E_ENEMY,
 		E_ENEMY_PROJECTILES,
 		E_CORRUPTION,
-		E_DONTRENDER,
 		E_TOTAL
 	};
 	EntityBase(ENTITY_TYPE typeValue = E_TOTAL);

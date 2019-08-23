@@ -56,7 +56,7 @@ void EntityManager::RenderUI()
 	end = entityList.end();
 	for (it = entityList.begin(); it != end; ++it)
 	{
-		if (!((*it)->GetType() == EntityBase::E_DONTRENDER))
+		if (!((*it)->GetType() == EntityBase::E_TOTAL))
 		(*it)->RenderUI();
 	}
 }
