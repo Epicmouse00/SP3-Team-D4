@@ -29,7 +29,8 @@ CPlayerInfo2D::CPlayerInfo2D(void)
 	, m_dFallSpeed(0.0)
 	, m_dFallAcceleration(-4.0)
 	, m_dElapsedTime(0.0)
-	, hp(3)
+	, hp(1)
+	, maxhp(1)
 	, mapOffset_x(0)
 	, mapOffset_y(0)
 	, tileOffset_x(0)
@@ -211,6 +212,11 @@ void CPlayerInfo2D::SetHp(const int hp)
 	this->hp = hp;
 }
 
+void CPlayerInfo2D::SetMaxHp(const int hp)
+{
+	this->maxhp = hp;
+}
+
 void CPlayerInfo2D::TakeDamage(void)
 {
 	if (damageBounceTime > damageBounceTimeLimit)
@@ -275,6 +281,11 @@ Vector3 CPlayerInfo2D::GetUp(void) const
 int CPlayerInfo2D::GetHp(void) const
 {
 	return hp;
+}
+
+int CPlayerInfo2D::GetMaxHp(void) const
+{
+	return maxhp;
 }
 
 // Get m_dJumpAcceleration of the player
@@ -899,6 +910,17 @@ void CPlayerInfo2D::Attack(const bool mode, const float timeDiff)
 void CPlayerInfo2D::Die()
 {
 	CSoundEngine::GetInstance()->PlayASound("death");
+}
+
+void CPlayerInfo2D::Heal()
+{
+	if (skill[SK_HEART3])
+		maxhp = 3;
+	else if (skill[SK_HEART2])
+		maxhp = 2;
+	else
+		maxhp = 1;
+	hp = maxhp;
 }
 
 bool CPlayerInfo2D::isCharged(void) const
