@@ -214,8 +214,8 @@ void CScene2D::Init()
 	//MeshBuilder::GetInstance()->GetMesh("sprite")->textureID = LoadTGA("Image//spritesheet.tga");
 
 	// Create entities into the scene
-	Create::Entity("reference", Vector3(0.0f, 0.0f, 0.0f)); // Reference
-	Create::Sprite2DObject("crosshair", Vector3(0.0f, 0.0f, 0.0f), Vector3(10.0f, 10.0f, 10.0f));
+	//Create::Entity("reference", Vector3(0.0f, 0.0f, 0.0f)); // Reference
+	//Create::Sprite2DObject("crosshair", Vector3(0.0f, 0.0f, 0.0f), Vector3(10.0f, 10.0f, 10.0f));
 
 	// Initialise and load the tile map
 	m_cMap = new CMap();
@@ -254,7 +254,7 @@ void CScene2D::Init()
 	// Create the background image
 	Scene2D_Background = Create::Sprite2DObject("SCENE2D_BKGROUND",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-		Vector3(360.0f, 240.0f, 0.0f), true);
+		Vector3(360.0f, 240.0f, 0.0f));
 	Scene2D_TileGround = Create::Sprite2DObject("Tile_1111",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
@@ -530,7 +530,7 @@ void CScene2D::Init()
 	}
 	temporop = Create::Projectile("Corrupt_temp", Vector3(static_cast<float>(-m_cMap->getScreenWidth()) / 2, static_cast<float>(m_cMap->getScreenHeight()) / 2, 0)
 		, Vector3(static_cast<float>(m_cMap->getScreenWidth()), static_cast<float>(m_cMap->getScreenHeight()), 0), Vector3(1, 0, 0)
-		, 1.f, 30.f, EntityBase::ENTITY_TYPE::E_CORRUPTION);
+		, 1.f, 0.f, EntityBase::ENTITY_TYPE::E_CORRUPTION);
 
 	Scene2D_Enemy = new SpriteEntity*[theEnemy[0]->GetFrameTotal()]; // Enemy stuff
 	Scene2D_Enemy[0] = Create::Sprite2DObject("Crystal_Attack_1",
@@ -926,7 +926,7 @@ void CScene2D::RenderEnemy(void)
 				{
 					float temporaryFloat = static_cast<float>(theEnemy[i]->GetHp()) / static_cast<float>(theEnemy[i]->GetMaxHp()) * m_cMap->GetTileSize_Width();
 					Scene2D_EnemyHpBar->SetPosition(Vector3(static_cast<float>(theEnemy_x - temporaryFloat / 2), static_cast<float>(theEnemy_y + m_cMap->GetTileSize_Height() / 2), 0));
-					Scene2D_EnemyHpBar->SetScale(Vector3(temporaryFloat, m_cMap->GetTileSize_Height() / 4, 0.f));
+					Scene2D_EnemyHpBar->SetScale(Vector3(temporaryFloat, static_cast<float>(m_cMap->GetTileSize_Height() / 4), 0.f));
 					Scene2D_EnemyHpBar->RenderUI();
 				}
 			}
@@ -948,7 +948,7 @@ void CScene2D::RenderEnemy(void)
 				{
 					float temporaryFloat = static_cast<float>(theAxeEnemy[i]->GetHp()) / static_cast<float>(theAxeEnemy[i]->GetMaxHp()) * m_cMap->GetTileSize_Width();
 					Scene2D_EnemyHpBar->SetPosition(Vector3(static_cast<float>(theEnemy_x - temporaryFloat /2), static_cast<float>(theEnemy_y + m_cMap->GetTileSize_Height() / 2), 0));
-					Scene2D_EnemyHpBar->SetScale(Vector3(temporaryFloat, m_cMap->GetTileSize_Height() / 4, 0.f));
+					Scene2D_EnemyHpBar->SetScale(Vector3(temporaryFloat, static_cast<float>(m_cMap->GetTileSize_Height() / 4), 0.f));
 					Scene2D_EnemyHpBar->RenderUI();
 				}
 			}
