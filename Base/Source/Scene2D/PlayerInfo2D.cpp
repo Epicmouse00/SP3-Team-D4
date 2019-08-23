@@ -63,7 +63,7 @@ CPlayerInfo2D::CPlayerInfo2D(void)
 	, maxXP(10)
 	, level(0)
 	, lifesteal(0)
-	, lifestealLimit(1)
+	, lifestealLimit(10)
 {
 }
 
