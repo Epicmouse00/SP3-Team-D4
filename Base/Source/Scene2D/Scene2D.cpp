@@ -523,19 +523,22 @@ void CScene2D::Init()
 		{
 			for (int height = 0; height < m_cMap->getNumOfTiles_MapHeight(); ++height)
 			{
-				if (m_cMap->theScreenMap[height][width] == 101)
+				switch (m_cMap->theScreenMap[height][width])
 				{
+				case 101:
 					m_cMap->theScreenMap[height][width] = 0;
 					theEnemy[i] = Create::EnemyEntity(m_cMap, new CStrategy_Shoot(), false
 						, Vector3(static_cast<float>(width * m_cMap->GetTileSize_Width() + (m_cMap->GetTileSize_Width() >> 1)), static_cast<float>(232 - height * m_cMap->GetTileSize_Height())));
 					++i;
-				}
-				if (m_cMap->theScreenMap[height][width] == 102)
-				{
+					break;
+				case 102:
 					m_cMap->theScreenMap[height][width] = 0;
 					theAxeEnemy[i2] = Create::AxeEnemyEntity(m_cMap, new CStrategy_Kill(), false
 						, Vector3(static_cast<float>(width * m_cMap->GetTileSize_Width() + (m_cMap->GetTileSize_Width() >> 1)), static_cast<float>(232 - height * m_cMap->GetTileSize_Height())));
 					++i2;
+					break;
+				default:
+					break;
 				}
 				if (i == m_iNumEnemy && i2 == m_iNumAxeEnemy)
 				{
@@ -765,7 +768,6 @@ void CScene2D::RenderTileMap()
 			// If we have reached the right side of the Map, then do not display the extra column of tiles.
 			if (m >= m_cMap->getNumOfTiles_MapWidth())
 				break;
-
 			if (m_cMap->theScreenMap[i][m] != 0
 				&& (m*m_cMap->GetTileSize_Width() + kiHalfTileWidth < temporop->GetPosition().x + temporop->GetScale().x / 2 - kiHalfTileWidth))
 			{
@@ -787,75 +789,77 @@ void CScene2D::RenderTileMap()
 					break;
 				}
 			}
-			else if (m_cMap->theScreenMap[i][m] == 1)
+			else
 			{
-				Scene2D_TileGround->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-															- thePlayerInfo->GetMapFineOffset_x()), 
-														static_cast<float>(224 - i*m_cMap->GetTileSize_Height() + kiHalfTileHeight),
-															0.0f));
-				Scene2D_TileGround->RenderUI();
-			}
-			else if (m_cMap->theScreenMap[i][m] == 3)
-			{
-				SpriteEntity* Door = nullptr;
-				if (thePlayerInfo->checkPosition_Y == i && thePlayerInfo->checkPosition_X == m ||
-					(thePlayerInfo->checkPosition_X + 1 < m_cMap->GetNumOfTiles_Width() && thePlayerInfo->checkPosition_Y == i && thePlayerInfo->checkPosition_X + 1 == m))
-					Door = Scene2D_TileDoor2;
-				else
-					Door = Scene2D_TileDoor;
-				Door->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-					- thePlayerInfo->GetMapFineOffset_x()),
-					static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
-					0.0f));
-				Door->RenderUI();
+				switch (m_cMap->theScreenMap[i][m])
+				{
+				case 1:
+					Scene2D_TileGround->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
+						- thePlayerInfo->GetMapFineOffset_x()),
+						static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
+						0.0f));
+					Scene2D_TileGround->RenderUI();
+					break;
+				case 3:
+				{
+					SpriteEntity* Door = nullptr;
+					if (thePlayerInfo->checkPosition_Y == i && thePlayerInfo->checkPosition_X == m ||
+						(thePlayerInfo->checkPosition_X + 1 < m_cMap->GetNumOfTiles_Width() && thePlayerInfo->checkPosition_Y == i && thePlayerInfo->checkPosition_X + 1 == m))
+						Door = Scene2D_TileDoor2;
+					else
+						Door = Scene2D_TileDoor;
+					Door->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
+						- thePlayerInfo->GetMapFineOffset_x()),
+						static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
+						0.0f));
+					Door->RenderUI();
+					break;
 				}
-			else if (m_cMap->theScreenMap[i][m] == 10)
-			{
-				Scene2D_Goodies_TreasureChest->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-					- thePlayerInfo->GetMapFineOffset_x()),
-					static_cast<float>(224 - i*m_cMap->GetTileSize_Height() + kiHalfTileHeight),
-					0.0f));
-				Scene2D_Goodies_TreasureChest->RenderUI();
-			}
-			else if (m_cMap->theScreenMap[i][m] == 20)
-			{
-				Scene2D_SpikeL->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-					- thePlayerInfo->GetMapFineOffset_x()),
-					static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
-					0.0f));
-				Scene2D_SpikeL->RenderUI();
-			}
-			else if (m_cMap->theScreenMap[i][m] == 21)
-			{
-				Scene2D_SpikeR->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-					- thePlayerInfo->GetMapFineOffset_x()),
-					static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
-					0.0f));
-				Scene2D_SpikeR->RenderUI();
-			}
-			else if (m_cMap->theScreenMap[i][m] == 22)
-			{
-				Scene2D_SpikeU->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-					- thePlayerInfo->GetMapFineOffset_x()),
-					static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
-					0.0f));
-				Scene2D_SpikeU->RenderUI();
-			}
-			else if (m_cMap->theScreenMap[i][m] == 23)
-			{
-				Scene2D_SpikeD->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-					- thePlayerInfo->GetMapFineOffset_x()),
-					static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
-					0.0f));
-				Scene2D_SpikeD->RenderUI();
-			}
-			else if (m_cMap->theScreenMap[i][m] == 30)
-			{
-				Scene2D_LevelUp->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-					- thePlayerInfo->GetMapFineOffset_x()),
-					static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
-					0.0f));
-				Scene2D_LevelUp->RenderUI();
+				case 10:
+					Scene2D_Goodies_TreasureChest->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
+						- thePlayerInfo->GetMapFineOffset_x()),
+						static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
+						0.0f));
+					Scene2D_Goodies_TreasureChest->RenderUI();
+					break;
+				case 20:
+					Scene2D_SpikeL->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
+						- thePlayerInfo->GetMapFineOffset_x()),
+						static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
+						0.0f));
+					Scene2D_SpikeL->RenderUI();
+					break;
+				case 21:
+					Scene2D_SpikeR->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
+						- thePlayerInfo->GetMapFineOffset_x()),
+						static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
+						0.0f));
+					Scene2D_SpikeR->RenderUI();
+					break;
+				case 22:
+					Scene2D_SpikeU->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
+						- thePlayerInfo->GetMapFineOffset_x()),
+						static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
+						0.0f));
+					Scene2D_SpikeU->RenderUI();
+					break;
+				case 23:
+					Scene2D_SpikeD->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
+						- thePlayerInfo->GetMapFineOffset_x()),
+						static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
+						0.0f));
+					Scene2D_SpikeD->RenderUI();
+					break;
+				case 30:
+					Scene2D_LevelUp->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
+						- thePlayerInfo->GetMapFineOffset_x()),
+						static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
+						0.0f));
+					Scene2D_LevelUp->RenderUI();
+					break;
+				default:
+					break;
+				}
 			}
 		}
 	}
