@@ -219,7 +219,7 @@ void CPlayerInfo2D::SetMaxHp(const int hp)
 	this->maxhp = hp;
 }
 
-void CPlayerInfo2D::TakeDamage(void)
+bool CPlayerInfo2D::TakeDamage(void)
 {
 	if (damageBounceTime > damageBounceTimeLimit)
 	{
@@ -228,7 +228,9 @@ void CPlayerInfo2D::TakeDamage(void)
 		if (hp <= 0)
 			Die();
 		damageBounceTime = 0.f;
+		return true;
 	}
+	return false;
 }
 
 // Set m_dJumpAcceleration of the player
@@ -544,9 +546,9 @@ void CPlayerInfo2D::Update(double dt)
 			&& (isOnGround() || skill[SK_AIR_ROLL]))
 		{
 			if (skill[SK_FAST_ROLL])
-				MoveLeftRight(!isFacingRight(), m_dRollSpeed);
+				MoveLeftRight(!isFacingRight(), static_cast<float>(m_dRollSpeed));
 			else
-				MoveLeftRight(!isFacingRight(), m_dMoveSpeed);
+				MoveLeftRight(!isFacingRight(), static_cast<float>(m_dMoveSpeed));
 		}
 		else if (KeyboardController::GetInstance()->IsKeyPressed('L')
 			&& (rollBounceTime > rollBounceTimeLimit2 && skill[SK_ROLL_COST] || rollBounceTime > rollBounceTimeLimit)
@@ -559,25 +561,25 @@ void CPlayerInfo2D::Update(double dt)
 			else if (KeyboardController::GetInstance()->IsKeyDown('D'))
 				direction = false;
 			if (skill[SK_FAST_ROLL])
-				MoveLeftRight(direction, m_dRollSpeed);
+				MoveLeftRight(direction, static_cast<float>(m_dRollSpeed));
 			else
-				MoveLeftRight(direction, m_dMoveSpeed);
+				MoveLeftRight(direction, static_cast<float>(m_dMoveSpeed));
 		}
 		else if (KeyboardController::GetInstance()->IsKeyDown('A')
 			&& !KeyboardController::GetInstance()->IsKeyDown('D')
 			&& !KeyboardController::GetInstance()->IsKeyPressed('J')
 			&& !isPogo()) // Move Left
 		{
-			MoveLeftRight(true, m_dMoveSpeed);
-			StaminaRegen(0.1, dt);
+			MoveLeftRight(true, static_cast<float>(m_dMoveSpeed));
+			StaminaRegen(0.1f, dt);
 		}
 		else if (KeyboardController::GetInstance()->IsKeyDown('D')
 			&& !KeyboardController::GetInstance()->IsKeyDown('A')
 			&& !KeyboardController::GetInstance()->IsKeyPressed('J')
 			&& !isPogo()) // Move Right
 		{
-			MoveLeftRight(false, m_dMoveSpeed);
-			StaminaRegen(0.1, dt);
+			MoveLeftRight(false, static_cast<float>(m_dMoveSpeed));
+			StaminaRegen(0.1f, dt);
 		}
 		else if (KeyboardController::GetInstance()->IsKeyPressed('J')
 			&& KeyboardController::GetInstance()->IsKeyDown('W') || KeyboardController::GetInstance()->IsKeyPressed('J')
@@ -627,7 +629,7 @@ void CPlayerInfo2D::Update(double dt)
 					SetAnimationStatus(CAnimation::P_IDLE_L1);
 			}
 
-			StaminaRegen(0.3, dt);
+			StaminaRegen(0.3f, dt);
 
 			UpdateAnimationIndex(0.1f);
 		}
@@ -648,7 +650,7 @@ void CPlayerInfo2D::Update(double dt)
 				&& !dashPower
 				&& dashBounceTime > dashBounceTimeLimit)
 			{
-				if (StaminaDecrease(0.4))
+				if (StaminaDecrease(0.4f))
 					dashPower = 0.7f;
 			}
 		}

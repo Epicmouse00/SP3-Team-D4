@@ -83,7 +83,7 @@ void CStrategy_Shoot::SetDestination(const float x, const float y)
  ********************************************************************************/
 int CStrategy_Shoot::GetDestination_x(void)
 {
-	return theDestination.x;
+	return static_cast<int>(theDestination.x);
 }
 
 /********************************************************************************
@@ -91,7 +91,7 @@ int CStrategy_Shoot::GetDestination_x(void)
  ********************************************************************************/
 int CStrategy_Shoot::GetDestination_y(void)
 {
-	return theDestination.y;
+	return static_cast<int>(theDestination.y);
 }
 
 /********************************************************************************

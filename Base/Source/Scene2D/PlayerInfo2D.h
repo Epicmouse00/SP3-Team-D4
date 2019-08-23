@@ -65,7 +65,7 @@ public:
 	// Set Max Hp
 	void SetMaxHp(const int hp);
 	// Take damage
-	void TakeDamage(void);
+	bool TakeDamage(void);
 	// Set m_dJumpSpeed of the player
 	void SetJumpSpeed(const double m_dJumpSpeed);
 	// Set m_dJumpAcceleration of the player
