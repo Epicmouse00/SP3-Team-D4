@@ -62,6 +62,8 @@ CPlayerInfo2D::CPlayerInfo2D(void)
 	, XP(0)
 	, maxXP(10)
 	, level(0)
+	, lifesteal(0)
+	, lifestealLimit(1)
 {
 }
 
@@ -319,6 +321,31 @@ void CPlayerInfo2D::XPLevelUp(void)
 	}
 }
 
+double CPlayerInfo2D::GetLifesteal(void) const
+{
+	return lifesteal;
+}
+
+void CPlayerInfo2D::AddLifesteal(int lifesteal)
+{
+	if (skill[SK_LIFESTEAL] && hp < maxhp)
+	{
+		this->lifesteal += lifesteal;
+		LifestealLifeUp();
+	}
+	else
+		lifesteal = 0;
+}
+
+void CPlayerInfo2D::LifestealLifeUp(void)
+{
+	if (lifesteal >= lifestealLimit)
+	{
+		lifesteal /= lifestealLimit;
+		Heal(true, 1);
+	}
+}
+
 double CPlayerInfo2D::GetLevel(void) const
 {
 	return level;
@@ -496,182 +523,189 @@ void CPlayerInfo2D::Update(double dt)
 	//	MoveUpDown(true, 1.0f);
 	//if (KeyboardController::GetInstance()->IsKeyDown('S'))
 	//	MoveUpDown(false, 1.0f);
-	if (dashPower && !KeyboardController::GetInstance()->IsKeyDown('K'))
+	if (!isDie())
 	{
-		chargeAttack = 0.f;
-		MoveLeftRight(!isFacingRight(), 3.f);
-		dashPower -= static_cast<float>(dt * 10.0f);
-		if (dashPower <= 0.f)
+		if (dashPower && !KeyboardController::GetInstance()->IsKeyDown('K'))
 		{
-			dashPower = 0.f;
+			chargeAttack = 0.f;
+			MoveLeftRight(!isFacingRight(), 3.f);
+			dashPower -= static_cast<float>(dt * 10.0f);
+			if (dashPower <= 0.f)
+			{
+				dashPower = 0.f;
+				Attack(!isFacingRight(), 0.5f);
+			}
+		}
+		else if (isCharged() && KeyboardController::GetInstance()->IsKeyReleased('K'))
+		{
 			Attack(!isFacingRight(), 0.5f);
 		}
-	}
-	else if (isCharged() && KeyboardController::GetInstance()->IsKeyReleased('K'))
-	{
-		Attack(!isFacingRight(), 0.5f);
-	}
-	else if (isRolling()
+		else if (isRolling()
 			&& (isOnGround() || skill[SK_AIR_ROLL]))
-	{
-		if (skill[SK_FAST_ROLL])
-			MoveLeftRight(!isFacingRight(), m_dRollSpeed);
-		else
-			MoveLeftRight(!isFacingRight(), m_dMoveSpeed);
-	}
-	else if (KeyboardController::GetInstance()->IsKeyPressed('L')
+		{
+			if (skill[SK_FAST_ROLL])
+				MoveLeftRight(!isFacingRight(), m_dRollSpeed);
+			else
+				MoveLeftRight(!isFacingRight(), m_dMoveSpeed);
+		}
+		else if (KeyboardController::GetInstance()->IsKeyPressed('L')
 			&& (rollBounceTime > rollBounceTimeLimit2 && skill[SK_ROLL_COST] || rollBounceTime > rollBounceTimeLimit)
 			&& !isAttacking()
 			&& (isOnGround() || skill[SK_AIR_ROLL]))
-	{
-		bool direction = !isFacingRight();
-		if (KeyboardController::GetInstance()->IsKeyDown('A'))
-			direction = true;
-		else if (KeyboardController::GetInstance()->IsKeyDown('D'))
-			direction = false;
-		if (skill[SK_FAST_ROLL])
-			MoveLeftRight(direction, m_dRollSpeed);
-		else
-			MoveLeftRight(direction, m_dMoveSpeed);
-	}
-	else if (KeyboardController::GetInstance()->IsKeyDown('A')
-		&& !KeyboardController::GetInstance()->IsKeyDown('D')
-		&& !KeyboardController::GetInstance()->IsKeyPressed('J')
-		&& !isPogo()) // Move Left
-	{
-		MoveLeftRight(true, m_dMoveSpeed);
-		StaminaRegen(0.1, dt);
-	}
-	else if (KeyboardController::GetInstance()->IsKeyDown('D')
-		&& !KeyboardController::GetInstance()->IsKeyDown('A')
-		&& !KeyboardController::GetInstance()->IsKeyPressed('J')
-		&& !isPogo()) // Move Right
-	{
-		MoveLeftRight(false, m_dMoveSpeed);
-		StaminaRegen(0.1, dt);
-	}
-	else if (KeyboardController::GetInstance()->IsKeyPressed('J')
+		{
+			bool direction = !isFacingRight();
+			if (KeyboardController::GetInstance()->IsKeyDown('A'))
+				direction = true;
+			else if (KeyboardController::GetInstance()->IsKeyDown('D'))
+				direction = false;
+			if (skill[SK_FAST_ROLL])
+				MoveLeftRight(direction, m_dRollSpeed);
+			else
+				MoveLeftRight(direction, m_dMoveSpeed);
+		}
+		else if (KeyboardController::GetInstance()->IsKeyDown('A')
+			&& !KeyboardController::GetInstance()->IsKeyDown('D')
+			&& !KeyboardController::GetInstance()->IsKeyPressed('J')
+			&& !isPogo()) // Move Left
+		{
+			MoveLeftRight(true, m_dMoveSpeed);
+			StaminaRegen(0.1, dt);
+		}
+		else if (KeyboardController::GetInstance()->IsKeyDown('D')
+			&& !KeyboardController::GetInstance()->IsKeyDown('A')
+			&& !KeyboardController::GetInstance()->IsKeyPressed('J')
+			&& !isPogo()) // Move Right
+		{
+			MoveLeftRight(false, m_dMoveSpeed);
+			StaminaRegen(0.1, dt);
+		}
+		else if (KeyboardController::GetInstance()->IsKeyPressed('J')
 			&& KeyboardController::GetInstance()->IsKeyDown('W') || KeyboardController::GetInstance()->IsKeyPressed('J')
 			&& KeyboardController::GetInstance()->IsKeyDown('S')
 			&& !KeyboardController::GetInstance()->IsKeyDown('K')
 			&& !isOnGround())
-	{
-		Attack((!isFacingRight()), 0.5f);
-	}
-	else if (KeyboardController::GetInstance()->IsKeyPressed('J')
+		{
+			Attack((!isFacingRight()), 0.5f);
+		}
+		else if (KeyboardController::GetInstance()->IsKeyPressed('J')
 			&& KeyboardController::GetInstance()->IsKeyDown('A')
 			&& !KeyboardController::GetInstance()->IsKeyDown('K')
 			&& !isAttacking()) // Attack Left
-	{
-		Attack(true, 0.5f);
-	}
-	else if (KeyboardController::GetInstance()->IsKeyPressed('J')
+		{
+			Attack(true, 0.5f);
+		}
+		else if (KeyboardController::GetInstance()->IsKeyPressed('J')
 			&& KeyboardController::GetInstance()->IsKeyDown('D')
 			&& !KeyboardController::GetInstance()->IsKeyDown('K')
 			&& !isAttacking()) // Attack Right
-	{
-		Attack(false, 0.5f);
-	}
-	else if (KeyboardController::GetInstance()->IsKeyPressed('J')
+		{
+			Attack(false, 0.5f);
+		}
+		else if (KeyboardController::GetInstance()->IsKeyPressed('J')
 			&& !KeyboardController::GetInstance()->IsKeyDown('K'))
-	{
-		Attack(!isFacingRight(), 0.5f);
-	}
-	else if (isAttacking())
-	{
-		UpdateAnimationIndex(1.f);
-	}
-	else if (isOnGround()) // Idle
-	{
-		if (isCharged())
 		{
-			if (isFacingRight())
-				SetAnimationStatus(CAnimation::P_CHARGE_R);
+			Attack(!isFacingRight(), 0.5f);
+		}
+		else if (isAttacking())
+		{
+			UpdateAnimationIndex(1.f);
+		}
+		else if (isOnGround()) // Idle
+		{
+			if (isCharged())
+			{
+				if (isFacingRight())
+					SetAnimationStatus(CAnimation::P_CHARGE_R);
+				else
+					SetAnimationStatus(CAnimation::P_CHARGE_L);
+			}
 			else
-				SetAnimationStatus(CAnimation::P_CHARGE_L);
+			{
+				if (isFacingRight())
+					SetAnimationStatus(CAnimation::P_IDLE_R1);
+				else
+					SetAnimationStatus(CAnimation::P_IDLE_L1);
+			}
+
+			StaminaRegen(0.3, dt);
+
+			UpdateAnimationIndex(0.1f);
 		}
 		else
 		{
-			if (isFacingRight())
-				SetAnimationStatus(CAnimation::P_IDLE_R1);
-			else
-				SetAnimationStatus(CAnimation::P_IDLE_L1);
+			UpdateAnimationIndex(1.f);
 		}
 
-		StaminaRegen(0.3, dt);
-
-		UpdateAnimationIndex(0.1f);
-	}
-	else
-	{
-		UpdateAnimationIndex(1.f);
-	}
-
-	if (KeyboardController::GetInstance()->IsKeyDown('K') && isOnGround())
-	{
-		if (skill[SK_CHARGE_ATTACK])
-			chargeAttack += static_cast<float>(10 * dt);
-		if (isCharged())
+		if (KeyboardController::GetInstance()->IsKeyDown('K') && isOnGround())
 		{
-			dashPower = 0.f;
+			if (skill[SK_CHARGE_ATTACK])
+				chargeAttack += static_cast<float>(10 * dt);
+			if (isCharged())
+			{
+				dashPower = 0.f;
+			}
+			else if (skill[SK_DASH_ATTACK]
+				&& !dashPower
+				&& dashBounceTime > dashBounceTimeLimit)
+			{
+				if (StaminaDecrease(0.4))
+					dashPower = 0.7f;
+			}
 		}
-		else if (skill[SK_DASH_ATTACK]
-			&& !dashPower
-			&& dashBounceTime > dashBounceTimeLimit)
+
+		if (dashPower && KeyboardController::GetInstance()->IsKeyReleased('K'))
+			dashBounceTime = 0.f;
+
+		if (position.x + (tileSize_Width >> 1) > theMapReference->getNumOfTiles_MapWidth() * theMapReference->GetTileSize_Width())
+			position.x = static_cast<float>(theMapReference->getNumOfTiles_MapWidth() * theMapReference->GetTileSize_Width() - (tileSize_Width >> 1));
+		if (position.x - (tileSize_Width >> 1) < 0)
+			position.x = static_cast<float>(tileSize_Width >> 1);
+
+		if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumped && isOnAir() && !m_bDoubleJump && isRolling() && !isAttacking() && skill[SK_DOUBLE_JUMP])
 		{
-			if (StaminaDecrease(0.4))
-				dashPower = 0.7f;
+			m_bJumped = true;
+			m_bDoubleJump = true;
+			SetToJumpUpwards(true);
 		}
-	}
 
-	if (dashPower && KeyboardController::GetInstance()->IsKeyReleased('K'))
-		dashBounceTime = 0.f;
-
-	if (position.x + (tileSize_Width >> 1) > theMapReference->getNumOfTiles_MapWidth() * theMapReference->GetTileSize_Width())
-		position.x = static_cast<float>(theMapReference->getNumOfTiles_MapWidth() * theMapReference->GetTileSize_Width() - (tileSize_Width>>1));
-	if (position.x - (tileSize_Width >> 1) < 0)
-		position.x = static_cast<float>(tileSize_Width>>1);
-
-	if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumped && isOnAir() && !m_bDoubleJump && isRolling() && !isAttacking() && skill[SK_DOUBLE_JUMP])
-	{
-		m_bJumped = true;
-		m_bDoubleJump = true;
-		SetToJumpUpwards(true);
-	}
-
-	if (KeyboardController::GetInstance()->IsKeyReleased(VK_SPACE))
-	{
-		m_bJumpKeyHeld = false;
-	}
-
-	if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumpKeyHeld && !m_bDoubleJump && m_bJumped && !isRolling() && !isAttacking() && skill[SK_DOUBLE_JUMP])
-	{
- 		m_bJumpKeyHeld = true;
-		m_bDoubleJump = true;
-		SetToJumpUpwards(true);
-	}
-
-	// If the user presses SPACEBAR, then make him jump
-	if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumped && !isOnAir() && !isRolling() && !isAttacking())
-	{
-		m_bJumped = true;
-		m_bJumpKeyHeld = true;
-		SetToJumpUpwards(true);
-	}
-	else
-	{
-		// Check if the player has walked off the platform
-		if (isOnAir())
+		if (KeyboardController::GetInstance()->IsKeyReleased(VK_SPACE))
 		{
-			SetOnFreeFall(true);
+			m_bJumpKeyHeld = false;
 		}
-	}
-	if (KeyboardController::GetInstance()->IsKeyPressed('K') && !isOnGround())
-	{
-		if (isFacingRight())
-			SetAnimationStatus(CAnimation::P_POGO_R1);
+
+		if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumpKeyHeld && !m_bDoubleJump && m_bJumped && !isRolling() && !isAttacking() && skill[SK_DOUBLE_JUMP])
+		{
+			m_bJumpKeyHeld = true;
+			m_bDoubleJump = true;
+			SetToJumpUpwards(true);
+		}
+
+		// If the user presses SPACEBAR, then make him jump
+		if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumped && !isOnAir() && !isRolling() && !isAttacking())
+		{
+			m_bJumped = true;
+			m_bJumpKeyHeld = true;
+			SetToJumpUpwards(true);
+		}
 		else
-			SetAnimationStatus(CAnimation::P_POGO_L1);
+		{
+			// Check if the player has walked off the platform
+			if (isOnAir())
+			{
+				SetOnFreeFall(true);
+			}
+		}
+		if (KeyboardController::GetInstance()->IsKeyPressed('K') && !isOnGround())
+		{
+			if (isFacingRight())
+				SetAnimationStatus(CAnimation::P_POGO_R1);
+			else
+				SetAnimationStatus(CAnimation::P_POGO_L1);
+		}
+	}
+	else
+	{
+		UpdateAnimationIndex(0.2f);
 	}
 
 	// Constrain the position
@@ -910,9 +944,13 @@ void CPlayerInfo2D::Attack(const bool mode, const float timeDiff)
 void CPlayerInfo2D::Die()
 {
 	CSoundEngine::GetInstance()->PlayASound("death");
+	if (isFacingRight())
+		SetAnimationStatus(P_DIE_R1);
+	else
+		SetAnimationStatus(P_DIE_L1);
 }
 
-void CPlayerInfo2D::Heal()
+void CPlayerInfo2D::Heal(bool sound, int life)
 {
 	if (skill[SK_HEART3])
 		maxhp = 3;
@@ -920,7 +958,13 @@ void CPlayerInfo2D::Heal()
 		maxhp = 2;
 	else
 		maxhp = 1;
-	hp = maxhp;
+
+	if (hp + life > maxhp)
+		hp = maxhp;
+	else
+		hp += life;
+	if (sound)
+		CSoundEngine::GetInstance()->PlayASound("heal");
 }
 
 bool CPlayerInfo2D::isCharged(void) const
@@ -1445,6 +1489,7 @@ void CPlayerInfo2D::InitSound(void) const
 	CSoundEngine::GetInstance()->AddSound("killcrystal", "Sound//killcrystal.wav");
 	CSoundEngine::GetInstance()->AddSound("killaxe", "Sound//killaxe.wav");
 	CSoundEngine::GetInstance()->AddSound("damaged", "Sound//damaged.wav");
+	CSoundEngine::GetInstance()->AddSound("heal", "Sound//heal.wav");
 }
 
 bool CPlayerInfo2D::Roll()

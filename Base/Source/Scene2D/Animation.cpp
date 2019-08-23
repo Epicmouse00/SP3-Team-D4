@@ -80,6 +80,8 @@ int CAnimation::GuessNextFrame(int frame) const
 	case P_JUMP_R2:
 	case P_CHARGE_R:
 	case P_CHARGE_L:
+	case P_DIE_R2:
+	case P_DIE_L2:
 		return frame;
 		break;
 	default:
@@ -117,6 +119,8 @@ bool CAnimation::isFacingRight(int frame) const
 	case P_ROLL_R2:
 	case P_ROLL_R3:
 	case P_ROLL_R4:
+	case P_DIE_R1:
+	case P_DIE_R2:
 		return true;
 		break;
 	default:
@@ -175,6 +179,22 @@ bool CAnimation::isPogo(void) const
 	case P_POGO_R2:
 	case P_POGO_L1:
 	case P_POGO_L2:
+		return true;
+		break;
+	default:
+		return false;
+		break;
+	}
+}
+
+bool CAnimation::isDie(void) const
+{
+	switch (frameState)
+	{
+	case P_DIE_R1:
+	case P_DIE_R2:
+	case P_DIE_L1:
+	case P_DIE_L2:
 		return true;
 		break;
 	default:
