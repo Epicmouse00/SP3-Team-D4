@@ -221,7 +221,14 @@ void CScene2D::Init()
 	m_cMap = new CMap();
 	m_cMap->Init(Application::GetInstance().GetWindowHeight()-16, Application::GetInstance().GetWindowWidth(), 15, 64, 240, 1024);
 	m_cMap->LoadMap("Image//MapDesign.csv");
-
+	{
+		Math::InitRNG();
+		int mapNo = Math::RandIntMinMax(0, 1);
+		if (mapNo == 0)
+			m_cMap->AddFile("Image//MapDesign2.csv"); // why are we so laggy??
+		else
+			m_cMap->AddFile("Image//MapDesign.csv");
+	}
 	// Create the Goodies
 	CreateGoodies();
 

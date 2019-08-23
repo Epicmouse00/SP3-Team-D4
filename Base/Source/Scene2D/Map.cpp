@@ -53,10 +53,8 @@ bool CMap::LoadMap(const string mapName)
 {
 	if (LoadFile(mapName) == true)
 	{
-		if (AddFile("Image//MapDesign2.csv") == true) { // Note : make this random... also.. why are we so laggy
-			printf("Map (%s) has been successfully loaded!\n", mapName.c_str());
-			return true;
-		}
+		printf("Map (%s) has been successfully loaded!\n", mapName.c_str());
+		return true;
 	}
 
 	return false;
