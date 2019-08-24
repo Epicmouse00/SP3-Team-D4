@@ -1,4 +1,3 @@
-// stolen from http://www.david-amador.com/2012/04/xbox-360-controller-input-in-c-via-xinput/ yeet
 #include "SingletonTemplate.h"
 
 #define WIN32_LEAN_AND_MEAN
