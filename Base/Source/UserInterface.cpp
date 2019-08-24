@@ -211,7 +211,7 @@ bool UserInterface::Update(double dt)
 				ChangeScreen(screen);
 				// Press F to at main menu to get all skills
 				{
-					if (KeyboardController::GetInstance()->IsKeyDown('F'))
+					if (KeyboardController::GetInstance()->IsKeyDown('F') || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_START))
 						thePlayerInfo->InitSkill(true);
 				}
 				CPlayerInfo2D::GetInstance()->Heal(false);
@@ -330,7 +330,7 @@ bool UserInterface::Update(double dt)
 			thePlayerInfo->setSkill(selectionIndex, true);
 		}
 
-		if (KeyboardController::GetInstance()->IsKeyPressed('E') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_B))
+		if (KeyboardController::GetInstance()->IsKeyPressed('E') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_START))
 		{
 			screen = SC_PLAY;
 			ChangeScreen(screen);
@@ -505,7 +505,7 @@ void UserInterface::Render()// this is at the back since it needs to be on top? 
 {
 	switch(screen) {
 	case SC_MAIN:
-		if (KeyboardController::GetInstance()->IsKeyDown('F'))
+		if (KeyboardController::GetInstance()->IsKeyDown('F') || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_START))
 			titleScreen[1]->RenderUI();
 		else
 			titleScreen[0]->RenderUI();
