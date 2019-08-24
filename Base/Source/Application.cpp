@@ -120,7 +120,7 @@ void Application::Run()
 {
 	SceneManager::GetInstance()->SetActiveScene("Scene2D");
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
-	while (!glfwWindowShouldClose(m_window) && !IsKeyPressed(VK_ESCAPE))
+	while (!glfwWindowShouldClose(m_window) && (!IsKeyPressed(VK_ESCAPE) && !GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_BACK)))
 	{
 		glfwPollEvents();
 		UpdateInput();
