@@ -1,5 +1,6 @@
 #include "UserInterface.h"
 #include "KeyboardController.h"
+#include "GamePadXbox.h"
 
 #include "MeshBuilder.h"
 #include "Application.h"
@@ -181,13 +182,17 @@ bool UserInterface::Update(double dt)
 	switch (screen) {
 	case SC_MAIN: // This is the starting screen
 	{
-		if (KeyboardController::GetInstance()->IsKeyPressed(VK_UP) || KeyboardController::GetInstance()->IsKeyPressed('W'))
+		if (KeyboardController::GetInstance()->IsKeyPressed(VK_UP)
+			|| KeyboardController::GetInstance()->IsKeyPressed('W')
+			|| GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_DPAD_UP))
 		{
 			buttonObj[choice]->SetSelected(false);
 			choice = (choice + 1) % maxChoices;
 			buttonObj[choice]->SetSelected(true);
 		}
-		if (KeyboardController::GetInstance()->IsKeyPressed(VK_DOWN) || KeyboardController::GetInstance()->IsKeyPressed('S'))
+		if (KeyboardController::GetInstance()->IsKeyPressed(VK_DOWN)
+			|| KeyboardController::GetInstance()->IsKeyPressed('S')
+			|| GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_DPAD_DOWN))
 		{
 			buttonObj[choice]->SetSelected(false);
 			if (--choice < 0)
@@ -196,7 +201,9 @@ bool UserInterface::Update(double dt)
 			}
 			buttonObj[choice]->SetSelected(true);
 		}
-		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN) || KeyboardController::GetInstance()->IsKeyPressed(VK_SPACE))
+		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN)
+			|| KeyboardController::GetInstance()->IsKeyPressed(VK_SPACE)
+			|| GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_A))
 		{
 			switch (choice) {
 			case 2:
@@ -221,13 +228,17 @@ bool UserInterface::Update(double dt)
 	}
 	case SC_PAUSE: // This is the pause menu
 	{
-		if (KeyboardController::GetInstance()->IsKeyPressed(VK_UP) || KeyboardController::GetInstance()->IsKeyPressed('W'))
+		if (KeyboardController::GetInstance()->IsKeyPressed(VK_UP)
+			|| KeyboardController::GetInstance()->IsKeyPressed('W')
+			|| GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_DPAD_UP))
 		{
 			buttonObj[choice]->SetSelected(false);
 			choice = (choice + 1) % maxChoices;
 			buttonObj[choice]->SetSelected(true);
 		}
-		if (KeyboardController::GetInstance()->IsKeyPressed(VK_DOWN) || KeyboardController::GetInstance()->IsKeyPressed('S'))
+		if (KeyboardController::GetInstance()->IsKeyPressed(VK_DOWN)
+			|| KeyboardController::GetInstance()->IsKeyPressed('S')
+			|| GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_DPAD_DOWN))
 		{
 			buttonObj[choice]->SetSelected(false);
 			if (--choice < 0)
@@ -236,7 +247,9 @@ bool UserInterface::Update(double dt)
 			}
 			buttonObj[choice]->SetSelected(true);
 		}
-		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN) || KeyboardController::GetInstance()->IsKeyPressed(VK_SPACE))
+		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN)
+			|| KeyboardController::GetInstance()->IsKeyPressed(VK_SPACE)
+			|| GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_A))
 		{
 			switch (choice) {
 			case 2:
@@ -255,7 +268,7 @@ bool UserInterface::Update(double dt)
 	}
 	case SC_SKILL_TREE:
 	{
-		if (KeyboardController::GetInstance()->IsKeyPressed('A'))
+		if (KeyboardController::GetInstance()->IsKeyPressed('A') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_DPAD_LEFT))
 		{
 			if (selectionIndex != 0)
 			{
@@ -269,7 +282,7 @@ bool UserInterface::Update(double dt)
 				}
 			}
 		}
-		else if (KeyboardController::GetInstance()->IsKeyPressed('D'))
+		else if (KeyboardController::GetInstance()->IsKeyPressed('D') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_DPAD_RIGHT))
 		{
 			if (selectionIndex != 4 && selectionIndex != 8 && selectionIndex != 12)
 			{
@@ -283,7 +296,7 @@ bool UserInterface::Update(double dt)
 				}
 			}
 		}
-		else if (KeyboardController::GetInstance()->IsKeyPressed('W'))
+		else if (KeyboardController::GetInstance()->IsKeyPressed('W') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_DPAD_UP))
 		{
 			if (selectionIndex == 0 || selectionIndex > 4)
 			{
@@ -297,7 +310,7 @@ bool UserInterface::Update(double dt)
 				}
 			}
 		}
-		else if (KeyboardController::GetInstance()->IsKeyPressed('S'))
+		else if (KeyboardController::GetInstance()->IsKeyPressed('S') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_DPAD_DOWN))
 		{
 			if (selectionIndex == 0 || selectionIndex < 9)
 			{
@@ -312,12 +325,12 @@ bool UserInterface::Update(double dt)
 			}
 		}
 		skillSelectedFrame->SetPosition(skillUnlockedFrames[selectionIndex]->GetPosition());
-		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN))
+		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN) || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_A))
 		{
 			thePlayerInfo->setSkill(selectionIndex, true);
 		}
 
-		if (KeyboardController::GetInstance()->IsKeyPressed('E'))
+		if (KeyboardController::GetInstance()->IsKeyPressed('E') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_B))
 		{
 			screen = SC_PLAY;
 			ChangeScreen(screen);
@@ -329,7 +342,10 @@ bool UserInterface::Update(double dt)
 	}
 	case SC_SHOP:
 	{
-		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RIGHT) || KeyboardController::GetInstance()->IsKeyPressed(VK_LEFT))
+		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RIGHT)
+			|| KeyboardController::GetInstance()->IsKeyPressed(VK_LEFT)
+			|| GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_DPAD_LEFT)
+			|| GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_DPAD_RIGHT))
 		{
 			screen = SC_SKILL_TREE;
 			ChangeScreen(screen);
@@ -381,7 +397,8 @@ bool UserInterface::Update(double dt)
 			return false;
 		}
 
-		if (KeyboardController::GetInstance()->IsKeyPressed('E') && (thePlayerInfo->GetMap()->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X]==30||
+		if ((KeyboardController::GetInstance()->IsKeyPressed('E') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_A))
+			&& (thePlayerInfo->GetMap()->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X]==30||
 			thePlayerInfo->checkPosition_X + 1 < thePlayerInfo->GetMap()->GetNumOfTiles_Width() && thePlayerInfo->GetMap()->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X + 1] == 30))
 		{
 			screen = SC_SKILL_TREE;
@@ -391,7 +408,7 @@ bool UserInterface::Update(double dt)
 			return true;
 		}
 
-		if (KeyboardController::GetInstance()->IsKeyPressed('P'))
+		if (KeyboardController::GetInstance()->IsKeyPressed('P') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_START))
 		{
 			screen = SC_PAUSE;
 			ChangeScreen(screen);

@@ -3,6 +3,7 @@
 
 #include "MouseController.h"
 #include "KeyboardController.h"
+#include "GamePadXbox.h"
 #include "Mtx44.h"
 #include "../Projectile/Projectile.h"
 #include "GoodiesFactory.h"
@@ -55,16 +56,17 @@ void Slash::Update(double dt)
 	{
 		if (direction == NOPE)
 		{
-			if (KeyboardController::GetInstance()->IsKeyReleased('K'))
+			if (KeyboardController::GetInstance()->IsKeyReleased('K') || GamePadXbox::GetInstance()->IsKeyReleased(GamePadXbox::GamePad_Button_B))
 			{
 				if (CPlayerInfo2D::GetInstance()->isFacingRight())
 					direction = RIGHT3;
 				else
 					direction = LEFT3;
 			}
-			else if (KeyboardController::GetInstance()->IsKeyDown('W'))
+			else if (KeyboardController::GetInstance()->IsKeyDown('W') || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_DPAD_UP))
 				direction = UP;
-			else if (KeyboardController::GetInstance()->IsKeyDown('S') && !CPlayerInfo2D::GetInstance()->isOnGround())
+			else if ((KeyboardController::GetInstance()->IsKeyDown('S') || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_DPAD_DOWN))
+				&& !CPlayerInfo2D::GetInstance()->isOnGround())
 				direction = DOWN;
 			else if (!CPlayerInfo2D::GetInstance()->getSecondAttack())
 			{
