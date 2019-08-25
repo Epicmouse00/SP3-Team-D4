@@ -207,7 +207,12 @@ public:
 		SK_TOTAL
 	};
 
+	bool getExit(void) const;
+	void setExit(bool b_exit);
+
 private:
+	bool b_exit;
+
 	void InitSound(void) const;
 
 	Vector3 defaultPosition, defaultTarget, defaultUp;

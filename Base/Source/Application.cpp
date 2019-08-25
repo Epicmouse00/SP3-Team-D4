@@ -4,6 +4,7 @@
 #include "GamePadXbox.h"
 #include "SceneManager.h"
 #include "GraphicsManager.h"
+#include "Scene2D/PlayerInfo2D.h"
 
 //Include GLEW
 #include <GL/glew.h>
@@ -120,7 +121,9 @@ void Application::Run()
 {
 	SceneManager::GetInstance()->SetActiveScene("Scene2D");
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
-	while (!glfwWindowShouldClose(m_window) && (!IsKeyPressed(VK_ESCAPE) && !GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_BACK)))
+	while (!glfwWindowShouldClose(m_window)
+		&& (!IsKeyPressed(VK_ESCAPE) && !GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_BACK))
+		&& !CPlayerInfo2D::GetInstance()->getExit())
 	{
 		glfwPollEvents();
 		UpdateInput();

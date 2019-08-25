@@ -32,6 +32,7 @@ CPlayerInfo2D::CPlayerInfo2D(void)
 	, m_dFallSpeed(0.0)
 	, m_dFallAcceleration(-4.0)
 	, m_dElapsedTime(0.0)
+	, b_exit(false)
 	, hp(1)
 	, maxhp(1)
 	, mapOffset_x(0)
@@ -1530,6 +1531,16 @@ bool CPlayerInfo2D::getSkill(int skill) const
 void CPlayerInfo2D::setSkill(int skill, bool state)
 {
 	this->skill[skill] = state;
+}
+
+bool CPlayerInfo2D::getExit(void) const
+{
+	return b_exit;
+}
+
+void CPlayerInfo2D::setExit(bool b_exit)
+{
+	this->b_exit = b_exit;
 }
 
 void CPlayerInfo2D::InitSound(void) const
