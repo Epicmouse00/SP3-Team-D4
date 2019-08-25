@@ -74,12 +74,19 @@ bool CMap::AddRearFile(CMap* map, CMap* ref)
 	}
 
 	Math::InitRNG();
-	for(int theColumnCounter = 0; theColumnCounter < theNumOfTiles_Width; ++theColumnCounter)
+	for (int theColumnCounter = 0; theColumnCounter < theNumOfTiles_Width;)
 	{
-		int tempRand = Math::RandIntMinMax(0, ref->GetNumOfTiles_Width()-1);
-		for (int theLineCounter = 0; theLineCounter < theNumOfTiles_MapHeight; ++theLineCounter)
+		int chunckSize = 8;
+		int tempRand = Math::RandIntMinMax(0, (ref->GetNumOfTiles_Width()/chunckSize) - 1);
+		for (int something = 0; something < chunckSize; ++something) 
 		{
-			theScreenMap[theLineCounter][theColumnCounter] = ref->theScreenMap[theLineCounter][tempRand];
+			for (int theLineCounter = 0; theLineCounter < theNumOfTiles_MapHeight; ++theLineCounter)
+			{
+				theScreenMap[theLineCounter][theColumnCounter] = ref->theScreenMap[theLineCounter][tempRand * chunckSize + something];
+			}
+			++theColumnCounter;
+			if (theColumnCounter == theNumOfTiles_Width)
+				break;
 		}
 	}
 	return true;
