@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "MouseController.h"
 #include "KeyboardController.h"
+#include "GamePadXbox.h"
 #include "SceneManager.h"
 #include "GraphicsManager.h"
 
@@ -119,7 +120,7 @@ void Application::Run()
 {
 	SceneManager::GetInstance()->SetActiveScene("Scene2D");
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
-	while (!glfwWindowShouldClose(m_window) && !IsKeyPressed(VK_ESCAPE))
+	while (!glfwWindowShouldClose(m_window) && (!IsKeyPressed(VK_ESCAPE) && !GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_BACK)))
 	{
 		glfwPollEvents();
 		UpdateInput();
@@ -156,6 +157,11 @@ void Application::UpdateInput()
 	// Update Keyboard Input
 	for (int i = 0; i < KeyboardController::MAX_KEYS; ++i)
 		KeyboardController::GetInstance()->UpdateKeyboardStatus(i, IsKeyPressed(i));
+
+	if (GamePadXbox::GetInstance()->is_connected())
+	{
+		GamePadXbox::GetInstance()->update();
+	}
 }
 
 void Application::PostInputUpdate()
@@ -173,6 +179,7 @@ void Application::PostInputUpdate()
 	// Call input systems to update at end of frame
 	MouseController::GetInstance()->EndFrameUpdate();
 	KeyboardController::GetInstance()->EndFrameUpdate();
+	GamePadXbox::GetInstance()->EndFrameUpdate();
 }
 
 void Application::MouseButtonCallbacks(GLFWwindow* window, int button, int action, int mods)
