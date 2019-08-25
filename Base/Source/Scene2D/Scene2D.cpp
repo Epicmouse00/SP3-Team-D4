@@ -36,8 +36,6 @@ CScene2D::CScene2D()
 	, theButtonInfo(NULL)
 	, theEnemy(NULL)
 	, theAxeEnemy(NULL)
-	, m_iNumEnemy(0)
-	, m_iNumAxeEnemy(0)
 	, doorIsOpen(false)
 {
 }
@@ -106,13 +104,6 @@ CScene2D::~CScene2D()
 	}
 	delete Scene2D_Enemy;
 	Scene2D_Enemy = NULL;
-
-
-	delete theEnemy;
-	theEnemy = NULL;
-
-	delete theAxeEnemy;
-	theAxeEnemy = NULL;
 
 	for (int i = 0; i < thePlayerInfo->GetFrameTotal(); ++i)
 	{
@@ -220,31 +211,58 @@ void CScene2D::Init()
 	// Initialise and load the tile map
 	m_cMap = new CMap();
 	m_cMap->Init(Application::GetInstance().GetWindowHeight()-16, Application::GetInstance().GetWindowWidth(), 15, 64, 240, 1024);
-	m_cMap->LoadMap("Image//MapDesign.csv");
 	size_t numberOfCopies = 10;
 	Math::InitRNG();
 	for (size_t i = 0; i < numberOfCopies; ++i)
 	{
 		int mapNo = Math::RandIntMinMax(0, 1);
-		switch (mapNo)
 		{
-		case 0:
-			m_cMap->AddFile("Image//MapDesign.csv");
-			break;
-		case 1:
-			m_cMap->AddFile("Image//MapDesign2.csv");
-			break;
-		default:
-			break;
+			int initialWidth = m_cMap->getNumOfTiles_MapWidth();
+			switch (mapNo)
+			{
+			case 0:
+				m_cMap->LoadMap("Image//MapDesign.csv"); // Less error checking than original?
+				break;
+			case 1:
+				m_cMap->LoadMap("Image//MapDesign2.csv");
+				break;
+			default:
+				break;
+			}
+			// unlimited??? (limited by max vector size?)
+			for (int width = initialWidth; width < m_cMap->getNumOfTiles_MapWidth(); ++width)
+			{
+				for (int height = 0; height < m_cMap->getNumOfTiles_MapHeight(); ++height)
+				{
+					switch (m_cMap->theScreenMap[height][width])
+					{
+					case 101:
+						m_cMap->theScreenMap[height][width] = 0;
+						theEnemy.push_back(Create::EnemyEntity(m_cMap, new CStrategy_Shoot(), false
+							, Vector3(static_cast<float>(width * m_cMap->GetTileSize_Width() + (m_cMap->GetTileSize_Width() >> 1)), static_cast<float>(232 - height * m_cMap->GetTileSize_Height()))));
+						break;
+					case 102:
+						m_cMap->theScreenMap[height][width] = 0;
+						theAxeEnemy.push_back(Create::AxeEnemyEntity(m_cMap, new CStrategy_Kill(), false
+							, Vector3(static_cast<float>(width * m_cMap->GetTileSize_Width() + (m_cMap->GetTileSize_Width() >> 1)), static_cast<float>(232 - height * m_cMap->GetTileSize_Height()))));
+						break;
+					default:
+						break;
+					}
+				}
+			}
 		}
 	}
 	// Create the Goodies
 	CreateGoodies();
-
-	m_cRearMap = new CMap();
-	m_cRearMap->Init(Application::GetInstance().GetWindowHeight(), Application::GetInstance().GetWindowWidth(), 15, 64, 240, 1024);
-	m_cRearMap->LoadMap("Image//RearMapDesign.csv");
-
+	{
+		CMap* rearMapRef = new CMap();
+		rearMapRef->Init(Application::GetInstance().GetWindowHeight(), Application::GetInstance().GetWindowWidth(), 15, 64, 240, 1024);
+		rearMapRef->LoadMap("Image//RearMapDesign.csv");
+		m_cRearMap = new CMap();
+		m_cRearMap->AddRearFile(m_cMap,rearMapRef);
+		delete rearMapRef;
+	}
 	// Create the playerinfo instance, which manages all information about the player
 	thePlayerInfo = CPlayerInfo2D::GetInstance();
 	thePlayerInfo->Init();
@@ -520,14 +538,10 @@ void CScene2D::Init()
 	//	Vector3(16.0f, 16.0f, 0.0f));
 
 	// Create the 3 enemies
-	m_iNumEnemy = m_cMap->getNumberOfEnemies();
-	theEnemy = new CEnemy*[m_iNumEnemy];
-	m_iNumAxeEnemy = m_cMap->getNumberOfAxeEnemies();
-	theAxeEnemy = new CAxeEnemy*[m_iNumAxeEnemy];
+	//theEnemy = new CEnemy*[m_iNumEnemy];
+	//theAxeEnemy = new CAxeEnemy*[m_iNumAxeEnemy];
 
 	{
-		int i = 0, i2 = 0;
-		bool breakk = false;
 		for (int width = 0; width < m_cMap->getNumOfTiles_MapWidth(); ++width)
 		{
 			for (int height = 0; height < m_cMap->getNumOfTiles_MapHeight(); ++height)
@@ -536,27 +550,18 @@ void CScene2D::Init()
 				{
 				case 101:
 					m_cMap->theScreenMap[height][width] = 0;
-					theEnemy[i] = Create::EnemyEntity(m_cMap, new CStrategy_Shoot(), false
-						, Vector3(static_cast<float>(width * m_cMap->GetTileSize_Width() + (m_cMap->GetTileSize_Width() >> 1)), static_cast<float>(232 - height * m_cMap->GetTileSize_Height())));
-					++i;
+					theEnemy.push_back(Create::EnemyEntity(m_cMap, new CStrategy_Shoot(), false
+						, Vector3(static_cast<float>(width * m_cMap->GetTileSize_Width() + (m_cMap->GetTileSize_Width() >> 1)), static_cast<float>(232 - height * m_cMap->GetTileSize_Height()))));
 					break;
 				case 102:
 					m_cMap->theScreenMap[height][width] = 0;
-					theAxeEnemy[i2] = Create::AxeEnemyEntity(m_cMap, new CStrategy_Kill(), false
-						, Vector3(static_cast<float>(width * m_cMap->GetTileSize_Width() + (m_cMap->GetTileSize_Width() >> 1)), static_cast<float>(232 - height * m_cMap->GetTileSize_Height())));
-					++i2;
+					theAxeEnemy.push_back(Create::AxeEnemyEntity(m_cMap, new CStrategy_Kill(), false
+						, Vector3(static_cast<float>(width * m_cMap->GetTileSize_Width() + (m_cMap->GetTileSize_Width() >> 1)), static_cast<float>(232 - height * m_cMap->GetTileSize_Height()))));
 					break;
 				default:
 					break;
 				}
-				if (i == m_iNumEnemy && i2 == m_iNumAxeEnemy)
-				{
-					breakk = true;
-					break;
-				}
 			}
-			if (breakk)
-				break;
 		}
 	}
 	temporop = Create::Projectile("Corrupt_temp", Vector3(static_cast<float>(-m_cMap->getScreenWidth()) / 2, static_cast<float>(m_cMap->getScreenHeight()) / 2, 0)
@@ -664,37 +669,35 @@ void CScene2D::Update(double dt)
 		theSlashInfo->Update(dt);
 		theButtonInfo->Update(dt);
 		// Update the enemies
-		for (int i = 0; i < m_iNumEnemy; ++i)
+		for (int i = 0; i < theEnemy.size(); ++i)
 		{
-			if (theEnemy[i] != nullptr) {
-				if (theEnemy[i]->IsDead())
-				{
-					delete theEnemy[i];
-					theEnemy[i] = nullptr;
-					continue;
-				}
-				if (!theEnemy[i]->IsDone())
-					theEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x,
-						thePlayerInfo->GetPos().y,
-						0));
-				theEnemy[i]->Update();
+			if (theEnemy[i]->IsDead())
+			{
+				delete theEnemy[i];
+				theEnemy[i] = nullptr;
+				theEnemy.erase(theEnemy.begin() + i);
+				continue;
 			}
+			if (!theEnemy[i]->IsDone())
+				theEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x,
+					thePlayerInfo->GetPos().y,
+					0));
+			theEnemy[i]->Update();
 		}
-		for (int i = 0; i < m_iNumAxeEnemy; ++i)
+		for (int i = 0; i < theAxeEnemy.size(); ++i)
 		{
-			if (theAxeEnemy[i] != nullptr) {
-				if (theAxeEnemy[i]->IsDead())
-				{
-					delete theAxeEnemy[i];
-					theAxeEnemy[i] = nullptr;
-					continue;
-				}
-				if (!theAxeEnemy[i]->IsDone())
-					theAxeEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x,
-						thePlayerInfo->GetPos().y,
-						0));
-				theAxeEnemy[i]->Update();
+			if (theAxeEnemy[i]->IsDead())
+			{
+				delete theAxeEnemy[i];
+				theAxeEnemy[i] = nullptr;
+				theAxeEnemy.erase(theAxeEnemy.begin() + i);
+				continue;
 			}
+			if (!theAxeEnemy[i]->IsDone())
+				theAxeEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x,
+					thePlayerInfo->GetPos().y,
+					0));
+			theAxeEnemy[i]->Update();
 		}
 
 		if (m_cMap->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X] == 3 ||
@@ -923,51 +926,49 @@ void CScene2D::RenderPlayer()
 void CScene2D::RenderEnemy(void)
 {
 	// Render the enemies
-	for (int i = 0; i < m_iNumEnemy; ++i)
+	for (int i = 0; i < theEnemy.size(); ++i)
 	{
-		if (theEnemy[i] != nullptr) {
-			int theEnemy_x = theEnemy[i]->GetPos_x() - thePlayerInfo->mapOffset_x;
-			int theEnemy_y = theEnemy[i]->GetPos_y();
-			int enemyFrameState = theEnemy[i]->GetFrameState();
+		int theEnemy_x = theEnemy[i]->GetPos_x() - thePlayerInfo->mapOffset_x;
+		int theEnemy_y = theEnemy[i]->GetPos_y();
+		int enemyFrameState = theEnemy[i]->GetFrameState();
 
-			if (((theEnemy_x >= 0) && (theEnemy_x < m_cMap->GetNumOfTiles_Width()*m_cMap->GetTileSize_Width())) &&
-				((theEnemy_y >= 0) && (theEnemy_y < m_cMap->GetNumOfTiles_Height()*m_cMap->GetTileSize_Height())) &&
-				enemyFrameState != CEnemy::C_TOTAL)
+		if (((theEnemy_x >= 0) && (theEnemy_x < m_cMap->GetNumOfTiles_Width()*m_cMap->GetTileSize_Width())) &&
+			((theEnemy_y >= 0) && (theEnemy_y < m_cMap->GetNumOfTiles_Height()*m_cMap->GetTileSize_Height())) &&
+			enemyFrameState != CEnemy::C_TOTAL)
+		{
+			Scene2D_Enemy[enemyFrameState]->SetPosition(Vector3(static_cast<float>(theEnemy_x), static_cast<float>(theEnemy_y), 0));
+			Scene2D_Enemy[enemyFrameState]->RenderUI();
+			if (theEnemy[i]->GetHp() < theEnemy[i]->GetMaxHp())
 			{
-				Scene2D_Enemy[enemyFrameState]->SetPosition(Vector3(static_cast<float>(theEnemy_x), static_cast<float>(theEnemy_y), 0));
-				Scene2D_Enemy[enemyFrameState]->RenderUI();
-				if (theEnemy[i]->GetHp() < theEnemy[i]->GetMaxHp())
-				{
-					float temporaryFloat = static_cast<float>(theEnemy[i]->GetHp()) / static_cast<float>(theEnemy[i]->GetMaxHp()) * m_cMap->GetTileSize_Width();
-					Scene2D_EnemyHpBar->SetPosition(Vector3(static_cast<float>(theEnemy_x - temporaryFloat / 2), static_cast<float>(theEnemy_y + m_cMap->GetTileSize_Height() / 2), 0));
-					Scene2D_EnemyHpBar->SetScale(Vector3(temporaryFloat, static_cast<float>(m_cMap->GetTileSize_Height() / 4), 0.f));
-					Scene2D_EnemyHpBar->RenderUI();
-				}
+				float temporaryFloat = static_cast<float>(theEnemy[i]->GetHp()) / static_cast<float>(theEnemy[i]->GetMaxHp()) * m_cMap->GetTileSize_Width();
+				Scene2D_EnemyHpBar->SetPosition(Vector3(static_cast<float>(theEnemy_x - temporaryFloat / 2), static_cast<float>(theEnemy_y + m_cMap->GetTileSize_Height() / 2), 0));
+				Scene2D_EnemyHpBar->SetScale(Vector3(temporaryFloat, static_cast<float>(m_cMap->GetTileSize_Height() / 4), 0.f));
+				Scene2D_EnemyHpBar->RenderUI();
 			}
 		}
 	}
-	for (int i = 0; i < m_iNumAxeEnemy; ++i)
+	for (int i = 0; i < theAxeEnemy.size(); ++i)
 	{
-		if (theAxeEnemy[i] != nullptr) {
-			int theEnemy_x = theAxeEnemy[i]->GetPos_x() - thePlayerInfo->mapOffset_x;
-			int theEnemy_y = theAxeEnemy[i]->GetPos_y();
-			int enemyFrameState = theAxeEnemy[i]->GetFrameState();
 
-			if (((theEnemy_x >= 0) && (theEnemy_x < m_cMap->GetNumOfTiles_Width()*m_cMap->GetTileSize_Width())) &&
-				((theEnemy_y >= 0) && (theEnemy_y < m_cMap->GetNumOfTiles_Height()*m_cMap->GetTileSize_Height())) &&
-				enemyFrameState != CAxeEnemy::A_TOTAL)
+		int theEnemy_x = theAxeEnemy[i]->GetPos_x() - thePlayerInfo->mapOffset_x;
+		int theEnemy_y = theAxeEnemy[i]->GetPos_y();
+		int enemyFrameState = theAxeEnemy[i]->GetFrameState();
+
+		if (((theEnemy_x >= 0) && (theEnemy_x < m_cMap->GetNumOfTiles_Width()*m_cMap->GetTileSize_Width())) &&
+			((theEnemy_y >= 0) && (theEnemy_y < m_cMap->GetNumOfTiles_Height()*m_cMap->GetTileSize_Height())) &&
+			enemyFrameState != CAxeEnemy::A_TOTAL)
+		{
+			Scene2D_AxeEnemy[enemyFrameState]->SetPosition(Vector3(static_cast<float>(theEnemy_x), static_cast<float>(theEnemy_y), 0));
+			Scene2D_AxeEnemy[enemyFrameState]->RenderUI();
+			if (theAxeEnemy[i]->GetHp() < theAxeEnemy[i]->GetMaxHp())
 			{
-				Scene2D_AxeEnemy[enemyFrameState]->SetPosition(Vector3(static_cast<float>(theEnemy_x), static_cast<float>(theEnemy_y), 0));
-				Scene2D_AxeEnemy[enemyFrameState]->RenderUI();
-				if (theAxeEnemy[i]->GetHp() < theAxeEnemy[i]->GetMaxHp())
-				{
-					float temporaryFloat = static_cast<float>(theAxeEnemy[i]->GetHp()) / static_cast<float>(theAxeEnemy[i]->GetMaxHp()) * m_cMap->GetTileSize_Width();
-					Scene2D_EnemyHpBar->SetPosition(Vector3(static_cast<float>(theEnemy_x - temporaryFloat /2), static_cast<float>(theEnemy_y + m_cMap->GetTileSize_Height() / 2), 0));
-					Scene2D_EnemyHpBar->SetScale(Vector3(temporaryFloat, static_cast<float>(m_cMap->GetTileSize_Height() / 4), 0.f));
-					Scene2D_EnemyHpBar->RenderUI();
-				}
+				float temporaryFloat = static_cast<float>(theAxeEnemy[i]->GetHp()) / static_cast<float>(theAxeEnemy[i]->GetMaxHp()) * m_cMap->GetTileSize_Width();
+				Scene2D_EnemyHpBar->SetPosition(Vector3(static_cast<float>(theEnemy_x - temporaryFloat / 2), static_cast<float>(theEnemy_y + m_cMap->GetTileSize_Height() / 2), 0));
+				Scene2D_EnemyHpBar->SetScale(Vector3(temporaryFloat, static_cast<float>(m_cMap->GetTileSize_Height() / 4), 0.f));
+				Scene2D_EnemyHpBar->RenderUI();
 			}
 		}
+
 	}
 }
 

@@ -75,10 +75,9 @@ private:
 	E_Button* theButtonInfo;
 
 	// The enemies
-	CEnemy** theEnemy;
-	CAxeEnemy** theAxeEnemy;
-	int m_iNumEnemy;
-	int m_iNumAxeEnemy;
+	vector<CEnemy*> theEnemy;
+	vector<CAxeEnemy*> theAxeEnemy;
+
 	SpriteEntity** Scene2D_Enemy;
 	SpriteEntity** Scene2D_AxeEnemy;
 	CProjectile* temporop;
