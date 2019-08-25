@@ -3,6 +3,7 @@
 
 #include "MouseController.h"
 #include "KeyboardController.h"
+#include "GamePadXbox.h"
 #include "Mtx44.h"
 #include "GoodiesFactory.h"
 
@@ -53,7 +54,12 @@ void E_Button::Update(double dt)
 		(CPlayerInfo2D::GetInstance()->checkPosition_X + 1 < CPlayerInfo2D::GetInstance()->GetMap()->GetNumOfTiles_Width() && CPlayerInfo2D::GetInstance()->GetMap()->theScreenMap[CPlayerInfo2D::GetInstance()->checkPosition_Y][CPlayerInfo2D::GetInstance()->checkPosition_X + 1] == 30))
 	{
 		if (GetFrameState() == B_TOTAL)
-			SetAnimationStatus(B_1);
+		{
+			if (GamePadXbox::GetInstance()->is_connected())
+				SetAnimationStatus(B_3);
+			else
+				SetAnimationStatus(B_1);
+		}
 		UpdateAnimationIndex(0.3f);
 		position = CPlayerInfo2D::GetInstance()->GetPos();
 		position.y += 16.f;

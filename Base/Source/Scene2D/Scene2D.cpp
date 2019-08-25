@@ -350,6 +350,12 @@ void CScene2D::Init()
 	Scene2D_E[1] = Create::Sprite2DObject("E_Button_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_E[2] = Create::Sprite2DObject("A_Button_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_E[3] = Create::Sprite2DObject("A_Button_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
 	
 	Scene2D_Hero_Animated = new SpriteEntity*[thePlayerInfo->GetFrameTotal()];
 	Scene2D_Hero_Animated[0] = Create::Sprite2DObject("Lonin_Right_Idle_1",
@@ -1228,6 +1234,10 @@ void CScene2D::LoadMeshes(void)
 		MeshBuilder::GetInstance()->GetMesh("E_Button_1")->textureID = LoadTGA("Image//Sprites//E_Button_1.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("E_Button_2", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("E_Button_2")->textureID = LoadTGA("Image//Sprites//E_Button_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("A_Button_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("A_Button_1")->textureID = LoadTGA("Image//Sprites//A_Button_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("A_Button_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("A_Button_2")->textureID = LoadTGA("Image//Sprites//A_Button_2.tga");
 	}
 	// Title Screen
 	{

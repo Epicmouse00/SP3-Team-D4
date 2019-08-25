@@ -1,4 +1,5 @@
 #include "AnimationButton.h"
+#include "GamePadXbox.h"
 #include "../SoundEngine.h"
 
 
@@ -45,10 +46,26 @@ int CAnimationButton::GuessNextFrame(int frame) const
 	switch (frame)
 	{
 	case B_1:
-		return B_2;
+	case B_3:
+		if (GamePadXbox::GetInstance()->is_connected())
+		{
+			return B_4;
+		}
+		else
+		{
+			return B_2;
+		}
 		break;
 	case B_2:
-		return B_1;
+	case B_4:
+		if (GamePadXbox::GetInstance()->is_connected())
+		{
+			return B_3;
+		}
+		else
+		{
+			return B_1;
+		}
 		break;
 	default:
 		return B_TOTAL;
