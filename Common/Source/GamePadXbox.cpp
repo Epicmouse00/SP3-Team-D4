@@ -113,6 +113,27 @@ void GamePadXbox::update()
 		currStatus.set(GamePad_Button_DPAD_UP, true);
 	if (_controllerState.Gamepad.sThumbLY < -80)
 		currStatus.set(GamePad_Button_DPAD_DOWN, true);
+
+	if (_controllerState.Gamepad.sThumbRX > 80)
+	{
+		currStatus.set(GamePad_Button_DPAD_RIGHT, true);
+		currStatus.set(GamePad_Button_A, true);
+	}
+	if (_controllerState.Gamepad.sThumbRX < -80)
+	{
+		currStatus.set(GamePad_Button_DPAD_LEFT, true);
+		currStatus.set(GamePad_Button_A, true);
+	}
+	if (_controllerState.Gamepad.sThumbRY > 80)
+	{
+		currStatus.set(GamePad_Button_DPAD_UP, true);
+		currStatus.set(GamePad_Button_A, true);
+	}
+	if (_controllerState.Gamepad.sThumbRY < -80)
+	{
+		currStatus.set(GamePad_Button_DPAD_DOWN, true);
+		currStatus.set(GamePad_Button_A, true);
+	}
 }
 
 bool GamePadXbox::IsKeyDown(int _slot)

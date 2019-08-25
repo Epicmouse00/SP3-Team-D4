@@ -97,13 +97,21 @@ CScene2D::~CScene2D()
 	delete theButtonInfo;
 	theButtonInfo = NULL;
 
-	for (int i = 0; i < theEnemy[0]->GetFrameTotal(); ++i)
+	for (int i = 0; i < CAnimationCrystal::C_TOTAL; ++i)
 	{
 		delete Scene2D_Enemy[i];
 		Scene2D_Enemy[i] = NULL;
 	}
 	delete Scene2D_Enemy;
 	Scene2D_Enemy = NULL;
+
+	for (int i = 0; i < CAnimationAxe::A_TOTAL; ++i)
+	{
+		delete Scene2D_AxeEnemy[i];
+		Scene2D_AxeEnemy[i] = NULL;
+	}
+	delete Scene2D_AxeEnemy;
+	Scene2D_AxeEnemy = NULL;
 
 	for (int i = 0; i < thePlayerInfo->GetFrameTotal(); ++i)
 	{
@@ -342,6 +350,12 @@ void CScene2D::Init()
 	Scene2D_E[1] = Create::Sprite2DObject("E_Button_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_E[2] = Create::Sprite2DObject("A_Button_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_E[3] = Create::Sprite2DObject("A_Button_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
 	
 	Scene2D_Hero_Animated = new SpriteEntity*[thePlayerInfo->GetFrameTotal()];
 	Scene2D_Hero_Animated[0] = Create::Sprite2DObject("Lonin_Right_Idle_1",
@@ -541,34 +555,11 @@ void CScene2D::Init()
 	//theEnemy = new CEnemy*[m_iNumEnemy];
 	//theAxeEnemy = new CAxeEnemy*[m_iNumAxeEnemy];
 
-	{
-		for (int width = 0; width < m_cMap->getNumOfTiles_MapWidth(); ++width)
-		{
-			for (int height = 0; height < m_cMap->getNumOfTiles_MapHeight(); ++height)
-			{
-				switch (m_cMap->theScreenMap[height][width])
-				{
-				case 101:
-					m_cMap->theScreenMap[height][width] = 0;
-					theEnemy.push_back(Create::EnemyEntity(m_cMap, new CStrategy_Shoot(), false
-						, Vector3(static_cast<float>(width * m_cMap->GetTileSize_Width() + (m_cMap->GetTileSize_Width() >> 1)), static_cast<float>(232 - height * m_cMap->GetTileSize_Height()))));
-					break;
-				case 102:
-					m_cMap->theScreenMap[height][width] = 0;
-					theAxeEnemy.push_back(Create::AxeEnemyEntity(m_cMap, new CStrategy_Kill(), false
-						, Vector3(static_cast<float>(width * m_cMap->GetTileSize_Width() + (m_cMap->GetTileSize_Width() >> 1)), static_cast<float>(232 - height * m_cMap->GetTileSize_Height()))));
-					break;
-				default:
-					break;
-				}
-			}
-		}
-	}
 	temporop = Create::Projectile("Corrupt_temp", Vector3(static_cast<float>(-m_cMap->getScreenWidth()) / 2, static_cast<float>(m_cMap->getScreenHeight()) / 2, 0)
 		, Vector3(static_cast<float>(m_cMap->getScreenWidth()), static_cast<float>(m_cMap->getScreenHeight()), 0), Vector3(1, 0, 0)
 		, 1.f, 30.f, EntityBase::ENTITY_TYPE::E_CORRUPTION);
 
-	Scene2D_Enemy = new SpriteEntity*[theEnemy[0]->GetFrameTotal()]; // Enemy stuff
+	Scene2D_Enemy = new SpriteEntity*[CAnimationCrystal::C_TOTAL]; // Enemy stuff
 	Scene2D_Enemy[0] = Create::Sprite2DObject("Crystal_Attack_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
@@ -588,7 +579,7 @@ void CScene2D::Init()
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
 
-	Scene2D_AxeEnemy = new SpriteEntity*[theAxeEnemy[0]->GetFrameTotal()];
+	Scene2D_AxeEnemy = new SpriteEntity*[CAnimationAxe::A_TOTAL];
 	Scene2D_AxeEnemy[0] = Create::Sprite2DObject("Axe_Attack_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
@@ -1243,6 +1234,10 @@ void CScene2D::LoadMeshes(void)
 		MeshBuilder::GetInstance()->GetMesh("E_Button_1")->textureID = LoadTGA("Image//Sprites//E_Button_1.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("E_Button_2", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("E_Button_2")->textureID = LoadTGA("Image//Sprites//E_Button_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("A_Button_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("A_Button_1")->textureID = LoadTGA("Image//Sprites//A_Button_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("A_Button_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("A_Button_2")->textureID = LoadTGA("Image//Sprites//A_Button_2.tga");
 	}
 	// Title Screen
 	{
