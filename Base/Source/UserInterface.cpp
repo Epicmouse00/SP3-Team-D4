@@ -217,8 +217,8 @@ bool UserInterface::Update(double dt)
 				CPlayerInfo2D::GetInstance()->Heal(false);
 				return true;
 				break;
-			case 1:
-				ShellExecute(0, 0, (LPCWSTR)("https://www.teepublic.com/t-shirt/5731054-rollin-like-lonin"), 0, 0, SW_SHOW);
+			case 1: // (LPCSTR) for debug, (LPCWSTR) for release
+				ShellExecute(0, 0, (LPCSTR)("https://www.teepublic.com/t-shirt/5731054-rollin-like-lonin"), 0, 0, SW_SHOW);
 				thePlayerInfo->setExit(true);
 				break;
 			case 0:
