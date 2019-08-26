@@ -207,10 +207,13 @@ void CPlayerInfo2D::SetToJumpUpwards(bool isOnJumpUpwards)
 		else
 			m_dJumpSpeed = 6.0;
 
-		if (isFacingRight() && !isDie())
-			SetAnimationStatus(CAnimation::P_JUMP_R1);
-		else
-			SetAnimationStatus(CAnimation::P_JUMP_L1);
+		if (!isDie())
+		{
+			if (isFacingRight())
+				SetAnimationStatus(CAnimation::P_JUMP_R1);
+			else
+				SetAnimationStatus(CAnimation::P_JUMP_L1);
+		}
 		UpdateAnimationIndex(1.f);
 		CSoundEngine::GetInstance()->PlayASound("jump");
 	}
