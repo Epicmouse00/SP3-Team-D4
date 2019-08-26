@@ -1578,6 +1578,8 @@ bool CPlayerInfo2D::getSkill(int skill) const
 void CPlayerInfo2D::setSkill(int skill, bool state)
 {
 	this->skill[skill] = state;
+	if (state)
+		CSoundEngine::GetInstance()->PlayASound("unlocked");
 }
 
 bool CPlayerInfo2D::getExit(void) const
@@ -1618,6 +1620,7 @@ void CPlayerInfo2D::InitSound(void) const
 	CSoundEngine::GetInstance()->AddSound("killaxe", "Sound//killaxe.wav");
 	CSoundEngine::GetInstance()->AddSound("damaged", "Sound//damaged.wav");
 	CSoundEngine::GetInstance()->AddSound("heal", "Sound//heal.wav");
+	CSoundEngine::GetInstance()->AddSound("unlocked", "Sound//unlocked.wav");
 }
 
 bool CPlayerInfo2D::Roll()

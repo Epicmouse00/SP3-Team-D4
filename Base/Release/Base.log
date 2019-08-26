@@ -1,10 +1,9 @@
 ﻿  PlayerInfo2D.cpp
 c:\users\user\documents\github\sp3-team-d4\base\source\scene2d\playerinfo2d.cpp(140): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-  Scene2D.cpp
   UserInterface.cpp
   Generating code
-  5 of 2706 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+  5 of 2708 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    10 functions had inline decision re-evaluated but remain unchanged
+    12 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Base.vcxproj -> C:\Users\User\Documents\GitHub\SP3-Team-D4\Release\Base.exe
