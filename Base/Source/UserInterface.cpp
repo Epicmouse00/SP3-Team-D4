@@ -495,10 +495,10 @@ bool UserInterface::GetScreenStatus()
 		return true;
 		break;
 	case SC_SKILL_TREE:
-		return true;
+		return false;
 		break;
 	case SC_SHOP:
-		return true;
+		return true;// Note : change this to false, and add a case SC_GAME_OVER
 		break;
 	}
 	return true;
