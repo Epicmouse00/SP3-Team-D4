@@ -336,7 +336,7 @@ bool UserInterface::Update(double dt)
 			thePlayerInfo->setSkill(selectionIndex, true);
 		}
 
-		if (KeyboardController::GetInstance()->IsKeyPressed('E') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_START))
+		if (KeyboardController::GetInstance()->IsKeyPressed('E') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_X))
 		{
 			screen = SC_PLAY;
 			ChangeScreen(screen);
@@ -404,7 +404,7 @@ bool UserInterface::Update(double dt)
 		else
 			dieTimer = 0;
 
-		if ((KeyboardController::GetInstance()->IsKeyPressed('E') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_A))
+		if ((KeyboardController::GetInstance()->IsKeyPressed('E') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_X))
 			&& (thePlayerInfo->GetMap()->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X]==30||
 			thePlayerInfo->checkPosition_X + 1 < thePlayerInfo->GetMap()->GetNumOfTiles_Width() && thePlayerInfo->GetMap()->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X + 1] == 30))
 		{

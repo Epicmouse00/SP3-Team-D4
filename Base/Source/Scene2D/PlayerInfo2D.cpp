@@ -706,7 +706,7 @@ void CPlayerInfo2D::Update(double dt)
 		if (position.x - (tileSize_Width >> 1) < 0)
 			position.x = static_cast<float>(tileSize_Width >> 1);
 
-		if ((KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_X) || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_Y) || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_LEFT_SHOULDER))
+		if ((KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_Y) || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_LEFT_SHOULDER))
 			&& !m_bJumped && isOnAir() && !m_bDoubleJump && isRolling() && !isAttacking() && skill[SK_DOUBLE_JUMP])
 		{
 			m_bJumped = true;
@@ -714,19 +714,19 @@ void CPlayerInfo2D::Update(double dt)
 			SetToJumpUpwards(true);
 		}
 
-		if (KeyboardController::GetInstance()->IsKeyReleased(VK_SPACE) || GamePadXbox::GetInstance()->IsKeyReleased(GamePadXbox::GamePad_Button_X) || GamePadXbox::GetInstance()->IsKeyReleased(GamePadXbox::GamePad_Button_Y) || GamePadXbox::GetInstance()->IsKeyReleased(GamePadXbox::GamePad_Button_LEFT_SHOULDER))
+		if (KeyboardController::GetInstance()->IsKeyReleased(VK_SPACE) || GamePadXbox::GetInstance()->IsKeyReleased(GamePadXbox::GamePad_Button_Y) || GamePadXbox::GetInstance()->IsKeyReleased(GamePadXbox::GamePad_Button_LEFT_SHOULDER))
 		{
 			m_bJumpKeyHeld = false;
 		}
 
-		if ((KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_X) || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_Y) || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_LEFT_SHOULDER))
+		if ((KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_Y) || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_LEFT_SHOULDER))
 			&& !m_bJumpKeyHeld && !m_bDoubleJump && m_bJumped && !isRolling() && !isAttacking() && skill[SK_DOUBLE_JUMP])
 		{
 			m_bJumpKeyHeld = true;
 			m_bDoubleJump = true;
 			SetToJumpUpwards(true);
 		}
-		else if ((KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_X) || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_Y) || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_LEFT_SHOULDER))
+		else if ((KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_Y) || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_LEFT_SHOULDER))
 			&& !m_bJumpKeyHeld && !m_bTripleJump && m_bDoubleJumped && !isRolling() && !isAttacking() && skill[SK_TRIPLE_JUMP])
 		{
 			m_bJumpKeyHeld = true;
@@ -735,7 +735,7 @@ void CPlayerInfo2D::Update(double dt)
 		}
 
 		// If the user presses SPACEBAR, then make him jump
-		if ((KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_X) || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_Y) || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_LEFT_SHOULDER))
+		if ((KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_Y) || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_LEFT_SHOULDER))
 			&& !m_bJumped && !isOnAir() && !isRolling() && !isAttacking())
 		{
 			m_bJumped = true;
