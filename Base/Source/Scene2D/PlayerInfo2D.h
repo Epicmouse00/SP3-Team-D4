@@ -297,7 +297,7 @@ private:
 		SC_PLAY,
 		SC_PAUSE,
 		SC_SKILL_TREE,
-		SC_SHOP,
+		SC_GAMEOVER,
 		SC_TOTAL
 	};
 	int screenState;

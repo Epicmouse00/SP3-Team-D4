@@ -349,7 +349,7 @@ bool UserInterface::Update(double dt)
 			}
 		}
 		skillSelectedFrame->SetPosition(skillUnlockedFrames[selectionIndex]->GetPosition());
-		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN) || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_A))
+		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN) || KeyboardController::GetInstance()->IsKeyPressed(VK_SPACE) || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_A))
 		{
 			if (thePlayerInfo->isUnlockable(selectionIndex) && thePlayerInfo->MinusLevel())
 			{
@@ -368,9 +368,10 @@ bool UserInterface::Update(double dt)
 		return true;
 		break;
 	}
-	case SC_SHOP:
+	case SC_GAMEOVER:
 	{
-		if (KeyboardController::GetInstance()->IsKeyPressed(VK_SPACE)
+		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN)
+			|| KeyboardController::GetInstance()->IsKeyPressed(VK_SPACE)
 			|| GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_A))
 		{
 			screen = SC_PLAY;
@@ -418,7 +419,7 @@ bool UserInterface::Update(double dt)
 		{
 			if (dieTimer > 1.f)
 			{
-				screen = SC_SHOP;
+				screen = SC_GAMEOVER;
 				ChangeScreen(screen);
 				return false;
 			}
@@ -495,14 +496,14 @@ void UserInterface::ChangeScreen(SCREEN_TYPE screenType)
 		
 		thePlayerInfo->setScreenState(SC_SKILL_TREE);
 		break;
-	case SC_SHOP:
+	case SC_GAMEOVER:
 		buttonObj[2]->SetText("Game Over?");
 
 		buttonObj[1]->SetText("");
 
 		buttonObj[0]->SetText("");
 
-		thePlayerInfo->setScreenState(SC_SHOP);
+		thePlayerInfo->setScreenState(SC_GAMEOVER);
 		break;
 	}
 }
@@ -524,7 +525,7 @@ bool UserInterface::GetScreenStatus()
 	case SC_SKILL_TREE:
 		return false;
 		break;
-	case SC_SHOP:
+	case SC_GAMEOVER:
 		return true;// Note : change this to false, and add a case SC_GAME_OVER
 		break;
 	}
@@ -585,7 +586,7 @@ void UserInterface::Render()// this is at the back since it needs to be on top? 
 		}
 		skillSelectedFrame->RenderUI();
 		break;
-	case SC_SHOP:
+	case SC_GAMEOVER:
 		buttonObj[0]->RenderUI();
 		buttonObj[1]->RenderUI();
 		buttonObj[2]->RenderUI();
