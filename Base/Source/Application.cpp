@@ -71,6 +71,7 @@ void Application::Init()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3); //Request a specific OpenGL version
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //We don't want the old OpenGL 
+	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
 	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
 	glfwWindowHint(GLFW_RED_BITS, mode->redBits);
@@ -78,10 +79,11 @@ void Application::Init()
 	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
 	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
+	//glfwWindowHint(GLFW_DECORATED, GL_FALSE);
+
 	//Create a window and create its OpenGL context
 	m_window = glfwCreateWindow(mode->width, mode->height, "Lonin", NULL, NULL);
 
-	glfwWindowHint(GLFW_DECORATED, false);
 
 	//If the window couldn't be created
 	if (!m_window)
@@ -91,7 +93,7 @@ void Application::Init()
 		exit(EXIT_FAILURE);
 	}
 	// Set windows position
-	glfwSetWindowPos(m_window, 0, 30);
+	glfwSetWindowPos(m_window, 0, 0);
 
 	//This function makes the context of the specified window current on the calling thread. 
 	glfwMakeContextCurrent(m_window);
