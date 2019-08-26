@@ -1229,12 +1229,16 @@ void CScene2D::LoadMeshes(void)
 		MeshBuilder::GetInstance()->GetMesh("XP_Bar")->textureID = LoadTGA("Image//Sprites//XP_Bar.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("XP_Block", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("XP_Block")->textureID = LoadTGA("Image//Sprites//XP_Block.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("XP_Block2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("XP_Block2")->textureID = LoadTGA("Image//Sprites//XP_Block2.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Level_Up_Screen", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Level_Up_Screen")->textureID = LoadTGA("Image//Level_Up_Screen.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Skill_Selected_Frame", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Skill_Selected_Frame")->textureID = LoadTGA("Image//Sprites//Skill_Selected_Frame.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Skill_Unlocked_Frame", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Skill_Unlocked_Frame")->textureID = LoadTGA("Image//Sprites//Skill_Unlocked_Frame.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Life_Block", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Life_Block")->textureID = LoadTGA("Image//Sprites//Life_Block.tga");
 
 		MeshBuilder::GetInstance()->GenerateQuad("Heart_1", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Heart_1")->textureID = LoadTGA("Image//Sprites//Heart_1.tga");

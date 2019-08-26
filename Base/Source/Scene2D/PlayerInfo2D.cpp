@@ -366,7 +366,7 @@ void CPlayerInfo2D::AddLifesteal(int lifesteal)
 		LifestealLifeUp();
 	}
 	else
-		lifesteal = 0;
+		this->lifesteal = 0;
 }
 
 void CPlayerInfo2D::LifestealLifeUp(void)
@@ -1053,8 +1053,11 @@ void CPlayerInfo2D::Heal(bool sound, int life)
 		hp = maxhp;
 	else
 		hp += life;
+
 	if (sound)
 		CSoundEngine::GetInstance()->PlayASound("heal");
+
+	lifesteal = 0;
 }
 
 void CPlayerInfo2D::Respawn(void)

@@ -71,8 +71,20 @@ UserInterface::UserInterface()
 			Vector3(static_cast<float>(thePlayerInfo->GetXP() / 2 + 150), 208.f, 0.0f),
 			Vector3(static_cast<float>(thePlayerInfo->GetXP()), 14.f, 0.0f));
 
+		lifeBar = Create::Sprite2DObject("XP_Bar",
+			Vector3(static_cast<float>(thePlayerInfo->GetXP() / 2 + 270), 208.f, 0.0f),
+			Vector3(static_cast<float>(thePlayerInfo->GetXP()), 14.f, 0.0f));
+
 		xpBlock = Create::Sprite2DObject("XP_Block",
 			Vector3(180.f, 208.f, 0.0f),
+			Vector3(64.f, 16.f, 0.0f));
+
+		xpBlock2 = Create::Sprite2DObject("XP_Block2",
+			Vector3(180.f, 208.f, 0.0f),
+			Vector3(64.f, 16.f, 0.0f));
+
+		lifeBlock = Create::Sprite2DObject("Life_Block",
+			Vector3(300.f, 208.f, 0.0f),
 			Vector3(64.f, 16.f, 0.0f));
 
 		levelUpScreen = Create::Sprite2DObject("Level_Up_Screen",
@@ -145,6 +157,12 @@ UserInterface::~UserInterface()
 	staminaBattery = NULL;
 	delete xpBar;
 	xpBar = NULL;
+	delete xpBlock;
+	xpBlock = NULL;
+	delete lifeBar;
+	lifeBar = NULL;
+	delete lifeBlock;
+	lifeBlock = NULL;
 	delete levelUpScreen;
 	levelUpScreen = NULL;
 	for (int i = 0; i < 13; ++i)
@@ -382,6 +400,9 @@ bool UserInterface::Update(double dt)
 		xpBar->SetScale(Vector3(static_cast<float>((thePlayerInfo->GetXP()) * 6), xpBar->GetScale().y));
 		xpBar->SetPosition(Vector3(xpBar->GetScale().x / 2 + 150, xpBar->GetPosition().y));
 
+		lifeBar->SetScale(Vector3(static_cast<float>((thePlayerInfo->GetLifesteal()) * 6), lifeBar->GetScale().y));
+		lifeBar->SetPosition(Vector3(lifeBar->GetScale().x / 2 + 270, lifeBar->GetPosition().y));
+
 		std::ostringstream ss;
 		ss.precision(5);
 		ss << "CP: " << thePlayerInfo->checkPosition_X << ", " << thePlayerInfo->checkPosition_Y << endl
@@ -532,7 +553,15 @@ void UserInterface::Render()// this is at the back since it needs to be on top? 
 		staminaBar[barStatus]->RenderUI();
 		staminaBattery->RenderUI();
 		xpBar->RenderUI();
-		xpBlock->RenderUI();
+		if (thePlayerInfo->GetLevel())
+			xpBlock2->RenderUI();
+		else
+			xpBlock->RenderUI();
+		if (thePlayerInfo->getSkill(CPlayerInfo2D::SK_LIFESTEAL))
+		{
+			lifeBar->RenderUI();
+			lifeBlock->RenderUI();
+		}
 		textObj[0]->RenderUI();
 		textObj[1]->RenderUI();
 		return;

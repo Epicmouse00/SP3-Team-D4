@@ -33,9 +33,12 @@ private:
 	UIButton* buttonObj[3];
 	SpriteEntity* xpBar;
 	SpriteEntity* xpBlock;
+	SpriteEntity* xpBlock2;
 	SpriteEntity** staminaBar;
 	int barStatus;
 	SpriteEntity* staminaBattery;
+	SpriteEntity* lifeBlock;
+	SpriteEntity* lifeBar;
 	SpriteEntity* UI_Bar;
 	TextEntity* textObj[2];
 	SpriteEntity* levelUpScreen;
