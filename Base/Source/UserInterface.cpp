@@ -333,7 +333,10 @@ bool UserInterface::Update(double dt)
 		skillSelectedFrame->SetPosition(skillUnlockedFrames[selectionIndex]->GetPosition());
 		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN) || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_A))
 		{
-			thePlayerInfo->setSkill(selectionIndex, true);
+			if (thePlayerInfo->isUnlockable(selectionIndex) && thePlayerInfo->MinusLevel())
+			{
+				thePlayerInfo->setSkill(selectionIndex, true);
+			}
 		}
 
 		if (KeyboardController::GetInstance()->IsKeyPressed('E') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_X))

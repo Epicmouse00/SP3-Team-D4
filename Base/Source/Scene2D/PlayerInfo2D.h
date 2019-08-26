@@ -107,6 +107,8 @@ public:
 	void LifestealLifeUp(void);
 	// Get Level of player
 	double GetLevel(void) const;
+	bool MinusLevel(void);
+	bool isUnlockable(int selectionIndex) const;
 	// Get Tile Offset for x-axis
 	int GetTileOffset_x(void) const;
 

@@ -383,6 +383,33 @@ double CPlayerInfo2D::GetLevel(void) const
 	return level;
 }
 
+bool CPlayerInfo2D::MinusLevel(void)
+{
+	if (level > 0)
+	{
+		--level;
+		return true;
+	}
+	else
+		return false;
+}
+
+bool CPlayerInfo2D::isUnlockable(int selectionIndex) const
+{
+	if (skill[selectionIndex]) // if unlocked
+		return false;
+	else if (selectionIndex == SK_DASH_ATTACK || selectionIndex == SK_FAST_ROLL || selectionIndex == SK_HEART2)
+	{
+		if (skill[SK_DOUBLE_JUMP])
+			return true;
+	}
+	else if (skill[selectionIndex - 1])
+		return true;
+	else if (selectionIndex == SK_DOUBLE_JUMP)
+		return true;
+	return false;
+}
+
 // Set Tile Offset for x-axis
 int CPlayerInfo2D::GetTileOffset_x(void) const
 {
