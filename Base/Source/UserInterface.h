@@ -42,6 +42,7 @@ private:
 	SpriteEntity** skillUnlockedFrames;
 	SpriteEntity* skillSelectedFrame;
 	int selectionIndex;
+	double dieTimer;
 
 	CPlayerInfo2D* thePlayerInfo;
 	Hearts* theHeartInfo;

@@ -132,8 +132,12 @@ public:
 	void MoveLeftRight(const bool mode, const float timeDiff);
 
 	void Attack(const bool mode, const float timeDiff);
-	void Die();
+	void Die(void);
 	void Heal(bool sound = true, int life = 3);
+	void Respawn(void);
+	bool getRespawn(void);
+
+	void SetSpawn();
 
 	bool isCharged(void) const;
 
@@ -218,8 +222,11 @@ private:
 	Vector3 defaultPosition, defaultTarget, defaultUp;
 	Vector3 target, up;
 	Vector3 maxBoundary, minBoundary;
+	Vector3 respawnPos;
 	int tileSize_Width, tileSize_Height;
 	int hp, maxhp;
+
+	bool respawn;
 
 	double m_dSpeed, m_dMoveSpeed, m_dRollSpeed;
 	double m_dAcceleration;

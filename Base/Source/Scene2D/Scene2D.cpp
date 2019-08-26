@@ -275,6 +275,7 @@ void CScene2D::Init()
 	thePlayerInfo = CPlayerInfo2D::GetInstance();
 	thePlayerInfo->Init();
 	thePlayerInfo->SetPos(Vector3(64.0f + kiHalfTileWidth, 80.f + kiHalfTileHeight));
+	thePlayerInfo->SetSpawn();
 	//thePlayerInfo->SetBoundary(Vector3(210.f, 230.0f, 0.0f), Vector3(10.0f, 10.0f, 0.0f));
 	thePlayerInfo->SetBoundary(Vector3(static_cast<float>(m_cMap->getScreenWidth()) / 2, static_cast<float>(m_cMap->getScreenHeight()), 0.0f)
 		, Vector3(static_cast<float>(m_cMap->getScreenWidth()) / 2, 0, 0.0f));
@@ -555,9 +556,13 @@ void CScene2D::Init()
 	//theEnemy = new CEnemy*[m_iNumEnemy];
 	//theAxeEnemy = new CAxeEnemy*[m_iNumAxeEnemy];
 
-	temporop = Create::Projectile("Corrupt_temp", Vector3(static_cast<float>(-m_cMap->getScreenWidth()) / 2, static_cast<float>(m_cMap->getScreenHeight()) / 2, 0)
-		, Vector3(static_cast<float>(m_cMap->getScreenWidth()), static_cast<float>(m_cMap->getScreenHeight()), 0), Vector3(1, 0, 0)
-		, 1.f, 30.f, EntityBase::ENTITY_TYPE::E_CORRUPTION);
+	temporop = Create::Projectile("Corrupt_temp",
+		Vector3(),
+		Vector3(static_cast<float>(m_cMap->getScreenWidth()),
+		static_cast<float>(m_cMap->getScreenHeight())),
+		Vector3(1, 0, 0),
+		1.f, 30.f, EntityBase::ENTITY_TYPE::E_CORRUPTION);
+	temporopPush();
 
 	Scene2D_Enemy = new SpriteEntity*[CAnimationCrystal::C_TOTAL]; // Enemy stuff
 	Scene2D_Enemy[0] = Create::Sprite2DObject("Crystal_Attack_1",
@@ -619,11 +624,11 @@ void CScene2D::Update(double dt)
 {
 	if (ui->Update(dt))
 	{
+		if (!ui->GetScreenStatus() || thePlayerInfo->getRespawn())// Note : add like a 60 sec countdown float or something? and when (that countdown reaches 0 / exit terminal), change the tile (3) int the m_cmap to something else...
+			temporopPush();
+
 		// Update our entities
 		EntityManager::GetInstance()->Update(dt);
-
-		if(!ui->GetScreenStatus())// Note : add like a 60 sec countdown float or something? and when (that countdown reaches 0 / exit terminal), change the tile (3) int the m_cmap to something else...
-			temporop->SetPosition(Vector3(static_cast<float>(thePlayerInfo->GetMapOffset_x() - m_cMap->getScreenWidth() / 2), static_cast<float>(m_cMap->getScreenHeight()) / 2, 0));
 		
 
 		// THIS WHOLE CHUNK TILL <THERE> CAN REMOVE INTO ENTITIES LOGIC! Or maybe into a scene function to keep the update clean
@@ -664,7 +669,7 @@ void CScene2D::Update(double dt)
 		theSlashInfo->Update(dt);
 		theButtonInfo->Update(dt);
 		// Update the enemies
-		for (int i = 0; i < theEnemy.size(); ++i)
+		for (size_t i = 0; i < theEnemy.size(); ++i)
 		{
 			if (theEnemy[i]->IsDead())
 			{
@@ -679,7 +684,7 @@ void CScene2D::Update(double dt)
 					0));
 			theEnemy[i]->Update();
 		}
-		for (int i = 0; i < theAxeEnemy.size(); ++i)
+		for (size_t i = 0; i < theAxeEnemy.size(); ++i)
 		{
 			if (theAxeEnemy[i]->IsDead())
 			{
@@ -760,6 +765,12 @@ void CScene2D::Exit()
 {
 	// Detach camera from other entities
 	GraphicsManager::GetInstance()->DetachCamera();
+}
+
+void CScene2D::temporopPush(void)
+{
+	//temporop->SetPosition(Vector3(static_cast<float>(thePlayerInfo->GetMapOffset_x() - m_cMap->getScreenWidth() / 2), static_cast<float>(m_cMap->getScreenHeight()) / 2, 0));
+	temporop->SetPosition(Vector3(static_cast<float>(thePlayerInfo->GetPos().x - m_cMap->getScreenWidth()), static_cast<float>(m_cMap->getScreenHeight()) / 2, 0));
 }
 
 void CScene2D::RenderTileMap()
@@ -921,7 +932,7 @@ void CScene2D::RenderPlayer()
 void CScene2D::RenderEnemy(void)
 {
 	// Render the enemies
-	for (int i = 0; i < theEnemy.size(); ++i)
+	for (size_t i = 0; i < theEnemy.size(); ++i)
 	{
 		int theEnemy_x = theEnemy[i]->GetPos_x() - thePlayerInfo->mapOffset_x;
 		int theEnemy_y = theEnemy[i]->GetPos_y();
@@ -942,7 +953,7 @@ void CScene2D::RenderEnemy(void)
 			}
 		}
 	}
-	for (int i = 0; i < theAxeEnemy.size(); ++i)
+	for (size_t i = 0; i < theAxeEnemy.size(); ++i)
 	{
 
 		int theEnemy_x = theAxeEnemy[i]->GetPos_x() - thePlayerInfo->mapOffset_x;

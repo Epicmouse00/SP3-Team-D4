@@ -14,6 +14,7 @@ UserInterface::UserInterface()
 	, theHeartInfo(NULL)
 	, barStatus(0)
 	, selectionIndex(0)
+	, dieTimer(0)
 {
 	theHeartInfo = Hearts::GetInstance();
 	theHeartInfo->Init();
@@ -339,6 +340,7 @@ bool UserInterface::Update(double dt)
 		{
 			screen = SC_PLAY;
 			ChangeScreen(screen);
+			thePlayerInfo->SetSpawn();
 			CPlayerInfo2D::GetInstance()->Heal();
 			return true;
 		}
@@ -347,20 +349,13 @@ bool UserInterface::Update(double dt)
 	}
 	case SC_SHOP:
 	{
-		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RIGHT)
-			|| KeyboardController::GetInstance()->IsKeyPressed(VK_LEFT)
-			|| GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_DPAD_LEFT)
-			|| GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_DPAD_RIGHT))
-		{
-			screen = SC_SKILL_TREE;
-			ChangeScreen(screen);
-			return true;
-		}
-		if (thePlayerInfo->GetHp()>0&&!(thePlayerInfo->GetMap()->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X] == 30 ||
-			thePlayerInfo->checkPosition_X + 1 < thePlayerInfo->GetMap()->GetNumOfTiles_Width() && thePlayerInfo->GetMap()->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X + 1] == 30))
+		if (KeyboardController::GetInstance()->IsKeyPressed(VK_SPACE)
+			|| GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_A))
 		{
 			screen = SC_PLAY;
 			ChangeScreen(screen);
+			thePlayerInfo->Respawn();
+			thePlayerInfo->Heal(false);
 			return true;
 		}
 		return true;
@@ -397,10 +392,17 @@ bool UserInterface::Update(double dt)
 
 		if (thePlayerInfo->GetHp() <= 0)
 		{
-			screen = SC_SHOP;
-			ChangeScreen(screen);
-			return false;
+			if (dieTimer > 1.f)
+			{
+				screen = SC_SHOP;
+				ChangeScreen(screen);
+				return false;
+			}
+			else
+				dieTimer += 1 * dt;
 		}
+		else
+			dieTimer = 0;
 
 		if ((KeyboardController::GetInstance()->IsKeyPressed('E') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_A))
 			&& (thePlayerInfo->GetMap()->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X]==30||
@@ -458,6 +460,7 @@ void UserInterface::ChangeScreen(SCREEN_TYPE screenType)
 		thePlayerInfo->setScreenState(SC_PAUSE);
 		break;
 	case SC_SKILL_TREE:
+		thePlayerInfo->SetAnimationStatus(CPlayerInfo2D::P_IDLE_R1);
 		buttonObj[2]->SetText("SKILL TREE");
 
 		buttonObj[1]->SetText("");

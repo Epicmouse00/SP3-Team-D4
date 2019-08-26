@@ -30,6 +30,8 @@ public:
 	virtual void Render();
 	virtual void Exit();
 
+	void temporopPush(void);
+
 private:
 	CScene2D(SceneManager* _sceneMgr); // This is used to register to SceneManager
 

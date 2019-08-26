@@ -69,6 +69,8 @@ CPlayerInfo2D::CPlayerInfo2D(void)
 	, level(0)
 	, lifesteal(0)
 	, lifestealLimit(10)
+	, respawnPos(Vector3())
+	, respawn(false)
 {
 }
 
@@ -244,7 +246,7 @@ void CPlayerInfo2D::SetMaxHp(const int hp)
 
 bool CPlayerInfo2D::TakeDamage(int damage)
 {
-	if (damageBounceTime > damageBounceTimeLimit)
+	if (damageBounceTime > damageBounceTimeLimit && !isDie())
 	{
 		hp -= damage;
 		CSoundEngine::GetInstance()->PlayASound("damaged");
@@ -553,6 +555,7 @@ void CPlayerInfo2D::UpdateFreeFall(double dt)
  ********************************************************************************/
 void CPlayerInfo2D::Update(double dt)
 {
+	respawn = false;
 	attackBounceTime += dt;
 	rollBounceTime += dt;
 	dashBounceTime += dt;
@@ -1025,6 +1028,23 @@ void CPlayerInfo2D::Heal(bool sound, int life)
 		hp += life;
 	if (sound)
 		CSoundEngine::GetInstance()->PlayASound("heal");
+}
+
+void CPlayerInfo2D::Respawn(void)
+{
+	position = respawnPos;
+	SetAnimationStatus(P_IDLE_R1);
+	respawn = true;
+}
+
+bool CPlayerInfo2D::getRespawn(void)
+{
+	return respawn;
+}
+
+void CPlayerInfo2D::SetSpawn()
+{
+	respawnPos = position;
 }
 
 bool CPlayerInfo2D::isCharged(void) const
