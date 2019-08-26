@@ -215,6 +215,7 @@ bool UserInterface::Update(double dt)
 						thePlayerInfo->InitSkill(true);
 				}
 				CPlayerInfo2D::GetInstance()->Heal(false);
+				CSoundEngine::GetInstance()->PlayBGM("bgm");
 				return true;
 				break;
 			case 1:
@@ -258,6 +259,7 @@ bool UserInterface::Update(double dt)
 			case 2:
 				screen = SC_PLAY;
 				ChangeScreen(screen);
+				CSoundEngine::GetInstance()->PlayBGM("bgm");
 				return true;
 				break;
 			case 1:
@@ -444,7 +446,6 @@ void UserInterface::ChangeScreen(SCREEN_TYPE screenType)
 		thePlayerInfo->setScreenState(SC_MAIN);
 		break;
 	case SC_PLAY:
-		CSoundEngine::GetInstance()->PlayBGM("bgm");
 		thePlayerInfo->setScreenState(SC_PLAY);
 		break;
 	case SC_PAUSE:
@@ -457,7 +458,6 @@ void UserInterface::ChangeScreen(SCREEN_TYPE screenType)
 		thePlayerInfo->setScreenState(SC_PAUSE);
 		break;
 	case SC_SKILL_TREE:
-		CSoundEngine::GetInstance()->PlayBGM("bgmmii");
 		buttonObj[2]->SetText("SKILL TREE");
 
 		buttonObj[1]->SetText("");
