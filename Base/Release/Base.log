@@ -1,28 +1,7 @@
-﻿  AnimationAxe.cpp
-  AnimationCrystal.cpp
-  AnimationHearts.cpp
-  AnimationSlash.cpp
-  PlayerInfo2D.cpp
-c:\users\user\documents\github\sp3-team-d4\base\source\scene2d\playerinfo2d.cpp(507): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-c:\users\user\documents\github\sp3-team-d4\base\source\scene2d\playerinfo2d.cpp(509): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-c:\users\user\documents\github\sp3-team-d4\base\source\scene2d\playerinfo2d.cpp(522): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-c:\users\user\documents\github\sp3-team-d4\base\source\scene2d\playerinfo2d.cpp(524): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-c:\users\user\documents\github\sp3-team-d4\base\source\scene2d\playerinfo2d.cpp(531): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-c:\users\user\documents\github\sp3-team-d4\base\source\scene2d\playerinfo2d.cpp(532): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\users\user\documents\github\sp3-team-d4\base\source\scene2d\playerinfo2d.cpp(539): warning C4244: 'argument': conversion from 'double' to 'const float', possible loss of data
-c:\users\user\documents\github\sp3-team-d4\base\source\scene2d\playerinfo2d.cpp(540): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\users\user\documents\github\sp3-team-d4\base\source\scene2d\playerinfo2d.cpp(590): warning C4305: 'argument': truncation from 'double' to 'float'
-c:\users\user\documents\github\sp3-team-d4\base\source\scene2d\playerinfo2d.cpp(611): warning C4305: 'argument': truncation from 'double' to 'float'
-  SoundEngine.cpp
-  UserInterface.cpp
-c:\users\user\documents\github\sp3-team-d4\base\source\userinterface.cpp(68): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\user\documents\github\sp3-team-d4\base\source\userinterface.cpp(69): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\user\documents\github\sp3-team-d4\base\source\userinterface.cpp(261): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-c:\users\user\documents\github\sp3-team-d4\base\source\userinterface.cpp(336): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\user\documents\github\sp3-team-d4\base\source\userinterface.cpp(337): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-c:\users\user\documents\github\sp3-team-d4\base\source\userinterface.cpp(389): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+﻿  UserInterface.cpp
   Generating code
-c:\users\user\documents\github\sp3-team-d4\base\source\userinterface.cpp(304): warning C4715: 'UserInterface::Update': not all control paths return a value
-  All 2506 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  355 of 2702 functions (13.1%) were compiled, the rest were copied from previous compilation.
+    198 functions were new in current compilation
+    151 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   Base.vcxproj -> C:\Users\User\Documents\GitHub\SP3-Team-D4\Release\Base.exe

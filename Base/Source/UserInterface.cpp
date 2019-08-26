@@ -218,7 +218,7 @@ bool UserInterface::Update(double dt)
 				return true;
 				break;
 			case 1:
-				ShellExecute(0, 0, "https://www.teepublic.com/t-shirt/5731054-rollin-like-lonin", 0, 0, SW_SHOW);
+				ShellExecute(0, 0, (LPCWSTR)("https://www.teepublic.com/t-shirt/5731054-rollin-like-lonin"), 0, 0, SW_SHOW);
 				thePlayerInfo->setExit(true);
 				break;
 			case 0:
