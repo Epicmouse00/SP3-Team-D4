@@ -622,6 +622,10 @@ void CScene2D::Update(double dt)
 		// Update our entities
 		EntityManager::GetInstance()->Update(dt);
 
+		if(!ui->GetScreenStatus())// Note : add like a 60 sec countdown float or something? and when (that countdown reaches 0 / exit terminal), change the tile (3) int the m_cmap to something else...
+			temporop->SetPosition(Vector3(static_cast<float>(thePlayerInfo->GetMapOffset_x() - m_cMap->getScreenWidth() / 2), static_cast<float>(m_cMap->getScreenHeight()) / 2, 0));
+		
+
 		// THIS WHOLE CHUNK TILL <THERE> CAN REMOVE INTO ENTITIES LOGIC! Or maybe into a scene function to keep the update clean
 		if (KeyboardController::GetInstance()->IsKeyDown('1'))
 			glEnable(GL_CULL_FACE);
