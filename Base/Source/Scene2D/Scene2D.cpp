@@ -45,6 +45,111 @@ CScene2D::CScene2D(SceneManager* _sceneMgr)
 	_sceneMgr->AddScene("Scene2D", this);
 }
 
+void CScene2D::createWorld(size_t Difficulty, size_t Repeat)
+{
+	for (size_t i = 0; i < Repeat; ++i)
+	{
+		int initialWidth = m_cMap->getNumOfTiles_MapWidth();
+		switch (Difficulty)
+		{
+		case D_EASY:
+			{
+				switch (Math::RandIntMinMax(0, 1))
+				{
+				case 0:
+					m_cMap->LoadMap("Levels//Easy1.csv");
+					break;
+				case 1:
+					m_cMap->LoadMap("Levels//Easy2.csv");
+					break;
+				default:
+					break;
+				}
+			}
+			break;
+		case D_NORMAL:
+			{
+				switch (Math::RandIntMinMax(0, 2))
+				{
+				case 0:
+					m_cMap->LoadMap("Levels//MapDesign.csv");
+					break;
+				case 1:
+					m_cMap->LoadMap("Levels//MapDesign2.csv");
+					break;
+				case 2:
+					m_cMap->LoadMap("Levels//Easy1.csv");
+					break;
+				default:
+					break;
+				}
+			}
+			break;
+		case D_HARD:
+			{
+				switch (Math::RandIntMinMax(0, 2))
+				{
+				case 0:
+					m_cMap->LoadMap("Levels//MapDesign.csv");
+					break;
+				case 1:
+					m_cMap->LoadMap("Levels//MapDesign2.csv");
+					break;
+				case 2:
+					m_cMap->LoadMap("Levels//Easy1.csv");
+					break;
+				default:
+					break;
+				}
+			}
+			break;
+		case D_EXPERT:
+			{
+				switch (Math::RandIntMinMax(0, 2))
+				{
+				case 0:
+					m_cMap->LoadMap("Levels//MapDesign.csv");
+					break;
+				case 1:
+					m_cMap->LoadMap("Levels//MapDesign2.csv");
+					break;
+				case 2:
+					m_cMap->LoadMap("Levels//Easy1.csv");
+					break;
+				default:
+					break;
+				}
+			}
+			break;
+		default:
+			break;
+		}
+		// unlimited??? (limited by max vector size?)
+		for (int width = initialWidth; width < m_cMap->getNumOfTiles_MapWidth(); ++width)
+		{
+			for (int height = 0; height < m_cMap->getNumOfTiles_MapHeight(); ++height)
+			{
+				switch (m_cMap->theScreenMap[height][width])
+				{
+				case 101:
+					m_cMap->theScreenMap[height][width] = 0;
+					theEnemy.push_back(Create::EnemyEntity(m_cMap, new CStrategy_Shoot(), false
+						, Vector3(static_cast<float>(width * m_cMap->GetTileSize_Width() + (m_cMap->GetTileSize_Width() >> 1)), static_cast<float>(232 - height * m_cMap->GetTileSize_Height()))));
+					break;
+				case 102:
+					m_cMap->theScreenMap[height][width] = 0;
+					theAxeEnemy.push_back(Create::AxeEnemyEntity(m_cMap, new CStrategy_Kill(), false
+						, Vector3(static_cast<float>(width * m_cMap->GetTileSize_Width() + (m_cMap->GetTileSize_Width() >> 1)), static_cast<float>(232 - height * m_cMap->GetTileSize_Height()))));
+					break;
+				default:
+					break;
+				}
+			}
+		}
+		
+	}
+}
+
 CScene2D::~CScene2D()
 {
 	//delete spritesheet;
@@ -219,54 +324,15 @@ void CScene2D::Init()
 	// Initialise and load the tile map
 	m_cMap = new CMap();
 	m_cMap->Init(Application::GetInstance().GetWindowHeight()-16, Application::GetInstance().GetWindowWidth(), 15, 64, 240, 1024);
-	size_t numberOfCopies = 10;
 	Math::InitRNG();
-	for (size_t i = 0; i < numberOfCopies; ++i)
-	{
-		int mapNo = Math::RandIntMinMax(0, 1);
-		{
-			int initialWidth = m_cMap->getNumOfTiles_MapWidth();
-			switch (mapNo)
-			{
-			case 0:
-				m_cMap->LoadMap("Image//MapDesign.csv"); // Less error checking than original?
-				break;
-			case 1:
-				m_cMap->LoadMap("Image//MapDesign2.csv");
-				break;
-			default:
-				break;
-			}
-			// unlimited??? (limited by max vector size?)
-			for (int width = initialWidth; width < m_cMap->getNumOfTiles_MapWidth(); ++width)
-			{
-				for (int height = 0; height < m_cMap->getNumOfTiles_MapHeight(); ++height)
-				{
-					switch (m_cMap->theScreenMap[height][width])
-					{
-					case 101:
-						m_cMap->theScreenMap[height][width] = 0;
-						theEnemy.push_back(Create::EnemyEntity(m_cMap, new CStrategy_Shoot(), false
-							, Vector3(static_cast<float>(width * m_cMap->GetTileSize_Width() + (m_cMap->GetTileSize_Width() >> 1)), static_cast<float>(232 - height * m_cMap->GetTileSize_Height()))));
-						break;
-					case 102:
-						m_cMap->theScreenMap[height][width] = 0;
-						theAxeEnemy.push_back(Create::AxeEnemyEntity(m_cMap, new CStrategy_Kill(), false
-							, Vector3(static_cast<float>(width * m_cMap->GetTileSize_Width() + (m_cMap->GetTileSize_Width() >> 1)), static_cast<float>(232 - height * m_cMap->GetTileSize_Height()))));
-						break;
-					default:
-						break;
-					}
-				}
-			}
-		}
-	}
+	createWorld(D_EASY, 10);
+	
 	// Create the Goodies
 	CreateGoodies();
 	{
 		CMap* rearMapRef = new CMap();
 		rearMapRef->Init(Application::GetInstance().GetWindowHeight(), Application::GetInstance().GetWindowWidth(), 15, 64, 240, 1024);
-		rearMapRef->LoadMap("Image//RearMapDesign.csv");
+		rearMapRef->LoadMap("Levels//RearMapDesign.csv");
 		m_cRearMap = new CMap();
 		m_cRearMap->AddRearFile(m_cMap,rearMapRef);
 		delete rearMapRef;

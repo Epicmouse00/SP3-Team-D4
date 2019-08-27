@@ -35,6 +35,15 @@ public:
 private:
 	CScene2D(SceneManager* _sceneMgr); // This is used to register to SceneManager
 
+	enum difficulty
+	{
+		D_EASY,
+		D_NORMAL,
+		D_HARD,
+		D_EXPERT
+	};
+	void createWorld(size_t Difficulty, size_t Repeat);
+
 	ShaderProgram* currProg;
 	FPSCamera camera;
 
