@@ -54,13 +54,19 @@ void CScene2D::createWorld(size_t Difficulty, size_t Repeat)
 		{
 		case D_EASY:
 			{
-				switch (Math::RandIntMinMax(0, 1))
+				switch (Math::RandIntMinMax(0, 3))
 				{
 				case 0:
 					m_cMap->LoadMap("Levels//Easy1.csv");
 					break;
 				case 1:
 					m_cMap->LoadMap("Levels//Easy2.csv");
+					break;
+				case 2:
+					m_cMap->LoadMap("Levels//Easy3.csv");
+					break;
+				case 3:
+					m_cMap->LoadMap("Levels//Easy4.csv");
 					break;
 				default:
 					break;
@@ -69,16 +75,13 @@ void CScene2D::createWorld(size_t Difficulty, size_t Repeat)
 			break;
 		case D_NORMAL:
 			{
-				switch (Math::RandIntMinMax(0, 2))
+				switch (Math::RandIntMinMax(0, 1))
 				{
 				case 0:
 					m_cMap->LoadMap("Levels//MapDesign.csv");
 					break;
 				case 1:
 					m_cMap->LoadMap("Levels//MapDesign2.csv");
-					break;
-				case 2:
-					m_cMap->LoadMap("Levels//Easy1.csv");
 					break;
 				default:
 					break;
@@ -87,16 +90,13 @@ void CScene2D::createWorld(size_t Difficulty, size_t Repeat)
 			break;
 		case D_HARD:
 			{
-				switch (Math::RandIntMinMax(0, 2))
+				switch (Math::RandIntMinMax(0, 1))
 				{
 				case 0:
 					m_cMap->LoadMap("Levels//MapDesign.csv");
 					break;
 				case 1:
 					m_cMap->LoadMap("Levels//MapDesign2.csv");
-					break;
-				case 2:
-					m_cMap->LoadMap("Levels//Easy1.csv");
 					break;
 				default:
 					break;
@@ -105,16 +105,13 @@ void CScene2D::createWorld(size_t Difficulty, size_t Repeat)
 			break;
 		case D_EXPERT:
 			{
-				switch (Math::RandIntMinMax(0, 2))
+				switch (Math::RandIntMinMax(0, 1))
 				{
 				case 0:
 					m_cMap->LoadMap("Levels//MapDesign.csv");
 					break;
 				case 1:
 					m_cMap->LoadMap("Levels//MapDesign2.csv");
-					break;
-				case 2:
-					m_cMap->LoadMap("Levels//Easy1.csv");
 					break;
 				default:
 					break;
@@ -326,6 +323,9 @@ void CScene2D::Init()
 	m_cMap->Init(Application::GetInstance().GetWindowHeight()-16, Application::GetInstance().GetWindowWidth(), 15, 64, 240, 1024);
 	Math::InitRNG();
 	createWorld(D_EASY, 10);
+	createWorld(D_NORMAL, 10);
+	createWorld(D_HARD, 10);
+	createWorld(D_EXPERT, 10);
 	
 	// Create the Goodies
 	CreateGoodies();
