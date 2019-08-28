@@ -53,6 +53,7 @@ private:
 	CProjectile* temporop;
 	int selectionIndex;
 	double dieTimer;
+	double corruptionTimer;
 
 	CPlayerInfo2D* thePlayerInfo;
 	Hearts* theHeartInfo;

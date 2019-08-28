@@ -18,6 +18,7 @@ UserInterface::UserInterface(CProjectile* temporo)
 	, textObj(NULL)
 	, selectionIndex(0)
 	, dieTimer(0)
+	, corruptionTimer(0)
 {
 	temporop = temporo;
 	theHeartInfo = Hearts::GetInstance();
@@ -307,6 +308,9 @@ bool UserInterface::Update(double dt)
 	}
 	case SC_SKILL_TREE:
 	{
+		corruptionTimer -= dt;
+		if (corruptionTimer < 0.f)
+			temporop->SetSpeed(30.f);
 		if (KeyboardController::GetInstance()->IsKeyPressed('A') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_DPAD_LEFT))
 		{
 			thePlayerInfo->SelectSound();
@@ -382,7 +386,7 @@ bool UserInterface::Update(double dt)
 				thePlayerInfo->SelectSound(2);
 		}
 
-		if (KeyboardController::GetInstance()->IsKeyPressed('E') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_X))
+		if (KeyboardController::GetInstance()->IsKeyPressed('E') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_X) || thePlayerInfo->position.x < temporop->GetPosition().x + temporop->GetScale().x / 2)
 		{
 			screen = SC_PLAY;
 			ChangeScreen(screen);
@@ -398,7 +402,8 @@ bool UserInterface::Update(double dt)
 				delete textObj;
 				textObj = NULL;
 			}
-
+			temporop->SetSpeed(30.f);
+			corruptionTimer = 0;
 			return true;
 		}
 
@@ -414,6 +419,7 @@ bool UserInterface::Update(double dt)
 			screen = SC_PLAY;
 			ChangeScreen(screen);
 			thePlayerInfo->Respawn();
+			temporop->SetPosition(Vector3(static_cast<float>(thePlayerInfo->GetPos().x - thePlayerInfo->GetMap()->getScreenWidth()), static_cast<float>(thePlayerInfo->GetMap()->getScreenHeight()) / 2, 0));
 			thePlayerInfo->Heal(false);
 			return true;
 		}
@@ -445,6 +451,9 @@ bool UserInterface::Update(double dt)
 	}
 	case SC_PLAY: // This just checks for changes in UI* stuff while in play
 	{
+		corruptionTimer -= dt;
+		if(corruptionTimer<0.f)
+			temporop->SetSpeed(30.f);
 		// Heart update
 		theHeartInfo->Update(dt);
 		barStatus = 0;
@@ -490,6 +499,7 @@ bool UserInterface::Update(double dt)
 			dieTimer = 0;
 
 		if ((KeyboardController::GetInstance()->IsKeyPressed('E') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_X))
+			&& thePlayerInfo->position.x > temporop->GetPosition().x + temporop->GetScale().x / 2
 			&& (thePlayerInfo->GetMap()->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X]==30||
 			thePlayerInfo->checkPosition_X + 1 < thePlayerInfo->GetMap()->GetNumOfTiles_Width() && thePlayerInfo->GetMap()->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X + 1] == 30))
 		{
@@ -497,6 +507,8 @@ bool UserInterface::Update(double dt)
 			screen = SC_SKILL_TREE;
 			if(temporop->GetPosition().x < static_cast<float>(thePlayerInfo->GetPos().x - thePlayerInfo->GetMap()->getScreenWidth()))
 				temporop->SetPosition(Vector3(static_cast<float>(thePlayerInfo->GetPos().x - thePlayerInfo->GetMap()->getScreenWidth()), static_cast<float>(thePlayerInfo->GetMap()->getScreenHeight()) / 2, 0));
+			corruptionTimer = 30.f;
+			temporop->SetSpeed(5.f);
 			ChangeScreen(screen);
 			return true;
 		}
