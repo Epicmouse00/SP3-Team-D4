@@ -1,0 +1,13 @@
+12
+
+Gamepad
+Left Joystick / D Pad - Move
+A - Attack
+B - Special attacks
+Y / Left Bumper - Jump
+Right Bumper - Roll
+X - Open level up menu
+Start - Pause
+
+1,2 - Toggle front face culling
+3,4 - Toggle wireframe mode

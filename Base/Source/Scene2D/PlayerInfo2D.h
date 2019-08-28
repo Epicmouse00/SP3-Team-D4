@@ -107,6 +107,8 @@ public:
 	void LifestealLifeUp(void);
 	// Get Level of player
 	double GetLevel(void) const;
+	bool MinusLevel(void);
+	bool isUnlockable(int selectionIndex) const;
 	// Get Tile Offset for x-axis
 	int GetTileOffset_x(void) const;
 
@@ -132,8 +134,12 @@ public:
 	void MoveLeftRight(const bool mode, const float timeDiff);
 
 	void Attack(const bool mode, const float timeDiff);
-	void Die();
+	void Die(void);
 	void Heal(bool sound = true, int life = 3);
+	void Respawn(void);
+	bool getRespawn(void);
+
+	void SetSpawn();
 
 	bool isCharged(void) const;
 
@@ -175,6 +181,7 @@ public:
 	void UpdateGoodies(const int tileIndex_Column, const int tileIndex_Row);
 	// Sound
 	void AttackSound(void) const;
+	void SelectSound(int type = 0) const;
 	void StepSound(void) const;
 	void DoorSound(void) const;
 	void DeflectSound(void) const;
@@ -187,6 +194,7 @@ public:
 
 	bool getSkill(int skill) const;
 	void setSkill(int skill, bool state);
+	void InitSkill(bool active = false);
 
 	enum Skills
 	{
@@ -206,14 +214,22 @@ public:
 		SK_TOTAL
 	};
 
+	bool getExit(void) const;
+	void setExit(bool b_exit);
+
 private:
+	bool b_exit;
+
 	void InitSound(void) const;
 
 	Vector3 defaultPosition, defaultTarget, defaultUp;
 	Vector3 target, up;
 	Vector3 maxBoundary, minBoundary;
+	Vector3 respawnPos;
 	int tileSize_Width, tileSize_Height;
 	int hp, maxhp;
+
+	bool respawn;
 
 	double m_dSpeed, m_dMoveSpeed, m_dRollSpeed;
 	double m_dAcceleration;
@@ -226,6 +242,9 @@ private:
 	bool m_bJumpKeyHeld;
 	bool m_bDoubleJump;
 	bool m_bDoubleJumped;
+
+	bool m_bTripleJump;
+	bool m_bTripleJumped;
 	
 	bool m_bFallDownwards;
 	double m_dFallSpeed;
@@ -279,7 +298,7 @@ private:
 		SC_PLAY,
 		SC_PAUSE,
 		SC_SKILL_TREE,
-		SC_SHOP,
+		SC_GAMEOVER,
 		SC_TOTAL
 	};
 	int screenState;
@@ -294,5 +313,4 @@ private:
 
 	// Skill Tree
 	bool skill[SK_TOTAL];
-	void InitSkill(void);
 };

@@ -3,6 +3,7 @@
 
 #include "MouseController.h"
 #include "KeyboardController.h"
+#include "GamePadXbox.h"
 #include "Mtx44.h"
 #include "../Projectile/Projectile.h"
 #include "GoodiesFactory.h"
@@ -25,10 +26,13 @@ CPlayerInfo2D::CPlayerInfo2D(void)
 	, m_bJumpKeyHeld(false)
 	, m_bDoubleJump(false)
 	, m_bDoubleJumped(false)
+	, m_bTripleJump(false)
+	, m_bTripleJumped(false)
 	, m_bFallDownwards(false)
 	, m_dFallSpeed(0.0)
 	, m_dFallAcceleration(-4.0)
 	, m_dElapsedTime(0.0)
+	, b_exit(false)
 	, hp(1)
 	, maxhp(1)
 	, mapOffset_x(0)
@@ -65,6 +69,8 @@ CPlayerInfo2D::CPlayerInfo2D(void)
 	, level(0)
 	, lifesteal(0)
 	, lifestealLimit(10)
+	, respawnPos(Vector3())
+	, respawn(false)
 {
 }
 
@@ -177,15 +183,14 @@ void CPlayerInfo2D::SetOnFreeFall(bool isOnFreeFall)
 		m_bFallDownwards = true;
 		m_dFallSpeed = 0.0;
 	}
-	if (!isRolling())
+	if (!isRolling()
+		&& !isDie()
+		&& !isPogo())
 	{
-		if (!isPogo())
-		{
-			if (isFacingRight() && !isDie())
-				SetAnimationStatus(CAnimation::P_FALL_R1);
-			else
-				SetAnimationStatus(CAnimation::P_FALL_L1);
-		}
+	if (isFacingRight())
+		SetAnimationStatus(CAnimation::P_FALL_R1);
+	else
+		SetAnimationStatus(CAnimation::P_FALL_L1);
 	}
 	UpdateAnimationIndex(1.5f);
 }
@@ -202,10 +207,13 @@ void CPlayerInfo2D::SetToJumpUpwards(bool isOnJumpUpwards)
 		else
 			m_dJumpSpeed = 6.0;
 
-		if (isFacingRight() && !isDie())
-			SetAnimationStatus(CAnimation::P_JUMP_R1);
-		else
-			SetAnimationStatus(CAnimation::P_JUMP_L1);
+		if (!isDie())
+		{
+			if (isFacingRight())
+				SetAnimationStatus(CAnimation::P_JUMP_R1);
+			else
+				SetAnimationStatus(CAnimation::P_JUMP_L1);
+		}
 		UpdateAnimationIndex(1.f);
 		CSoundEngine::GetInstance()->PlayASound("jump");
 	}
@@ -241,7 +249,7 @@ void CPlayerInfo2D::SetMaxHp(const int hp)
 
 bool CPlayerInfo2D::TakeDamage(int damage)
 {
-	if (damageBounceTime > damageBounceTimeLimit)
+	if (damageBounceTime > damageBounceTimeLimit && !isDie())
 	{
 		hp -= damage;
 		CSoundEngine::GetInstance()->PlayASound("damaged");
@@ -361,7 +369,7 @@ void CPlayerInfo2D::AddLifesteal(int lifesteal)
 		LifestealLifeUp();
 	}
 	else
-		lifesteal = 0;
+		this->lifesteal = 0;
 }
 
 void CPlayerInfo2D::LifestealLifeUp(void)
@@ -376,6 +384,33 @@ void CPlayerInfo2D::LifestealLifeUp(void)
 double CPlayerInfo2D::GetLevel(void) const
 {
 	return level;
+}
+
+bool CPlayerInfo2D::MinusLevel(void)
+{
+	if (level > 0)
+	{
+		--level;
+		return true;
+	}
+	else
+		return false;
+}
+
+bool CPlayerInfo2D::isUnlockable(int selectionIndex) const
+{
+	if (skill[selectionIndex]) // if unlocked
+		return false;
+	else if (selectionIndex == SK_DASH_ATTACK || selectionIndex == SK_FAST_ROLL || selectionIndex == SK_HEART2)
+	{
+		if (skill[SK_DOUBLE_JUMP])
+			return true;
+	}
+	else if (skill[selectionIndex - 1])
+		return true;
+	else if (selectionIndex == SK_DOUBLE_JUMP)
+		return true;
+	return false;
 }
 
 // Set Tile Offset for x-axis
@@ -404,6 +439,11 @@ void CPlayerInfo2D::UpdateJumpUpwards(double dt)
 	{
 		m_dJumpSpeed = 6.0f; // Double Jump is normal height even if skill[SK_HIGH_JUMP]
 		m_bDoubleJumped = true;
+	}
+	else if (m_bTripleJump && !m_bTripleJumped && skill[SK_TRIPLE_JUMP])
+	{
+		m_dJumpSpeed = 6.0f;
+		m_bTripleJumped = true;
 	}
 
 	// Record current position before jump
@@ -508,6 +548,8 @@ void CPlayerInfo2D::UpdateFreeFall(double dt)
 				m_bJumped = false;
 				m_bDoubleJump = false;
 				m_bDoubleJumped = false;
+				m_bTripleJump = false;
+				m_bTripleJumped = false;
 				break;
 			}
 		}
@@ -530,6 +572,8 @@ void CPlayerInfo2D::UpdateFreeFall(double dt)
 				m_bJumped = false;
 				m_bDoubleJump = false;
 				m_bDoubleJumped = false;
+				m_bTripleJump = false;
+				m_bTripleJumped = false;
 				break;
 			}
 		}
@@ -541,6 +585,7 @@ void CPlayerInfo2D::UpdateFreeFall(double dt)
  ********************************************************************************/
 void CPlayerInfo2D::Update(double dt)
 {
+	respawn = false;
 	attackBounceTime += dt;
 	rollBounceTime += dt;
 	dashBounceTime += dt;
@@ -552,7 +597,7 @@ void CPlayerInfo2D::Update(double dt)
 	//	MoveUpDown(false, 1.0f);
 	if (!isDie() && screenState != SC_SKILL_TREE)
 	{
-		if (dashPower && !KeyboardController::GetInstance()->IsKeyDown('K'))
+		if (dashPower && (KeyboardController::GetInstance()->IsKeyUp('K') && GamePadXbox::GetInstance()->IsKeyUp(GamePadXbox::GamePad_Button_B)))
 		{
 			chargeAttack = 0.f;
 			MoveLeftRight(!isFacingRight(), 3.f);
@@ -563,7 +608,7 @@ void CPlayerInfo2D::Update(double dt)
 				Attack(!isFacingRight(), 0.5f);
 			}
 		}
-		else if (isCharged() && KeyboardController::GetInstance()->IsKeyReleased('K'))
+		else if (isCharged() && (KeyboardController::GetInstance()->IsKeyReleased('K') || GamePadXbox::GetInstance()->IsKeyReleased(GamePadXbox::GamePad_Button_B)))
 		{
 			Attack(!isFacingRight(), 0.5f);
 		}
@@ -575,61 +620,62 @@ void CPlayerInfo2D::Update(double dt)
 			else
 				MoveLeftRight(!isFacingRight(), static_cast<float>(m_dMoveSpeed));
 		}
-		else if (KeyboardController::GetInstance()->IsKeyPressed('L')
+		else if ((KeyboardController::GetInstance()->IsKeyPressed('L') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_RIGHT_SHOULDER))
 			&& (rollBounceTime > rollBounceTimeLimit2 && skill[SK_ROLL_COST] || rollBounceTime > rollBounceTimeLimit)
 			&& !isAttacking()
 			&& (isOnGround() || skill[SK_AIR_ROLL]))
 		{
 			bool direction = !isFacingRight();
-			if (KeyboardController::GetInstance()->IsKeyDown('A'))
+			if (KeyboardController::GetInstance()->IsKeyDown('A') || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_DPAD_LEFT))
 				direction = true;
-			else if (KeyboardController::GetInstance()->IsKeyDown('D'))
+			else if (KeyboardController::GetInstance()->IsKeyDown('D') || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_DPAD_RIGHT))
 				direction = false;
 			if (skill[SK_FAST_ROLL])
 				MoveLeftRight(direction, static_cast<float>(m_dRollSpeed));
 			else
 				MoveLeftRight(direction, static_cast<float>(m_dMoveSpeed));
 		}
-		else if (KeyboardController::GetInstance()->IsKeyDown('A')
-			&& !KeyboardController::GetInstance()->IsKeyDown('D')
-			&& !KeyboardController::GetInstance()->IsKeyPressed('J')
+		else if ((KeyboardController::GetInstance()->IsKeyDown('A') || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_DPAD_LEFT))
+			&& (KeyboardController::GetInstance()->IsKeyUp('D') && GamePadXbox::GetInstance()->IsKeyUp(GamePadXbox::GamePad_Button_DPAD_RIGHT))
+			&& (!KeyboardController::GetInstance()->IsKeyPressed('J') && !GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_A))
 			&& !isPogo()) // Move Left
 		{
 			MoveLeftRight(true, static_cast<float>(m_dMoveSpeed));
 			StaminaRegen(0.1f, dt);
 		}
-		else if (KeyboardController::GetInstance()->IsKeyDown('D')
-			&& !KeyboardController::GetInstance()->IsKeyDown('A')
-			&& !KeyboardController::GetInstance()->IsKeyPressed('J')
+		else if ((KeyboardController::GetInstance()->IsKeyDown('D') || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_DPAD_RIGHT))
+			&& (KeyboardController::GetInstance()->IsKeyUp('A') && GamePadXbox::GetInstance()->IsKeyUp(GamePadXbox::GamePad_Button_DPAD_LEFT))
+			&& (!KeyboardController::GetInstance()->IsKeyPressed('J') && !GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_A))
 			&& !isPogo()) // Move Right
 		{
 			MoveLeftRight(false, static_cast<float>(m_dMoveSpeed));
 			StaminaRegen(0.1f, dt);
 		}
-		else if (KeyboardController::GetInstance()->IsKeyPressed('J')
-			&& KeyboardController::GetInstance()->IsKeyDown('W') || KeyboardController::GetInstance()->IsKeyPressed('J')
-			&& KeyboardController::GetInstance()->IsKeyDown('S')
-			&& !KeyboardController::GetInstance()->IsKeyDown('K')
+		else if ((KeyboardController::GetInstance()->IsKeyPressed('J') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_A))
+			&& (KeyboardController::GetInstance()->IsKeyDown('W') || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_DPAD_UP))
+			|| (KeyboardController::GetInstance()->IsKeyPressed('J') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_A))
+			&& (KeyboardController::GetInstance()->IsKeyDown('S') || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_DPAD_DOWN))
+			&& (KeyboardController::GetInstance()->IsKeyUp('K') && GamePadXbox::GetInstance()->IsKeyUp(GamePadXbox::GamePad_Button_B))
 			&& !isOnGround())
 		{
 			Attack((!isFacingRight()), 0.5f);
 		}
-		else if (KeyboardController::GetInstance()->IsKeyPressed('J')
-			&& KeyboardController::GetInstance()->IsKeyDown('A')
-			&& !KeyboardController::GetInstance()->IsKeyDown('K')
+		else if ((KeyboardController::GetInstance()->IsKeyPressed('J') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_A))
+			&& (KeyboardController::GetInstance()->IsKeyDown('A') || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_DPAD_LEFT))
+			&& (KeyboardController::GetInstance()->IsKeyUp('K') && GamePadXbox::GetInstance()->IsKeyUp(GamePadXbox::GamePad_Button_B))
 			&& !isAttacking()) // Attack Left
 		{
 			Attack(true, 0.5f);
 		}
-		else if (KeyboardController::GetInstance()->IsKeyPressed('J')
-			&& KeyboardController::GetInstance()->IsKeyDown('D')
-			&& !KeyboardController::GetInstance()->IsKeyDown('K')
+		else if ((KeyboardController::GetInstance()->IsKeyPressed('J') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_A))
+			&& (KeyboardController::GetInstance()->IsKeyDown('D') || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_DPAD_RIGHT))
+			&& (KeyboardController::GetInstance()->IsKeyUp('K') && GamePadXbox::GetInstance()->IsKeyUp(GamePadXbox::GamePad_Button_B))
 			&& !isAttacking()) // Attack Right
 		{
 			Attack(false, 0.5f);
 		}
-		else if (KeyboardController::GetInstance()->IsKeyPressed('J')
-			&& !KeyboardController::GetInstance()->IsKeyDown('K'))
+		else if ((KeyboardController::GetInstance()->IsKeyPressed('J') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_A))
+			&& (KeyboardController::GetInstance()->IsKeyUp('K') && GamePadXbox::GetInstance()->IsKeyUp(GamePadXbox::GamePad_Button_B)))
 		{
 			Attack(!isFacingRight(), 0.5f);
 		}
@@ -663,7 +709,8 @@ void CPlayerInfo2D::Update(double dt)
 			UpdateAnimationIndex(1.f);
 		}
 
-		if (KeyboardController::GetInstance()->IsKeyDown('K') && isOnGround())
+		if ((KeyboardController::GetInstance()->IsKeyDown('K') || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_B))
+			&& isOnGround())
 		{
 			if (skill[SK_CHARGE_ATTACK])
 				chargeAttack += static_cast<float>(10 * dt);
@@ -680,7 +727,8 @@ void CPlayerInfo2D::Update(double dt)
 			}
 		}
 
-		if (dashPower && KeyboardController::GetInstance()->IsKeyReleased('K'))
+		if (dashPower
+			&& (KeyboardController::GetInstance()->IsKeyReleased('K') || GamePadXbox::GetInstance()->IsKeyReleased(GamePadXbox::GamePad_Button_B)))
 			dashBounceTime = 0.f;
 
 		if (position.x + (tileSize_Width >> 1) > theMapReference->getNumOfTiles_MapWidth() * theMapReference->GetTileSize_Width())
@@ -688,27 +736,37 @@ void CPlayerInfo2D::Update(double dt)
 		if (position.x - (tileSize_Width >> 1) < 0)
 			position.x = static_cast<float>(tileSize_Width >> 1);
 
-		if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumped && isOnAir() && !m_bDoubleJump && isRolling() && !isAttacking() && skill[SK_DOUBLE_JUMP])
+		if ((KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_Y) || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_LEFT_SHOULDER))
+			&& !m_bJumped && isOnAir() && !m_bDoubleJump && isRolling() && !isAttacking() && skill[SK_DOUBLE_JUMP])
 		{
 			m_bJumped = true;
 			m_bDoubleJump = true;
 			SetToJumpUpwards(true);
 		}
 
-		if (KeyboardController::GetInstance()->IsKeyReleased(VK_SPACE))
+		if (KeyboardController::GetInstance()->IsKeyReleased(VK_SPACE) || GamePadXbox::GetInstance()->IsKeyReleased(GamePadXbox::GamePad_Button_Y) || GamePadXbox::GetInstance()->IsKeyReleased(GamePadXbox::GamePad_Button_LEFT_SHOULDER))
 		{
 			m_bJumpKeyHeld = false;
 		}
 
-		if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumpKeyHeld && !m_bDoubleJump && m_bJumped && !isRolling() && !isAttacking() && skill[SK_DOUBLE_JUMP])
+		if ((KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_Y) || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_LEFT_SHOULDER))
+			&& !m_bJumpKeyHeld && !m_bDoubleJump && m_bJumped && !isRolling() && !isAttacking() && skill[SK_DOUBLE_JUMP])
 		{
 			m_bJumpKeyHeld = true;
 			m_bDoubleJump = true;
 			SetToJumpUpwards(true);
 		}
+		else if ((KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_Y) || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_LEFT_SHOULDER))
+			&& !m_bJumpKeyHeld && !m_bTripleJump && m_bDoubleJumped && !isRolling() && !isAttacking() && skill[SK_TRIPLE_JUMP])
+		{
+			m_bJumpKeyHeld = true;
+			m_bTripleJump = true;
+			SetToJumpUpwards(true);
+		}
 
 		// If the user presses SPACEBAR, then make him jump
-		if (KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) && !m_bJumped && !isOnAir() && !isRolling() && !isAttacking())
+		if ((KeyboardController::GetInstance()->IsKeyDown(VK_SPACE) || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_Y) || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_LEFT_SHOULDER))
+			&& !m_bJumped && !isOnAir() && !isRolling() && !isAttacking())
 		{
 			m_bJumped = true;
 			m_bJumpKeyHeld = true;
@@ -722,7 +780,8 @@ void CPlayerInfo2D::Update(double dt)
 				SetOnFreeFall(true);
 			}
 		}
-		if (KeyboardController::GetInstance()->IsKeyPressed('K') && !isOnGround() && !isDie())
+		if ((KeyboardController::GetInstance()->IsKeyPressed('K') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_B))
+			&& !isOnGround() && !isDie())
 		{
 			if (isFacingRight())
 				SetAnimationStatus(CAnimation::P_POGO_R1);
@@ -788,15 +847,17 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 		(int)ceil(position.y / theMapReference->GetTileSize_Height());
 
 	// Check if the hero can move sideways
-	if (KeyboardController::GetInstance()->IsKeyPressed('L')
+	if ((KeyboardController::GetInstance()->IsKeyPressed('L') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_RIGHT_SHOULDER))
 		&& (isOnGround() || skill[SK_AIR_ROLL])
-		&& (KeyboardController::GetInstance()->IsKeyDown('A') || !isFacingRight()
-		&& !KeyboardController::GetInstance()->IsKeyDown('D')) || isRolling()
-		&& !isFacingRight())
+		&& ((KeyboardController::GetInstance()->IsKeyDown('A') || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_DPAD_LEFT)) || !isFacingRight()
+		&& (KeyboardController::GetInstance()->IsKeyUp('D') && GamePadXbox::GetInstance()->IsKeyUp(GamePadXbox::GamePad_Button_DPAD_RIGHT))) || isRolling()
+		&& !isFacingRight()
+		&& !isDie())
 	{
 		// Find the tile number which the player's left side is on
 		checkPosition_X = (int)((position.x - (tileSize_Width >> 1)) / tileSize_Width);
-		if (KeyboardController::GetInstance()->IsKeyPressed('L') && (rollBounceTime > rollBounceTimeLimit2 && skill[SK_ROLL_COST] || rollBounceTime > rollBounceTimeLimit) && !isDie())
+		if ((KeyboardController::GetInstance()->IsKeyPressed('L') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_RIGHT_SHOULDER))
+			&& (rollBounceTime > rollBounceTimeLimit2 && skill[SK_ROLL_COST] || rollBounceTime > rollBounceTimeLimit))
 		{
 			if (Roll())
 				SetAnimationStatus(CAnimation::P_ROLL_L1);
@@ -815,15 +876,17 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 			}
 		}
 	}
-	else if (KeyboardController::GetInstance()->IsKeyPressed('L')
+	else if ((KeyboardController::GetInstance()->IsKeyPressed('L') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_RIGHT_SHOULDER))
 			&& (isOnGround() || skill[SK_AIR_ROLL])
-			&& (KeyboardController::GetInstance()->IsKeyDown('D') || isFacingRight()
-			&& !KeyboardController::GetInstance()->IsKeyDown('A')) || isRolling()
-			&& isFacingRight())
+			&& ((KeyboardController::GetInstance()->IsKeyDown('D') || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_DPAD_RIGHT)) || isFacingRight()
+			&& (KeyboardController::GetInstance()->IsKeyUp('A') && GamePadXbox::GetInstance()->IsKeyUp(GamePadXbox::GamePad_Button_DPAD_LEFT))) || isRolling()
+			&& isFacingRight()
+			&& !isDie())
 	{
 		// Find the tile number which the player's right side is on
 		checkPosition_X = (int)((position.x + (tileSize_Width >> 1)) / tileSize_Width);
-		if (KeyboardController::GetInstance()->IsKeyPressed('L') && (rollBounceTime > rollBounceTimeLimit2 && skill[SK_ROLL_COST] || rollBounceTime > rollBounceTimeLimit) && !isDie())
+		if ((KeyboardController::GetInstance()->IsKeyPressed('L') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_RIGHT_SHOULDER))
+			&& (rollBounceTime > rollBounceTimeLimit2 && skill[SK_ROLL_COST] || rollBounceTime > rollBounceTimeLimit))
 		{
 			if (Roll())
 				SetAnimationStatus(CAnimation::P_ROLL_R1);
@@ -846,7 +909,8 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 
 		}
 	}
-	else if (KeyboardController::GetInstance()->IsKeyDown('A') || dashPower && !isFacingRight())
+	else if ((KeyboardController::GetInstance()->IsKeyDown('A') || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_DPAD_LEFT)) || dashPower
+		&& !isFacingRight())
 	{
 		// Find the tile number which the player's left side is on
 		checkPosition_X = (int)((position.x - (tileSize_Width >> 1)) / tileSize_Width);
@@ -867,7 +931,8 @@ void CPlayerInfo2D::UpdateSideMovements(void)
 			}
 		}
 	}
-	else if (KeyboardController::GetInstance()->IsKeyDown('D') || dashPower && isFacingRight())
+	else if ((KeyboardController::GetInstance()->IsKeyDown('D') || GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_DPAD_RIGHT)) || dashPower
+		&& isFacingRight())
 	{
 		// Find the tile number which the player's right side is on
 		checkPosition_X = (int)((position.x + (tileSize_Width >> 1)) / tileSize_Width);
@@ -928,7 +993,8 @@ void CPlayerInfo2D::Attack(const bool mode, const float timeDiff)
 {
 	if (attackBounceTime > attackBounceTimeLimit && !isDie())
 	{
-		if (!KeyboardController::GetInstance()->IsKeyDown('W') && !KeyboardController::GetInstance()->IsKeyDown('S'))
+		if ((KeyboardController::GetInstance()->IsKeyUp('W') && GamePadXbox::GetInstance()->IsKeyUp(GamePadXbox::GamePad_Button_DPAD_UP))
+			&& (KeyboardController::GetInstance()->IsKeyUp('S') && GamePadXbox::GetInstance()->IsKeyUp(GamePadXbox::GamePad_Button_DPAD_DOWN)))
 			secondAttack = true;
 		if (!isAttacking())
 		{
@@ -990,8 +1056,28 @@ void CPlayerInfo2D::Heal(bool sound, int life)
 		hp = maxhp;
 	else
 		hp += life;
+
 	if (sound)
 		CSoundEngine::GetInstance()->PlayASound("heal");
+
+	lifesteal = 0;
+}
+
+void CPlayerInfo2D::Respawn(void)
+{
+	position = respawnPos;
+	SetAnimationStatus(P_IDLE_R1);
+	respawn = true;
+}
+
+bool CPlayerInfo2D::getRespawn(void)
+{
+	return respawn;
+}
+
+void CPlayerInfo2D::SetSpawn()
+{
+	respawnPos = position;
 }
 
 bool CPlayerInfo2D::isCharged(void) const
@@ -1038,6 +1124,8 @@ bool CPlayerInfo2D::isOnAir(void)
 	m_bJumped = false;
 	m_bDoubleJump = false;
 	m_bDoubleJumped = false;
+	m_bTripleJump = false;
+	m_bTripleJumped = false;
 	return false;
 }
 
@@ -1416,6 +1504,24 @@ void CPlayerInfo2D::AttackSound(void) const
 	}
 }
 
+void CPlayerInfo2D::SelectSound(int type) const
+{
+	switch (type)
+	{
+	case 0:
+		CSoundEngine::GetInstance()->PlayASound("select");
+		break;
+	case 1:
+		CSoundEngine::GetInstance()->PlayASound("select2");
+		break;
+	case 2:
+		CSoundEngine::GetInstance()->PlayASound("select3");
+		break;
+	default:
+		break;
+	}
+}
+
 void CPlayerInfo2D::StepSound(void) const
 {
 	switch (rand() % 4)
@@ -1496,6 +1602,18 @@ bool CPlayerInfo2D::getSkill(int skill) const
 void CPlayerInfo2D::setSkill(int skill, bool state)
 {
 	this->skill[skill] = state;
+	if (state)
+		CSoundEngine::GetInstance()->PlayASound("unlocked");
+}
+
+bool CPlayerInfo2D::getExit(void) const
+{
+	return b_exit;
+}
+
+void CPlayerInfo2D::setExit(bool b_exit)
+{
+	this->b_exit = b_exit;
 }
 
 void CPlayerInfo2D::InitSound(void) const
@@ -1504,7 +1622,6 @@ void CPlayerInfo2D::InitSound(void) const
 	CSoundEngine::GetInstance()->AddSound("bgm", "Sound//bgm.mp3");
 	CSoundEngine::GetInstance()->AddSound("bgmwalk", "Sound//bgmwalk.mp3");
 	CSoundEngine::GetInstance()->AddSound("bgmrroll", "Sound//rroll.mp3");
-	CSoundEngine::GetInstance()->AddSound("bgmmii", "Sound//bgmmii.mp3");
 	CSoundEngine::GetInstance()->AddSound("jump", "Sound//jump.wav");
 	CSoundEngine::GetInstance()->AddSound("step1", "Sound//step1.wav");
 	CSoundEngine::GetInstance()->AddSound("step2", "Sound//step2.wav");
@@ -1527,6 +1644,11 @@ void CPlayerInfo2D::InitSound(void) const
 	CSoundEngine::GetInstance()->AddSound("killaxe", "Sound//killaxe.wav");
 	CSoundEngine::GetInstance()->AddSound("damaged", "Sound//damaged.wav");
 	CSoundEngine::GetInstance()->AddSound("heal", "Sound//heal.wav");
+	CSoundEngine::GetInstance()->AddSound("unlocked", "Sound//unlocked.wav");
+	CSoundEngine::GetInstance()->AddSound("select", "Sound//select.wav");
+	CSoundEngine::GetInstance()->AddSound("select2", "Sound//select2.wav");
+	CSoundEngine::GetInstance()->AddSound("select3", "Sound//select3.wav");
+	CSoundEngine::GetInstance()->AddSound("levelup", "Sound//levelup.wav");
 }
 
 bool CPlayerInfo2D::Roll()
@@ -1564,11 +1686,10 @@ void CPlayerInfo2D::StaminaRegen(float regen, double dt)
 		stamina = 1.f;
 }
 
-void CPlayerInfo2D::InitSkill(void)
+void CPlayerInfo2D::InitSkill(bool active)
 {
 	for (int i = 0; i < SK_TOTAL; ++i)
 	{
-		skill[i] = true;
+		skill[i] = active;
 	}
-	// triple jump
 }

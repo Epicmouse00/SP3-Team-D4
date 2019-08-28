@@ -36,8 +36,6 @@ CScene2D::CScene2D()
 	, theButtonInfo(NULL)
 	, theEnemy(NULL)
 	, theAxeEnemy(NULL)
-	, m_iNumEnemy(0)
-	, m_iNumAxeEnemy(0)
 	, doorIsOpen(false)
 {
 }
@@ -45,6 +43,69 @@ CScene2D::CScene2D()
 CScene2D::CScene2D(SceneManager* _sceneMgr)
 {
 	_sceneMgr->AddScene("Scene2D", this);
+}
+
+void CScene2D::createWorld(size_t Difficulty, size_t Repeat)
+{
+	for (size_t i = 0; i < Repeat; ++i)
+	{
+		int initialWidth = m_cMap->getNumOfTiles_MapWidth();
+		std::ostringstream ss;
+		switch (Difficulty)
+		{
+		case 100: // 100 is for testing
+			{
+				ss << "Levels//Test.csv";
+			}
+			break;
+		case D_EASY:
+			{
+				ss << "Levels//Easy" << Math::RandIntMinMax(1, 3) << ".csv";
+			}
+			break;
+		case D_NORMAL:
+			{
+				ss << "Levels//Normal" << Math::RandIntMinMax(1, 5) << ".csv";
+			}
+			break;
+		case D_HARD:
+			{
+				ss << "Levels//Hard" << Math::RandIntMinMax(1, 1) << ".csv";
+			}
+			break;
+		case D_EXPERT:
+			{
+				ss << "Levels//MapDesign" << Math::RandIntMinMax(1, 2) << ".csv";
+			}
+			break;
+		default:
+			break;
+		}
+		m_cMap->LoadMap(ss.str());
+		// unlimited??? (limited by max vector size?)
+		for (int width = initialWidth; width < m_cMap->getNumOfTiles_MapWidth(); ++width)
+		{
+			for (int height = 0; height < m_cMap->getNumOfTiles_MapHeight(); ++height)
+			{
+				switch (m_cMap->theScreenMap[height][width])
+				{
+				case 101:
+					m_cMap->theScreenMap[height][width] = 0;
+					theEnemy.push_back(Create::EnemyEntity(m_cMap, new CStrategy_Shoot(), false
+						, Vector3(static_cast<float>(width * m_cMap->GetTileSize_Width() + (m_cMap->GetTileSize_Width() >> 1)), static_cast<float>(232 - height * m_cMap->GetTileSize_Height()))));
+					break;
+				case 102:
+					m_cMap->theScreenMap[height][width] = 0;
+					theAxeEnemy.push_back(Create::AxeEnemyEntity(m_cMap, new CStrategy_Kill(), false
+						, Vector3(static_cast<float>(width * m_cMap->GetTileSize_Width() + (m_cMap->GetTileSize_Width() >> 1)), static_cast<float>(232 - height * m_cMap->GetTileSize_Height()))));
+					break;
+				default:
+					break;
+				}
+			}
+		}
+		
+	}
 }
 
 CScene2D::~CScene2D()
@@ -99,7 +160,7 @@ CScene2D::~CScene2D()
 	delete theButtonInfo;
 	theButtonInfo = NULL;
 
-	for (int i = 0; i < theEnemy[0]->GetFrameTotal(); ++i)
+	for (int i = 0; i < CAnimationCrystal::C_TOTAL; ++i)
 	{
 		delete Scene2D_Enemy[i];
 		Scene2D_Enemy[i] = NULL;
@@ -107,12 +168,13 @@ CScene2D::~CScene2D()
 	delete Scene2D_Enemy;
 	Scene2D_Enemy = NULL;
 
-
-	delete theEnemy;
-	theEnemy = NULL;
-
-	delete theAxeEnemy;
-	theAxeEnemy = NULL;
+	for (int i = 0; i < CAnimationAxe::A_TOTAL; ++i)
+	{
+		delete Scene2D_AxeEnemy[i];
+		Scene2D_AxeEnemy[i] = NULL;
+	}
+	delete Scene2D_AxeEnemy;
+	Scene2D_AxeEnemy = NULL;
 
 	for (int i = 0; i < thePlayerInfo->GetFrameTotal(); ++i)
 	{
@@ -220,26 +282,28 @@ void CScene2D::Init()
 	// Initialise and load the tile map
 	m_cMap = new CMap();
 	m_cMap->Init(Application::GetInstance().GetWindowHeight()-16, Application::GetInstance().GetWindowWidth(), 15, 64, 240, 1024);
-	m_cMap->LoadMap("Image//MapDesign.csv");
-	{
-		Math::InitRNG();
-		int mapNo = Math::RandIntMinMax(0, 1);
-		if (mapNo == 0)
-			m_cMap->AddFile("Image//MapDesign2.csv"); // why are we so laggy??
-		else
-			m_cMap->AddFile("Image//MapDesign.csv");
-	}
+	Math::InitRNG();
+	createWorld();
+	createWorld(D_EASY, 5);
+	createWorld(D_NORMAL, 5);
+	createWorld(D_HARD, 10);
+	createWorld(D_EXPERT, 10);
+	
 	// Create the Goodies
 	CreateGoodies();
-
-	m_cRearMap = new CMap();
-	m_cRearMap->Init(Application::GetInstance().GetWindowHeight(), Application::GetInstance().GetWindowWidth(), 15, 64, 240, 1024);
-	m_cRearMap->LoadMap("Image//RearMapDesign.csv");
-
+	{
+		CMap* rearMapRef = new CMap();
+		rearMapRef->Init(Application::GetInstance().GetWindowHeight(), Application::GetInstance().GetWindowWidth(), 15, 64, 240, 1024);
+		rearMapRef->LoadMap("Levels//RearMapDesign.csv");
+		m_cRearMap = new CMap();
+		m_cRearMap->AddRearFile(m_cMap,rearMapRef);
+		delete rearMapRef;
+	}
 	// Create the playerinfo instance, which manages all information about the player
 	thePlayerInfo = CPlayerInfo2D::GetInstance();
 	thePlayerInfo->Init();
 	thePlayerInfo->SetPos(Vector3(64.0f + kiHalfTileWidth, 80.f + kiHalfTileHeight));
+	thePlayerInfo->SetSpawn();
 	//thePlayerInfo->SetBoundary(Vector3(210.f, 230.0f, 0.0f), Vector3(10.0f, 10.0f, 0.0f));
 	thePlayerInfo->SetBoundary(Vector3(static_cast<float>(m_cMap->getScreenWidth()) / 2, static_cast<float>(m_cMap->getScreenHeight()), 0.0f)
 		, Vector3(static_cast<float>(m_cMap->getScreenWidth()) / 2, 0, 0.0f));
@@ -247,7 +311,14 @@ void CScene2D::Init()
 	thePlayerInfo->SetMap(m_cMap);
 	thePlayerInfo->SetRearMap(m_cRearMap);
 
-	ui = new UserInterface;
+	Scene2D_corruption = Create::Projectile("Corrupt_temp",
+		Vector3(static_cast<float>(thePlayerInfo->GetPos().x - m_cMap->getScreenWidth()), static_cast<float>(m_cMap->getScreenHeight()) / 2, 0),
+		Vector3(static_cast<float>(m_cMap->getScreenWidth()),
+			static_cast<float>(m_cMap->getScreenHeight())),
+		Vector3(1, 0, 0),
+		1.f, 30.f, EntityBase::ENTITY_TYPE::E_CORRUPTION);
+
+	ui = new UserInterface(Scene2D_corruption);
 	theSlashInfo = Slash::GetInstance();
 	theSlashInfo->Init();
 
@@ -313,6 +384,12 @@ void CScene2D::Init()
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
 	Scene2D_E[1] = Create::Sprite2DObject("E_Button_2",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_E[2] = Create::Sprite2DObject("X_Button_1",
+		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+		Vector3(16.0f, 16.0f, 0.0f));
+	Scene2D_E[3] = Create::Sprite2DObject("X_Button_2",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
 	
@@ -506,52 +583,7 @@ void CScene2D::Init()
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
 
-	//Scene2D_Goodies_TreasureChest = Create::Sprite2DObject("SCENE2D_TILE_TREASURECHEST",
-	//	Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-	//	Vector3(16.0f, 16.0f, 0.0f));
-
-	// Create the 3 enemies
-	m_iNumEnemy = m_cMap->getNumberOfEnemies();
-	theEnemy = new CEnemy*[m_iNumEnemy];
-	m_iNumAxeEnemy = m_cMap->getNumberOfAxeEnemies();
-	theAxeEnemy = new CAxeEnemy*[m_iNumAxeEnemy];
-
-	{
-		int i = 0, i2 = 0;
-		bool breakk = false;
-		for (int width = 0; width < m_cMap->getNumOfTiles_MapWidth(); ++width)
-		{
-			for (int height = 0; height < m_cMap->getNumOfTiles_MapHeight(); ++height)
-			{
-				if (m_cMap->theScreenMap[height][width] == 101)
-				{
-					m_cMap->theScreenMap[height][width] = 0;
-					theEnemy[i] = Create::EnemyEntity(m_cMap, new CStrategy_Shoot(), false
-						, Vector3(static_cast<float>(width * m_cMap->GetTileSize_Width() + (m_cMap->GetTileSize_Width() >> 1)), static_cast<float>(232 - height * m_cMap->GetTileSize_Height())));
-					++i;
-				}
-				if (m_cMap->theScreenMap[height][width] == 102)
-				{
-					m_cMap->theScreenMap[height][width] = 0;
-					theAxeEnemy[i2] = Create::AxeEnemyEntity(m_cMap, new CStrategy_Kill(), false
-						, Vector3(static_cast<float>(width * m_cMap->GetTileSize_Width() + (m_cMap->GetTileSize_Width() >> 1)), static_cast<float>(232 - height * m_cMap->GetTileSize_Height())));
-					++i2;
-				}
-				if (i == m_iNumEnemy && i2 == m_iNumAxeEnemy)
-				{
-					breakk = true;
-					break;
-				}
-			}
-			if (breakk)
-				break;
-		}
-	}
-	temporop = Create::Projectile("Corrupt_temp", Vector3(static_cast<float>(-m_cMap->getScreenWidth()) / 2, static_cast<float>(m_cMap->getScreenHeight()) / 2, 0)
-		, Vector3(static_cast<float>(m_cMap->getScreenWidth()), static_cast<float>(m_cMap->getScreenHeight()), 0), Vector3(1, 0, 0)
-		, 1.f, 30.f, EntityBase::ENTITY_TYPE::E_CORRUPTION);
-
-	Scene2D_Enemy = new SpriteEntity*[theEnemy[0]->GetFrameTotal()]; // Enemy stuff
+	Scene2D_Enemy = new SpriteEntity*[CAnimationCrystal::C_TOTAL]; // Enemy stuff
 	Scene2D_Enemy[0] = Create::Sprite2DObject("Crystal_Attack_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
@@ -571,7 +603,7 @@ void CScene2D::Init()
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
 
-	Scene2D_AxeEnemy = new SpriteEntity*[theAxeEnemy[0]->GetFrameTotal()];
+	Scene2D_AxeEnemy = new SpriteEntity*[CAnimationAxe::A_TOTAL];
 	Scene2D_AxeEnemy[0] = Create::Sprite2DObject("Axe_Attack_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
@@ -613,6 +645,7 @@ void CScene2D::Update(double dt)
 	{
 		// Update our entities
 		EntityManager::GetInstance()->Update(dt);
+		
 
 		// THIS WHOLE CHUNK TILL <THERE> CAN REMOVE INTO ENTITIES LOGIC! Or maybe into a scene function to keep the update clean
 		if (KeyboardController::GetInstance()->IsKeyDown('1'))
@@ -652,37 +685,35 @@ void CScene2D::Update(double dt)
 		theSlashInfo->Update(dt);
 		theButtonInfo->Update(dt);
 		// Update the enemies
-		for (int i = 0; i < m_iNumEnemy; ++i)
+		for (size_t i = 0; i < theEnemy.size(); ++i)
 		{
-			if (theEnemy[i] != nullptr) {
-				if (theEnemy[i]->IsDead())
-				{
-					delete theEnemy[i];
-					theEnemy[i] = nullptr;
-					continue;
-				}
-				if (!theEnemy[i]->IsDone())
-					theEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x,
-						thePlayerInfo->GetPos().y,
-						0));
-				theEnemy[i]->Update();
+			if (theEnemy[i]->IsDead())
+			{
+				delete theEnemy[i];
+				theEnemy[i] = nullptr;
+				theEnemy.erase(theEnemy.begin() + i);
+				continue;
 			}
+			if (!theEnemy[i]->IsDone())
+				theEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x,
+					thePlayerInfo->GetPos().y,
+					0));
+			theEnemy[i]->Update();
 		}
-		for (int i = 0; i < m_iNumAxeEnemy; ++i)
+		for (size_t i = 0; i < theAxeEnemy.size(); ++i)
 		{
-			if (theAxeEnemy[i] != nullptr) {
-				if (theAxeEnemy[i]->IsDead())
-				{
-					delete theAxeEnemy[i];
-					theAxeEnemy[i] = nullptr;
-					continue;
-				}
-				if (!theAxeEnemy[i]->IsDone())
-					theAxeEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x,
-						thePlayerInfo->GetPos().y,
-						0));
-				theAxeEnemy[i]->Update();
+			if (theAxeEnemy[i]->IsDead())
+			{
+				delete theAxeEnemy[i];
+				theAxeEnemy[i] = nullptr;
+				theAxeEnemy.erase(theAxeEnemy.begin() + i);
+				continue;
 			}
+			if (!theAxeEnemy[i]->IsDone())
+				theAxeEnemy[i]->SetDestination(Vector3(thePlayerInfo->GetPos().x,
+					thePlayerInfo->GetPos().y,
+					0));
+			theAxeEnemy[i]->Update();
 		}
 
 		if (m_cMap->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X] == 3 ||
@@ -699,8 +730,8 @@ void CScene2D::Update(double dt)
 			doorIsOpen = true;
 		}
 
-		if (temporop->GetPosition().x > static_cast<float>(thePlayerInfo->GetMapOffset_x() + m_cMap->getScreenWidth() / 2))
-			temporop->SetPosition(Vector3(static_cast<float>(thePlayerInfo->GetMapOffset_x() + m_cMap->getScreenWidth() / 2),temporop->GetPosition().y, 0.f));
+		if (Scene2D_corruption->GetPosition().x > static_cast<float>(thePlayerInfo->GetMapOffset_x() + m_cMap->getScreenWidth() / 2))
+			Scene2D_corruption->SetPosition(Vector3(static_cast<float>(thePlayerInfo->GetMapOffset_x() + m_cMap->getScreenWidth() / 2),Scene2D_corruption->GetPosition().y));
 
 		GraphicsManager::GetInstance()->UpdateLights(dt);
 	}
@@ -740,8 +771,8 @@ void CScene2D::Render()
 		RenderEnemy();
 		// Render the player
 		RenderPlayer();
-		if(!temporop->IsDone())
-			temporop->RenderUI();
+
+		Scene2D_corruption->RenderUI();
 	}
 	ui->Render();
 }
@@ -756,106 +787,85 @@ void CScene2D::RenderTileMap()
 {
 	int m = 0;
 	thePlayerInfo->UpdateMapFineOffset();
-	for (int i = 0; i < m_cMap->getNumOfTiles_MapHeight(); i++)
+	int NumOfTilesMapHeight = m_cMap->getNumOfTiles_MapHeight();
+	int NumOfTilesMapWidth = m_cMap->getNumOfTiles_MapWidth();
+	for (int i = 0; i < NumOfTilesMapHeight; ++i)
 	{
-		for (int k = 0; k < m_cMap->getNumOfTiles_MapWidth()+1; k++)
+		for (int k = 0; k < NumOfTilesMapWidth + 1; ++k)
 		{
 			m = thePlayerInfo->GetTileOffset_x() + k;
 
 			// If we have reached the right side of the Map, then do not display the extra column of tiles.
-			if (m >= m_cMap->getNumOfTiles_MapWidth())
+			if (m >= m_cMap->getNumOfTiles_MapWidth()
+				|| m > thePlayerInfo->GetTileOffset_x() + m_cMap->getScreenWidth()/m_cMap->GetTileSize_Width() + 1)
 				break;
 
+			Vector3 tempPos = Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
+									- thePlayerInfo->GetMapFineOffset_x()),
+									static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight));
+
 			if (m_cMap->theScreenMap[i][m] != 0
-				&& (m*m_cMap->GetTileSize_Width() + kiHalfTileWidth < temporop->GetPosition().x + temporop->GetScale().x / 2 - kiHalfTileWidth))
+				&& (m*m_cMap->GetTileSize_Width() + kiHalfTileWidth < Scene2D_corruption->GetPosition().x + Scene2D_corruption->GetScale().x / 2 - kiHalfTileWidth))
 			{
 				switch (rand() % 5)
 				{
 				case 0:
-					Scene2D_Error2->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-						- thePlayerInfo->GetMapFineOffset_x()),
-						static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
-						0.0f));
+					Scene2D_Error2->SetPosition(tempPos);
 					Scene2D_Error2->RenderUI();
 					break;
 				default:
-					Scene2D_Error->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-						- thePlayerInfo->GetMapFineOffset_x()),
-						static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
-						0.0f));
+					Scene2D_Error->SetPosition(tempPos);
 					Scene2D_Error->RenderUI();
 					break;
 				}
 			}
-			else if (m_cMap->theScreenMap[i][m] == 1)
+			else
 			{
-				Scene2D_TileGround->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-															- thePlayerInfo->GetMapFineOffset_x()), 
-														static_cast<float>(224 - i*m_cMap->GetTileSize_Height() + kiHalfTileHeight),
-															0.0f));
-				Scene2D_TileGround->RenderUI();
-			}
-			else if (m_cMap->theScreenMap[i][m] == 3)
-			{
-				SpriteEntity* Door = nullptr;
-				if (thePlayerInfo->checkPosition_Y == i && thePlayerInfo->checkPosition_X == m ||
-					(thePlayerInfo->checkPosition_X + 1 < m_cMap->GetNumOfTiles_Width() && thePlayerInfo->checkPosition_Y == i && thePlayerInfo->checkPosition_X + 1 == m))
-					Door = Scene2D_TileDoor2;
-				else
-					Door = Scene2D_TileDoor;
-				Door->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-					- thePlayerInfo->GetMapFineOffset_x()),
-					static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
-					0.0f));
-				Door->RenderUI();
+				switch (m_cMap->theScreenMap[i][m])
+				{
+				case 1:
+					Scene2D_TileGround->SetPosition(tempPos);
+					Scene2D_TileGround->RenderUI();
+					break;
+				case 3:
+				{
+					SpriteEntity* Door = nullptr;
+					if (thePlayerInfo->checkPosition_Y == i && thePlayerInfo->checkPosition_X == m ||
+						(thePlayerInfo->checkPosition_X + 1 < m_cMap->GetNumOfTiles_Width() && thePlayerInfo->checkPosition_Y == i && thePlayerInfo->checkPosition_X + 1 == m))
+						Door = Scene2D_TileDoor2;
+					else
+						Door = Scene2D_TileDoor;
+					Door->SetPosition(tempPos);
+					Door->RenderUI();
+					break;
 				}
-			else if (m_cMap->theScreenMap[i][m] == 10)
-			{
-				Scene2D_Goodies_TreasureChest->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-					- thePlayerInfo->GetMapFineOffset_x()),
-					static_cast<float>(224 - i*m_cMap->GetTileSize_Height() + kiHalfTileHeight),
-					0.0f));
-				Scene2D_Goodies_TreasureChest->RenderUI();
-			}
-			else if (m_cMap->theScreenMap[i][m] == 20)
-			{
-				Scene2D_SpikeL->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-					- thePlayerInfo->GetMapFineOffset_x()),
-					static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
-					0.0f));
-				Scene2D_SpikeL->RenderUI();
-			}
-			else if (m_cMap->theScreenMap[i][m] == 21)
-			{
-				Scene2D_SpikeR->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-					- thePlayerInfo->GetMapFineOffset_x()),
-					static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
-					0.0f));
-				Scene2D_SpikeR->RenderUI();
-			}
-			else if (m_cMap->theScreenMap[i][m] == 22)
-			{
-				Scene2D_SpikeU->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-					- thePlayerInfo->GetMapFineOffset_x()),
-					static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
-					0.0f));
-				Scene2D_SpikeU->RenderUI();
-			}
-			else if (m_cMap->theScreenMap[i][m] == 23)
-			{
-				Scene2D_SpikeD->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-					- thePlayerInfo->GetMapFineOffset_x()),
-					static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
-					0.0f));
-				Scene2D_SpikeD->RenderUI();
-			}
-			else if (m_cMap->theScreenMap[i][m] == 30)
-			{
-				Scene2D_LevelUp->SetPosition(Vector3(static_cast<float>(k*m_cMap->GetTileSize_Width() + kiHalfTileWidth
-					- thePlayerInfo->GetMapFineOffset_x()),
-					static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight),
-					0.0f));
-				Scene2D_LevelUp->RenderUI();
+				case 10:
+					Scene2D_Goodies_TreasureChest->SetPosition(tempPos);
+					Scene2D_Goodies_TreasureChest->RenderUI();
+					break;
+				case 20:
+					Scene2D_SpikeL->SetPosition(tempPos);
+					Scene2D_SpikeL->RenderUI();
+					break;
+				case 21:
+					Scene2D_SpikeR->SetPosition(tempPos);
+					Scene2D_SpikeR->RenderUI();
+					break;
+				case 22:
+					Scene2D_SpikeU->SetPosition(tempPos);
+					Scene2D_SpikeU->RenderUI();
+					break;
+				case 23:
+					Scene2D_SpikeD->SetPosition(tempPos);
+					Scene2D_SpikeD->RenderUI();
+					break;
+				case 30:
+					Scene2D_LevelUp->SetPosition(tempPos);
+					Scene2D_LevelUp->RenderUI();
+					break;
+				default:
+					break;
+				}
 			}
 		}
 	}
@@ -866,40 +876,39 @@ void CScene2D::RenderRearTileMap(void)
 {
 	int m = 0;
 	thePlayerInfo->UpdateRearMap();
-	for (int i = 0; i < m_cRearMap->GetNumOfTiles_Height(); ++i)
+	int NumOfTiles_Height = m_cRearMap->GetNumOfTiles_Height();
+	int NumOfTiles_Width = m_cRearMap->GetNumOfTiles_Width();
+	for (int i = 0; i < NumOfTiles_Height; ++i)
 	{
-		for (int k = 0; k < m_cRearMap->GetNumOfTiles_Width() + 1; ++k)
+		for (int k = 0; k < NumOfTiles_Width + 1; ++k)
 		{
 			m = thePlayerInfo->GetRearTileOffset_x() + k;
 
 			// If we have reached the right side of the Map, then do not display the extra column of tiles.
-			if (m >= m_cRearMap->getNumOfTiles_MapWidth())
+			if (m >= m_cRearMap->getNumOfTiles_MapWidth()
+				|| m > thePlayerInfo->GetRearTileOffset_x() + m_cRearMap->getScreenWidth() / m_cRearMap->GetTileSize_Width() + 1)
 				break;
 
-			if (m_cRearMap->theScreenMap[i][m] == 1)
-			{
-				Scene2D_TilePillar_1->SetPosition(Vector3(static_cast<float>(k*m_cRearMap->GetTileSize_Width() + kiHalfTileWidth
-					- thePlayerInfo->GetRearMapFineOffset_x()),
-					static_cast<float>(224 - i * m_cRearMap->GetTileSize_Height() + kiHalfTileHeight),
-					0.0f));
+			Vector3 tempPosition = Vector3(static_cast<float>(k*m_cRearMap->GetTileSize_Width() + kiHalfTileWidth
+				- thePlayerInfo->GetRearMapFineOffset_x()),
+				static_cast<float>(224 - i * m_cRearMap->GetTileSize_Height() + kiHalfTileHeight));
 
+			switch (m_cRearMap->theScreenMap[i][m])
+			{
+			case 1:
+				Scene2D_TilePillar_1->SetPosition(tempPosition);
 				Scene2D_TilePillar_1->RenderUI();
-			}
-			else if (m_cRearMap->theScreenMap[i][m] == 2)
-			{
-				Scene2D_TilePillar_2->SetPosition(Vector3(static_cast<float>(k*m_cRearMap->GetTileSize_Width() + kiHalfTileWidth
-					- thePlayerInfo->GetRearMapFineOffset_x()),
-					static_cast<float>(224 - i * m_cRearMap->GetTileSize_Height() + kiHalfTileHeight),
-					0.0f));
+				break;
+			case 2:
+				Scene2D_TilePillar_2->SetPosition(tempPosition);
 				Scene2D_TilePillar_2->RenderUI();
-			}
-			else if (m_cRearMap->theScreenMap[i][m] == 3)
-			{
-				Scene2D_TilePillar_3->SetPosition(Vector3(static_cast<float>(k*m_cRearMap->GetTileSize_Width() + kiHalfTileWidth
-					- thePlayerInfo->GetRearMapFineOffset_x()),
-					static_cast<float>(224 - i * m_cRearMap->GetTileSize_Height() + kiHalfTileHeight),
-					0.0f));
+				break;
+			case 3:
+				Scene2D_TilePillar_3->SetPosition(tempPosition);
 				Scene2D_TilePillar_3->RenderUI();
+				break;
+			default:
+				break;
 			}
 		}
 	}
@@ -911,17 +920,21 @@ void CScene2D::RenderPlayer()
 	//	Scene2D_Hero->RenderUI();
 
 	// Display the player
-	Scene2D_Hero_Animated[thePlayerInfo->GetFrameState()]->SetPosition(Vector3(thePlayerInfo->GetPos().x-thePlayerInfo->GetMapOffset_x(), thePlayerInfo->GetPos().y,0));
-	Scene2D_Hero_Animated[thePlayerInfo->GetFrameState()]->RenderUI();
-	if (theSlashInfo->GetFrameState() != Slash::S_TOTAL)
+	int playerFrameState = thePlayerInfo->GetFrameState();
+	int playerMapOffsetX = thePlayerInfo->GetMapOffset_x();
+	Scene2D_Hero_Animated[playerFrameState]->SetPosition(Vector3(thePlayerInfo->GetPos().x - playerMapOffsetX, thePlayerInfo->GetPos().y));
+	Scene2D_Hero_Animated[playerFrameState]->RenderUI();
+	int slashFrameState = theSlashInfo->GetFrameState();
+	if (slashFrameState != Slash::S_TOTAL)
 	{
-		Scene2D_Slash_Animated[theSlashInfo->GetFrameState()]->SetPosition(Vector3(theSlashInfo->GetPos().x - thePlayerInfo->GetMapOffset_x(), theSlashInfo->GetPos().y, theSlashInfo->GetPos().z));
-		Scene2D_Slash_Animated[theSlashInfo->GetFrameState()]->RenderUI();
+		Scene2D_Slash_Animated[slashFrameState]->SetPosition(Vector3(theSlashInfo->GetPos().x - playerMapOffsetX, theSlashInfo->GetPos().y));
+		Scene2D_Slash_Animated[slashFrameState]->RenderUI();
 	}
-	if (theButtonInfo->GetFrameState() != E_Button::B_TOTAL)
+	int buttonFrameState = theButtonInfo->GetFrameState();
+	if (buttonFrameState != E_Button::B_TOTAL)
 	{
-		Scene2D_E[theButtonInfo->GetFrameState()]->SetPosition(Vector3(theButtonInfo->GetPos().x - thePlayerInfo->GetMapOffset_x(), theButtonInfo->GetPos().y, theButtonInfo->GetPos().z));
-		Scene2D_E[theButtonInfo->GetFrameState()]->RenderUI();
+		Scene2D_E[buttonFrameState]->SetPosition(Vector3(theButtonInfo->GetPos().x - playerMapOffsetX, theButtonInfo->GetPos().y));
+		Scene2D_E[buttonFrameState]->RenderUI();
 	}
 }
 
@@ -929,49 +942,49 @@ void CScene2D::RenderPlayer()
 void CScene2D::RenderEnemy(void)
 {
 	// Render the enemies
-	for (int i = 0; i < m_iNumEnemy; ++i)
+	for (size_t i = 0; i < theEnemy.size(); ++i)
 	{
-		if (theEnemy[i] != nullptr) {
-			int theEnemy_x = theEnemy[i]->GetPos_x() - thePlayerInfo->mapOffset_x;
-			int theEnemy_y = theEnemy[i]->GetPos_y();
+		int theEnemy_x = theEnemy[i]->GetPos_x() - thePlayerInfo->mapOffset_x;
+		int theEnemy_y = theEnemy[i]->GetPos_y();
+		int enemyFrameState = theEnemy[i]->GetFrameState();
 
-			if (((theEnemy_x >= 0) && (theEnemy_x < m_cMap->GetNumOfTiles_Width()*m_cMap->GetTileSize_Width())) &&
-				((theEnemy_y >= 0) && (theEnemy_y < m_cMap->GetNumOfTiles_Height()*m_cMap->GetTileSize_Height())) &&
-				theEnemy[i]->GetFrameState() != CEnemy::C_TOTAL)
+		if (((theEnemy_x >= 0) && (theEnemy_x < m_cMap->GetNumOfTiles_Width()*m_cMap->GetTileSize_Width())) &&
+			((theEnemy_y >= 0) && (theEnemy_y < m_cMap->GetNumOfTiles_Height()*m_cMap->GetTileSize_Height())) &&
+			enemyFrameState != CEnemy::C_TOTAL)
+		{
+			Scene2D_Enemy[enemyFrameState]->SetPosition(Vector3(static_cast<float>(theEnemy_x), static_cast<float>(theEnemy_y), 0));
+			Scene2D_Enemy[enemyFrameState]->RenderUI();
+			if (theEnemy[i]->GetHp() < theEnemy[i]->GetMaxHp())
 			{
-				Scene2D_Enemy[theEnemy[i]->GetFrameState()]->SetPosition(Vector3(static_cast<float>(theEnemy_x), static_cast<float>(theEnemy_y), 0));
-				Scene2D_Enemy[theEnemy[i]->GetFrameState()]->RenderUI();
-				if (theEnemy[i]->GetHp() < theEnemy[i]->GetMaxHp())
-				{
-					float temporaryFloat = static_cast<float>(theEnemy[i]->GetHp()) / static_cast<float>(theEnemy[i]->GetMaxHp()) * m_cMap->GetTileSize_Width();
-					Scene2D_EnemyHpBar->SetPosition(Vector3(static_cast<float>(theEnemy_x - temporaryFloat / 2), static_cast<float>(theEnemy_y + m_cMap->GetTileSize_Height() / 2), 0));
-					Scene2D_EnemyHpBar->SetScale(Vector3(temporaryFloat, static_cast<float>(m_cMap->GetTileSize_Height() / 4), 0.f));
-					Scene2D_EnemyHpBar->RenderUI();
-				}
+				float temporaryFloat = static_cast<float>(theEnemy[i]->GetHp()) / static_cast<float>(theEnemy[i]->GetMaxHp()) * m_cMap->GetTileSize_Width();
+				Scene2D_EnemyHpBar->SetPosition(Vector3(static_cast<float>(theEnemy_x - temporaryFloat / 2), static_cast<float>(theEnemy_y + m_cMap->GetTileSize_Height() / 2), 0));
+				Scene2D_EnemyHpBar->SetScale(Vector3(temporaryFloat, static_cast<float>(m_cMap->GetTileSize_Height() / 4), 0.f));
+				Scene2D_EnemyHpBar->RenderUI();
 			}
 		}
 	}
-	for (int i = 0; i < m_iNumAxeEnemy; ++i)
+	for (size_t i = 0; i < theAxeEnemy.size(); ++i)
 	{
-		if (theAxeEnemy[i] != nullptr) {
-			int theEnemy_x = theAxeEnemy[i]->GetPos_x() - thePlayerInfo->mapOffset_x;
-			int theEnemy_y = theAxeEnemy[i]->GetPos_y();
 
-			if (((theEnemy_x >= 0) && (theEnemy_x < m_cMap->GetNumOfTiles_Width()*m_cMap->GetTileSize_Width())) &&
-				((theEnemy_y >= 0) && (theEnemy_y < m_cMap->GetNumOfTiles_Height()*m_cMap->GetTileSize_Height())) &&
-				theAxeEnemy[i]->GetFrameState() != CAxeEnemy::A_TOTAL)
+		int theEnemy_x = theAxeEnemy[i]->GetPos_x() - thePlayerInfo->mapOffset_x;
+		int theEnemy_y = theAxeEnemy[i]->GetPos_y();
+		int enemyFrameState = theAxeEnemy[i]->GetFrameState();
+
+		if (((theEnemy_x >= 0) && (theEnemy_x < m_cMap->GetNumOfTiles_Width()*m_cMap->GetTileSize_Width())) &&
+			((theEnemy_y >= 0) && (theEnemy_y < m_cMap->GetNumOfTiles_Height()*m_cMap->GetTileSize_Height())) &&
+			enemyFrameState != CAxeEnemy::A_TOTAL)
+		{
+			Scene2D_AxeEnemy[enemyFrameState]->SetPosition(Vector3(static_cast<float>(theEnemy_x), static_cast<float>(theEnemy_y), 0));
+			Scene2D_AxeEnemy[enemyFrameState]->RenderUI();
+			if (theAxeEnemy[i]->GetHp() < theAxeEnemy[i]->GetMaxHp())
 			{
-				Scene2D_AxeEnemy[theAxeEnemy[i]->GetFrameState()]->SetPosition(Vector3(static_cast<float>(theEnemy_x), static_cast<float>(theEnemy_y), 0));
-				Scene2D_AxeEnemy[theAxeEnemy[i]->GetFrameState()]->RenderUI();
-				if (theAxeEnemy[i]->GetHp() < theAxeEnemy[i]->GetMaxHp())
-				{
-					float temporaryFloat = static_cast<float>(theAxeEnemy[i]->GetHp()) / static_cast<float>(theAxeEnemy[i]->GetMaxHp()) * m_cMap->GetTileSize_Width();
-					Scene2D_EnemyHpBar->SetPosition(Vector3(static_cast<float>(theEnemy_x - temporaryFloat /2), static_cast<float>(theEnemy_y + m_cMap->GetTileSize_Height() / 2), 0));
-					Scene2D_EnemyHpBar->SetScale(Vector3(temporaryFloat, static_cast<float>(m_cMap->GetTileSize_Height() / 4), 0.f));
-					Scene2D_EnemyHpBar->RenderUI();
-				}
+				float temporaryFloat = static_cast<float>(theAxeEnemy[i]->GetHp()) / static_cast<float>(theAxeEnemy[i]->GetMaxHp()) * m_cMap->GetTileSize_Width();
+				Scene2D_EnemyHpBar->SetPosition(Vector3(static_cast<float>(theEnemy_x - temporaryFloat / 2), static_cast<float>(theEnemy_y + m_cMap->GetTileSize_Height() / 2), 0));
+				Scene2D_EnemyHpBar->SetScale(Vector3(temporaryFloat, static_cast<float>(m_cMap->GetTileSize_Height() / 4), 0.f));
+				Scene2D_EnemyHpBar->RenderUI();
 			}
 		}
+
 	}
 }
 
@@ -1208,7 +1221,7 @@ void CScene2D::LoadMeshes(void)
 	}
 	// UI
 	{
-		MeshBuilder::GetInstance()->GenerateQuad("UI_BOX", Color(1, 0, 1), 1.f);
+		MeshBuilder::GetInstance()->GenerateQuad("UI_BOX", Color(0.2f, 0.2f, 0.6f), 1.f);
 		MeshBuilder::GetInstance()->GenerateQuad("Corrupt_temp", Color(1, 0, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Corrupt_temp")->textureID = LoadTGA("Image//corruptionAlpha.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("UI_BOX2", Color(0, 0, 1), 1.f);
@@ -1226,12 +1239,16 @@ void CScene2D::LoadMeshes(void)
 		MeshBuilder::GetInstance()->GetMesh("XP_Bar")->textureID = LoadTGA("Image//Sprites//XP_Bar.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("XP_Block", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("XP_Block")->textureID = LoadTGA("Image//Sprites//XP_Block.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("XP_Block2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("XP_Block2")->textureID = LoadTGA("Image//Sprites//XP_Block2.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Level_Up_Screen", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Level_Up_Screen")->textureID = LoadTGA("Image//Level_Up_Screen.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Skill_Selected_Frame", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Skill_Selected_Frame")->textureID = LoadTGA("Image//Sprites//Skill_Selected_Frame.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("Skill_Unlocked_Frame", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Skill_Unlocked_Frame")->textureID = LoadTGA("Image//Sprites//Skill_Unlocked_Frame.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("Life_Block", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("Life_Block")->textureID = LoadTGA("Image//Sprites//Life_Block.tga");
 
 		MeshBuilder::GetInstance()->GenerateQuad("Heart_1", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Heart_1")->textureID = LoadTGA("Image//Sprites//Heart_1.tga");
@@ -1246,6 +1263,10 @@ void CScene2D::LoadMeshes(void)
 		MeshBuilder::GetInstance()->GetMesh("E_Button_1")->textureID = LoadTGA("Image//Sprites//E_Button_1.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("E_Button_2", Color(1, 1, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("E_Button_2")->textureID = LoadTGA("Image//Sprites//E_Button_2.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("X_Button_1", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("X_Button_1")->textureID = LoadTGA("Image//Sprites//X_Button_1.tga");
+		MeshBuilder::GetInstance()->GenerateQuad("X_Button_2", Color(1, 1, 1), 1.f);
+		MeshBuilder::GetInstance()->GetMesh("X_Button_2")->textureID = LoadTGA("Image//Sprites//X_Button_2.tga");
 	}
 	// Title Screen
 	{

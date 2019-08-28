@@ -33,6 +33,15 @@ public:
 private:
 	CScene2D(SceneManager* _sceneMgr); // This is used to register to SceneManager
 
+	enum difficulty
+	{
+		D_EASY,
+		D_NORMAL,
+		D_HARD,
+		D_EXPERT
+	};
+	void createWorld(size_t Difficulty = 100, size_t Repeat = 1);
+
 	ShaderProgram* currProg;
 	FPSCamera camera;
 
@@ -75,13 +84,12 @@ private:
 	E_Button* theButtonInfo;
 
 	// The enemies
-	CEnemy** theEnemy;
-	CAxeEnemy** theAxeEnemy;
-	int m_iNumEnemy;
-	int m_iNumAxeEnemy;
+	vector<CEnemy*> theEnemy;
+	vector<CAxeEnemy*> theAxeEnemy;
+
 	SpriteEntity** Scene2D_Enemy;
 	SpriteEntity** Scene2D_AxeEnemy;
-	CProjectile* temporop;
+	CProjectile* Scene2D_corruption;
 
 	// Render the tile map
 	void RenderTileMap(void);

@@ -1,0 +1,30 @@
+Jeremy:
+Skill tree screen
+
+Melvin:
+Scrolling (Original framework couldn't scroll properly)
+UI base
+Screen changing
+Player Collision (Out of bounds)
+Entity Collision
+Projectiles
+Enhanced enemy array, map, and rearmap systems for infinite levels
+Credits, Instruction & Skills text file reading etc.
+
+Jovan:
+Art assets
+All sprite animations
+All player movements
+Sound
+Enemy base
+UI system (Stamina bar, Hearts, XP bar, Lifesteal bar)
+Skill array (For skill tree)
+Parallax scrolling (Original framework couldn't scroll properly)
+Respawning system
+Removed lag
+Gamepad input
+Merch? :P
+Pseudo fullscreen appication
+
+Kenneth:
+Enemy AI

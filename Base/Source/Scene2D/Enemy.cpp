@@ -162,10 +162,11 @@ void CEnemy::Update(void)
 				{
 					case CStrategy::E_STRATEGY_SHOOT:
 					{
-						if (dynamic_cast<CStrategy_Shoot*>(theStrategy)->GetState() == CStrategy_Shoot::ATTACK && !isAttacking())
+						int tempstate = dynamic_cast<CStrategy_Shoot*>(theStrategy)->GetState();
+						if (tempstate == CStrategy_Shoot::ATTACK && !isAttacking())
 							SetAnimationStatus(C_ATTACK_1);
-						else if (dynamic_cast<CStrategy_Shoot*>(theStrategy)->GetState() == CStrategy_Shoot::IDLE ||
-							dynamic_cast<CStrategy_Shoot*>(theStrategy)->GetState() == CStrategy_Shoot::REPEL)
+						else if (tempstate == CStrategy_Shoot::IDLE ||
+							tempstate == CStrategy_Shoot::REPEL)
 							SetAnimationStatus(C_IDLE_1);
 						break;
 					}

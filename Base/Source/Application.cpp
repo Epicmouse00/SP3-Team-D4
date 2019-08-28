@@ -1,8 +1,10 @@
 #include "Application.h"
 #include "MouseController.h"
 #include "KeyboardController.h"
+#include "GamePadXbox.h"
 #include "SceneManager.h"
 #include "GraphicsManager.h"
+#include "Scene2D/PlayerInfo2D.h"
 
 //Include GLEW
 #include <GL/glew.h>
@@ -69,14 +71,19 @@ void Application::Init()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3); //Request a specific OpenGL version
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // To make MacOS happy; should not be needed
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //We don't want the old OpenGL 
+	glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-	int m_Width = 320 * 3;
-	int m_Height = 240 * 3;
+	const GLFWvidmode* mode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+	glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+	glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+	glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+	glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
+
+	//glfwWindowHint(GLFW_DECORATED, GL_FALSE);
 
 	//Create a window and create its OpenGL context
-	m_window = glfwCreateWindow(m_window_width*4, m_window_height*4, "NYP Framework", NULL, NULL);
+	m_window = glfwCreateWindow(mode->width, mode->height, "Lonin", NULL, NULL);
 
-	glfwWindowHint(GLFW_DECORATED, false);
 
 	//If the window couldn't be created
 	if (!m_window)
@@ -86,7 +93,7 @@ void Application::Init()
 		exit(EXIT_FAILURE);
 	}
 	// Set windows position
-	glfwSetWindowPos(m_window, 0, 30);
+	glfwSetWindowPos(m_window, 0, 0);
 
 	//This function makes the context of the specified window current on the calling thread. 
 	glfwMakeContextCurrent(m_window);
@@ -119,7 +126,9 @@ void Application::Run()
 {
 	SceneManager::GetInstance()->SetActiveScene("Scene2D");
 	m_timer.startTimer();    // Start timer to calculate how long it takes to render this frame
-	while (!glfwWindowShouldClose(m_window) && !IsKeyPressed(VK_ESCAPE))
+	while (!glfwWindowShouldClose(m_window)
+		&& (!IsKeyPressed(VK_ESCAPE) && !GamePadXbox::GetInstance()->IsKeyDown(GamePadXbox::GamePad_Button_BACK))
+		&& !CPlayerInfo2D::GetInstance()->getExit())
 	{
 		glfwPollEvents();
 		UpdateInput();
@@ -153,9 +162,17 @@ void Application::UpdateInput()
 	glfwGetCursorPos(m_window, &mouse_currX, &mouse_currY);
 	MouseController::GetInstance()->UpdateMousePosition(mouse_currX, mouse_currY);
 
-	// Update Keyboard Input
-	for (int i = 0; i < KeyboardController::MAX_KEYS; ++i)
-		KeyboardController::GetInstance()->UpdateKeyboardStatus(i, IsKeyPressed(i));
+	if (GamePadXbox::GetInstance()->is_connected())
+	{
+		// Update Controller Input
+		GamePadXbox::GetInstance()->update();
+	}
+	else
+	{
+		// Update Keyboard Input
+		for (int i = 0; i < KeyboardController::MAX_KEYS; ++i)
+			KeyboardController::GetInstance()->UpdateKeyboardStatus(i, IsKeyPressed(i));
+	}
 }
 
 void Application::PostInputUpdate()
@@ -173,6 +190,7 @@ void Application::PostInputUpdate()
 	// Call input systems to update at end of frame
 	MouseController::GetInstance()->EndFrameUpdate();
 	KeyboardController::GetInstance()->EndFrameUpdate();
+	GamePadXbox::GetInstance()->EndFrameUpdate();
 }
 
 void Application::MouseButtonCallbacks(GLFWwindow* window, int button, int action, int mods)

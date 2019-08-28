@@ -1,4 +1,5 @@
 #include "Map.h"
+#include "MyMath.h"
 
 CMap::CMap(void)
 : theScreen_Height(0)
@@ -11,8 +12,6 @@ CMap::CMap(void)
 , theMap_Width(0)
 , theNumOfTiles_MapHeight(0)
 , theNumOfTiles_MapWidth(0)
-, numberOfEnemies(0)
-, numberOfAxeEnemies(0)
 {
 	theScreenMap.clear();
 }
@@ -38,20 +37,15 @@ void CMap::Init(const int theScreen_Height, const int theScreen_Width,
 
 	// Calculate the number of tiles for map height and map width
 	theNumOfTiles_MapHeight = (int)(theMap_Height / theTileSize_Height);
-	theNumOfTiles_MapWidth = (int)(theMap_Width / theTileSize_Width);
-
+	//theNumOfTiles_MapWidth = (int)(theMap_Width / theTileSize_Width);
+	theNumOfTiles_MapWidth = 0;
 	// Resize the screen map array based on the number of tiles in the map height
 	theScreenMap.resize(theNumOfTiles_MapHeight);
-	for (int i = 0; i < theNumOfTiles_MapHeight; ++i)
-	{
-		// Resize each element inside screen map array based on the number of tiles in the map width
-		theScreenMap[i].resize(theNumOfTiles_MapWidth);
-	}
 }
 
 bool CMap::LoadMap(const string mapName)
 {
-	if (LoadFile(mapName) == true)
+	if (AddFile(mapName) == true)
 	{
 		printf("Map (%s) has been successfully loaded!\n", mapName.c_str());
 		return true;
@@ -60,56 +54,39 @@ bool CMap::LoadMap(const string mapName)
 	return false;
 }
 
-bool CMap::LoadFile(const string mapName)
+bool CMap::AddRearFile(CMap* map, CMap* ref)
 {
-	int theLineCounter = 0;
-	int theMaxNumOfColumns = 0;
+	this->theScreen_Height = map->getScreenHeight();
+	this->theScreen_Width = map->getScreenWidth();
+	this->theNumOfTiles_Height = map->GetNumOfTiles_Height();
+	this->theNumOfTiles_Width = map->GetNumOfTiles_Width() / 2;
+	this->theTileSize_Height = map->GetTileSize_Height();
+	this->theTileSize_Width = map->GetTileSize_Width();
+	this->theMap_Height = theNumOfTiles_Height * theTileSize_Height;
+	this->theMap_Width = theNumOfTiles_Width * theTileSize_Width;
+	theNumOfTiles_MapHeight = (int)(theMap_Height / theTileSize_Height);
+	theNumOfTiles_MapWidth = (int)(theMap_Width / theTileSize_Width);
 
-	ifstream file(mapName.c_str());
-	if(file.is_open())
+	theScreenMap.resize(theNumOfTiles_MapHeight);
+	for (int i = 0; i < theNumOfTiles_Height; ++i)
 	{
-		int i = 0, k = 0;
-		while(file.good())
+		theScreenMap[i].resize(theNumOfTiles_Width);
+	}
+
+	Math::InitRNG();
+	for (int theColumnCounter = 0; theColumnCounter < theNumOfTiles_Width;)
+	{
+		int chunckSize = 8;
+		int tempRand = Math::RandIntMinMax(0, (ref->GetNumOfTiles_Width()/chunckSize) - 1);
+		for (int something = 0; something < chunckSize; ++something) 
 		{
-			string aLineOfText = "";
-			getline(file, aLineOfText);
-
-			if (theLineCounter >= theNumOfTiles_MapHeight)
-				break;
-
-			// If this line is not a comment line, then process it
-			if(!(aLineOfText.find("//*") == NULL) && aLineOfText != "")
+			for (int theLineCounter = 0; theLineCounter < theNumOfTiles_MapHeight; ++theLineCounter)
 			{
-				if (theLineCounter == 0)
-				{
-					// This is the first line of the map data file
-					string token;
-					istringstream iss(aLineOfText);
-					while(getline(iss, token, ','))
-					{
-						// Count the number of columns
-						theMaxNumOfColumns = atoi(token.c_str());
-					}
-					if (theMaxNumOfColumns != theNumOfTiles_MapWidth)
-						return false;
-				}
-				else
-				{
-					int theColumnCounter = 0;
-
-					string token;
-					istringstream iss(aLineOfText);
-					while (getline(iss, token, ',') && (theColumnCounter<theNumOfTiles_MapWidth))
-					{
-						if ((theScreenMap[theLineCounter][theColumnCounter] = atoi(token.c_str())) == 101)
-							++numberOfEnemies;
-						else if (theScreenMap[theLineCounter][theColumnCounter] == 102)
-						++numberOfAxeEnemies;
-						++theColumnCounter;
-					}
-				}
+				theScreenMap[theLineCounter][theColumnCounter] = ref->theScreenMap[theLineCounter][tempRand * chunckSize + something];
 			}
-			theLineCounter++;
+			++theColumnCounter;
+			if (theColumnCounter == theNumOfTiles_Width)
+				break;
 		}
 	}
 	return true;
@@ -159,10 +136,7 @@ bool CMap::AddFile(const string mapName)
 					istringstream iss(aLineOfText);
 					while (getline(iss, token, ',') && (theColumnCounter < theNumOfTiles_MapWidth))
 					{
-						if ((theScreenMap[theLineCounter][theColumnCounter] = atoi(token.c_str())) == 101)
-							++numberOfEnemies;
-						else if (theScreenMap[theLineCounter][theColumnCounter] == 102)
-							++numberOfAxeEnemies;
+						theScreenMap[theLineCounter][theColumnCounter] = atoi(token.c_str());
 						++theColumnCounter;
 					}
 				}
@@ -214,14 +188,7 @@ int CMap::getScreenWidth(void)
 {
 	return theScreen_Width;
 }
-int CMap::getNumberOfEnemies(void)
-{
-	return numberOfEnemies;
-}
-int CMap::getNumberOfAxeEnemies(void)
-{
-	return numberOfAxeEnemies;
-}
+
 // Get the number of tiles for height of the map
 int CMap::getNumOfTiles_MapHeight(void)
 {
