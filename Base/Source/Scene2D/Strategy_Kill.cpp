@@ -33,7 +33,7 @@ void CStrategy_Kill::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition, 
 	// Decide which state to change to
 	int distanceHeroToEnemy = CalculateDistance(PlayerPosition, theEnemyPosition);
 
-	if (playerLevel >= 4)
+	if (playerLevel >= 9)
 	{
 		if (distanceHeroToEnemy < (AI_STATE_ATTACK + 32)*(AI_STATE_ATTACK + 32))
 		{
@@ -61,18 +61,18 @@ void CStrategy_Kill::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition, 
 		if (theEnemyPosition.x < 16 || theEnemyPosition.x > (theMapReference->GetNumOfTiles_Width() - 1) * theMapReference->GetTileSize_Width())
 			n = -n;
 		if (bounce < 17)
-			theEnemyPosition.x = theEnemyPosition.x + n;
+			theEnemyPosition.x = static_cast<float>(theEnemyPosition.x + n);
 		else CurrentState = IDLE;
 
 		break;
 	case ATTACK:
-		if (playerLevel >= 3 && !isOnAir && PlayerPosition.y > theEnemyPosition.y)
+		if (playerLevel >= 6 && !isOnAir && PlayerPosition.y > theEnemyPosition.y)
 		{
 			m = 6;
 		}
 		if (theEnemyPosition.x != PlayerPosition.x)
 		{
-			if (playerLevel >= 2)
+			if (playerLevel >= 3)
 			{
 				n = 1.5;
 			}
@@ -83,7 +83,7 @@ void CStrategy_Kill::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition, 
 				n = -n;
 			}
 
-			theEnemyPosition.x = theEnemyPosition.x + n;
+			theEnemyPosition.x = static_cast<float>(theEnemyPosition.x + n);
 		}
 		break;
 	default:
@@ -106,7 +106,7 @@ void CStrategy_Kill::SetDestination(const float x, const float y)
  ********************************************************************************/
 int CStrategy_Kill::GetDestination_x(void)
 {
-	return theDestination.x;
+	return static_cast<int>(theDestination.x);
 }
 
 /********************************************************************************
@@ -114,7 +114,7 @@ int CStrategy_Kill::GetDestination_x(void)
  ********************************************************************************/
 int CStrategy_Kill::GetDestination_y(void)
 {
-	return theDestination.y;
+	return static_cast<int>(theDestination.y);
 }
 
 /********************************************************************************

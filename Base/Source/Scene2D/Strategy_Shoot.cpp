@@ -26,7 +26,7 @@ void CStrategy_Shoot::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition,
 {
 	// Decide which state to change to
 	int distanceHeroToEnemy = CalculateDistance(PlayerPosition, theEnemyPosition);
-	if (playerLevel >= 3)
+	if (playerLevel >= 6)
 	{
 		if (distanceHeroToEnemy < (AI_STATE_ATTACK + 32)*(AI_STATE_ATTACK + 32))
 		{
@@ -53,15 +53,15 @@ void CStrategy_Shoot::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition,
 		++bounce;
 		if (bounce > 59)
 		{
-			if (playerLevel >= 4)
+			if (playerLevel >= 9)
 			{
 				bounce -= Math::RandIntMinMax(10, 40);
 			}
-			else if (playerLevel <= 3)
+			else if (playerLevel >= 3)
 			{
 				bounce -= Math::RandIntMinMax(20, 50);
 			}
-			else if (playerLevel <= 1)
+			else
 			{
 				bounce -= Math::RandIntMinMax(30, 60);
 			}
@@ -79,17 +79,17 @@ void CStrategy_Shoot::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition,
 				{
 					n = -n;
 				}
-				theEnemyPosition.x = theEnemyPosition.x + n;
+				theEnemyPosition.x = static_cast<float>(theEnemyPosition.x + n);
 			}
 
-			if (playerLevel >= 3)
+			if (playerLevel >= 6)
 			{
 				m = 1;
 				if (theEnemyPosition.y < PlayerPosition.y)
 				{
 					m = -m;
 				}
-				theEnemyPosition.y = theEnemyPosition.y + m;
+				theEnemyPosition.y = static_cast<float>(theEnemyPosition.y + m);
 			}
 		}
 		break;

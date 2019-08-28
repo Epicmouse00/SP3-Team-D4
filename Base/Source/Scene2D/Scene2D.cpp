@@ -75,7 +75,7 @@ void CScene2D::createWorld(size_t Difficulty, size_t Repeat)
 			break;
 		case D_EXPERT:
 			{
-				ss << "Levels//MapDesign" << Math::RandIntMinMax(1, 2) << ".csv";
+				ss << "Levels//Expert" << Math::RandIntMinMax(1, 2) << ".csv";
 			}
 			break;
 		default:
@@ -281,7 +281,7 @@ void CScene2D::Init()
 	m_cMap = new CMap();
 	m_cMap->Init(Application::GetInstance().GetWindowHeight()-16, Application::GetInstance().GetWindowWidth(), 15, 64, 240, 1024);
 	Math::InitRNG();
-	createWorld(); // For Test.csv
+	//createWorld(); // For Test.csv
 	createWorld(D_EASY, 5);
 	createWorld(D_NORMAL, 5);
 	createWorld(D_HARD, 10);

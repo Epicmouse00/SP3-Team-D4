@@ -157,7 +157,7 @@ void CAxeEnemy::Update(void)
 		{
 			if (!isDead && !isDone)
 			{
-				theStrategy->Update(theDestination, position, GetLevel());
+				theStrategy->Update(theDestination, position, CPlayerInfo2D::GetInstance()->GetLevel(true));
 				constrain();
 			}
 			if (isDone)

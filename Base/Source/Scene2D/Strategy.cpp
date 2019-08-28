@@ -20,14 +20,14 @@ void CStrategy::Init(CMap* m_cMap)
 	theMapReference = m_cMap;
 }
 
-void CStrategy::Update(Vector3& theDestination, Vector3& theEnemyPosition)
+void CStrategy::Update(Vector3& theDestination, Vector3& theEnemyPosition, double playerLevel)
 {
 	cout << "void CStrategy::Update()" << endl;
 }
 
 int CStrategy::CalculateDistance(Vector3 theDestination, Vector3 theEnemyPosition)
 {
-	return ((theDestination.x - theEnemyPosition.x)*(theDestination.x - theEnemyPosition.x) + 
+	return static_cast<int>((theDestination.x - theEnemyPosition.x)*(theDestination.x - theEnemyPosition.x) + 
 			(theDestination.y - theEnemyPosition.y)*(theDestination.y - theEnemyPosition.y));
 }
 
