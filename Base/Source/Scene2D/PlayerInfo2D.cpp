@@ -66,14 +66,14 @@ CPlayerInfo2D::CPlayerInfo2D(void)
 	, chargeTime(5.f)
 	, XP(0)
 	, level(0)
-	, levelConst(0)
+	, levelConst(1)
 	, lifesteal(0)
 	, lifestealLimit(10)
 	, respawnPos(Vector3())
 	, respawn(false)
 	, respawnXP(0)
 	, respawnLevel(0)
-	, respawnLevelConst(0)
+	, respawnLevelConst(1)
 {
 }
 
@@ -352,9 +352,9 @@ void CPlayerInfo2D::AddXP(double xp)
 
 void CPlayerInfo2D::XPLevelUp(void)
 {
-	if (XP > levelConst)
+	if (XP >= levelConst)
 	{
-		XP /= levelConst;
+		XP -= levelConst;
 		++level;
 		++levelConst;
 	}
