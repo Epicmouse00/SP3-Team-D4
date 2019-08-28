@@ -75,7 +75,7 @@ void CScene2D::createWorld(size_t Difficulty, size_t Repeat)
 			break;
 		case D_EXPERT:
 			{
-				ss << "Levels//MapDesign" << Math::RandIntMinMax(1, 2) << ".csv";
+				ss << "Levels//Expert" << Math::RandIntMinMax(1, 2) << ".csv";
 			}
 			break;
 		default:
