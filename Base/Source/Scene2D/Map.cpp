@@ -92,6 +92,25 @@ bool CMap::AddRearFile(CMap* map, CMap* ref)
 	return true;
 }
 
+void CMap::ShiftMap(int amount)
+{
+	for (int width = amount; width < theNumOfTiles_Width; ++width)
+	{
+		for (int height = 0; height < theNumOfTiles_Height; ++height)
+		{
+			theScreenMap[height][width - amount] = theScreenMap[height][width];
+		}
+	}
+	theNumOfTiles_Width -= 200;
+	theNumOfTiles_MapWidth -= 200;
+	theMap_Width = theNumOfTiles_Width * theTileSize_Width;
+
+	for (int i = 0; i < theNumOfTiles_Height; ++i)
+	{
+		theScreenMap[i].resize(theNumOfTiles_Width);
+	}
+}
+
 bool CMap::AddFile(const string mapName)
 {
 	int theLineCounter = 0;
