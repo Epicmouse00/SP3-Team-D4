@@ -283,7 +283,7 @@ void CScene2D::Init()
 	m_cMap = new CMap();
 	m_cMap->Init(Application::GetInstance().GetWindowHeight()-16, Application::GetInstance().GetWindowWidth(), 15, 64, 240, 1024);
 	Math::InitRNG();
-	//createWorld(); // For Test.csv
+	createWorld(); // For Test.csv
 	createWorld(D_EASY, 5);
 	createWorld(D_NORMAL, 5);
 	createWorld(D_HARD, 10);
