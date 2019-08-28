@@ -320,6 +320,7 @@ bool UserInterface::Update(double dt)
 					selectionIndex = 0;
 				}
 			}
+			SetChoiceText();
 		}
 		else if (KeyboardController::GetInstance()->IsKeyPressed('D') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_DPAD_RIGHT))
 		{
@@ -335,6 +336,7 @@ bool UserInterface::Update(double dt)
 					selectionIndex = 5;
 				}
 			}
+			SetChoiceText();
 		}
 		else if (KeyboardController::GetInstance()->IsKeyPressed('W') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_DPAD_UP))
 		{
@@ -350,6 +352,7 @@ bool UserInterface::Update(double dt)
 					selectionIndex = 1;
 				}
 			}
+			SetChoiceText();
 		}
 		else if (KeyboardController::GetInstance()->IsKeyPressed('S') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_DPAD_DOWN))
 		{
@@ -365,6 +368,7 @@ bool UserInterface::Update(double dt)
 					selectionIndex = 9;
 				}
 			}
+			SetChoiceText();
 		}
 		skillSelectedFrame->SetPosition(skillUnlockedFrames[selectionIndex]->GetPosition());
 		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN) || KeyboardController::GetInstance()->IsKeyPressed(VK_SPACE) || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_A))
@@ -383,8 +387,20 @@ bool UserInterface::Update(double dt)
 			ChangeScreen(screen);
 			thePlayerInfo->SetSpawn();
 			CPlayerInfo2D::GetInstance()->Heal();
+
+			if (textObj != NULL) {
+				for (int i = 0; i < numOfLines; ++i) {
+					delete textObj[i];
+					textObj[i] = NULL;
+				}
+				numOfLines = 0;
+				delete textObj;
+				textObj = NULL;
+			}
+
 			return true;
 		}
+
 		return true;
 		break;
 	}
@@ -550,7 +566,9 @@ void UserInterface::ChangeScreen(SCREEN_TYPE screenType)
 		choice = 0;
 
 		levelUpScreen->SetPosition(Vector3(static_cast<float>(thePlayerInfo->GetMap()->getScreenWidth()) / 2, static_cast<float>(thePlayerInfo->GetMap()->getScreenHeight()) / 2, 0.0f));
-		
+
+		SetChoiceText();
+
 		thePlayerInfo->setScreenState(SC_SKILL_TREE);
 		break;
 	case SC_GAMEOVER:
@@ -627,6 +645,36 @@ void UserInterface::SetWords(SCREEN_TYPE screenType)
 				aLineOfText,
 				Vector3(8, 8), Color(1.0f, 0.0f, 0.0f));
 		}
+	}
+}
+
+void UserInterface::SetChoiceText()
+{
+	if (textObj == NULL) {
+		numOfLines = 2;
+		textObj = new TextEntity*[numOfLines];
+		textObj[0] = Create::Text2DObject("text",
+			Vector3(90, 65, 0.0f),
+			"",
+			Vector3(10, 10), Color(1.0f, 0.0f, 0.0f));
+		textObj[1] = Create::Text2DObject("text",
+			Vector3(92, 55, 0.0f),
+			"",
+			Vector3(7, 7), Color(1.0f, 0.0f, 0.0f));
+
+	}
+
+	ifstream file(".//Image//Skills.txt");
+	if (file.is_open())
+	{
+		string aLineOfText = "";
+		for (int i = 0; i < selectionIndex * 2; ++i)
+			getline(file, aLineOfText);
+		getline(file, aLineOfText);
+		textObj[0]->SetText(aLineOfText);
+		getline(file, aLineOfText);
+		textObj[1]->SetText(aLineOfText);
+		file.close();
 	}
 }
 
@@ -707,6 +755,8 @@ void UserInterface::Render()// this is at the back since it needs to be on top? 
 			}
 		}
 		skillSelectedFrame->RenderUI();
+		for (int i = 0; i < numOfLines; ++i)
+			textObj[i]->RenderUI();
 		break;
 	case SC_GAMEOVER:
 		for (int i = 0; i < maxChoices; ++i) {

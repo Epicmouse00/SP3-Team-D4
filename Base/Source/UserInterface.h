@@ -25,6 +25,7 @@ public:
 private:
 	void ChangeScreen(SCREEN_TYPE screenType);
 	void SetWords(SCREEN_TYPE screenType);
+	void SetChoiceText();
 
 	int choice;
 	int maxChoices;
