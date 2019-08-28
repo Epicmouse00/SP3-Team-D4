@@ -753,6 +753,8 @@ void CScene2D::Update(double dt)
 			{
 				m_cMap->ShiftMap(200);
 				thePlayerInfo->SetPos(Vector3(thePlayerInfo->position.x - m_cMap->GetTileSize_Width() * 200, thePlayerInfo->position.y));
+				thePlayerInfo->Constrain();
+				thePlayerInfo->UpdateTileOffset();
 				Scene2D_corruption->SetPosition(Vector3(Scene2D_corruption->GetPosition().x - m_cMap->GetTileSize_Width() * 200, Scene2D_corruption->GetPosition().y));
 			}
 			for (int width = thePlayerInfo->GetTileOffset_x(); width < m_cMap->getNumOfTiles_MapWidth(); ++width)
