@@ -139,21 +139,24 @@ bool CPlayerInfo2D::isOnGround(void)
 		int checkPosition_X = (int)((position.x - (tileSize_Width >> 1)) / tileSize_Width);
 		int checkPosition_Y = theMapReference->GetNumOfTiles_Height() -
 			(int)ceil(position.y / tileSize_Height);
+		if (checkPosition_X >= 0 && checkPosition_X < theMapReference->getNumOfTiles_MapWidth())
+		{
 
-		if (((int)(position.x - (tileSize_Width >> 1)) % tileSize_Width) == 0 || position >= theMapReference->getMapWidth() - theMapReference->GetTileSize_Width()/2)
-		{
-			if (theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X] >= 20 && theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X] <= 23)
-				TakeDamage();
+			if (((int)(position.x - (tileSize_Width >> 1)) % tileSize_Width) == 0 || position >= theMapReference->getMapWidth() - theMapReference->GetTileSize_Width() / 2)
+			{
+				if (theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X] >= 20 && theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X] <= 23)
+					TakeDamage();
+			}
+			else
+			{
+				if (theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X] >= 20 &&
+					theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X] <= 23 ||
+					theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X + 1] >= 20 &&
+					theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X + 1] <= 23)
+					TakeDamage();
+			}
+			return true;
 		}
-		else
-		{
-			if (theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X] >= 20 &&
-				theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X] <= 23 ||
-				theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X + 1] >= 20 &&
-				theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X + 1] <= 23)
-				TakeDamage();
-		}
-		return true;
 	}
 
 	return false;
