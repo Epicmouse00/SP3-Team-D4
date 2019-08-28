@@ -472,7 +472,7 @@ void CPlayerInfo2D::UpdateJumpUpwards(double dt)
 		if (((int)(position.x - (tileSize_Width >> 1)) % tileSize_Width) == 0)
 		{
 			if (theMapReference->theScreenMap[i][checkPosition_X] == 1 || 
-				theMapReference->theScreenMap[i][checkPosition_X]>=200 && theMapReference->theScreenMap[i][checkPosition_X]<=203)
+				theMapReference->theScreenMap[i][checkPosition_X]>=20 && theMapReference->theScreenMap[i][checkPosition_X]<=23)
 			{
 				if (theMapReference->theScreenMap[i][checkPosition_X] != 1)
 				{

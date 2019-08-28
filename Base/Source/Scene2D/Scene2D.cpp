@@ -90,12 +90,10 @@ void CScene2D::createWorld(size_t Difficulty, size_t Repeat)
 				switch (m_cMap->theScreenMap[height][width])
 				{
 				case 101:
-					m_cMap->theScreenMap[height][width] = 0;
 					theEnemy.push_back(Create::EnemyEntity(m_cMap, new CStrategy_Shoot(), false
 						, Vector3(static_cast<float>(width * m_cMap->GetTileSize_Width() + (m_cMap->GetTileSize_Width() >> 1)), static_cast<float>(232 - height * m_cMap->GetTileSize_Height()))));
 					break;
 				case 102:
-					m_cMap->theScreenMap[height][width] = 0;
 					theAxeEnemy.push_back(Create::AxeEnemyEntity(m_cMap, new CStrategy_Kill(), false
 						, Vector3(static_cast<float>(width * m_cMap->GetTileSize_Width() + (m_cMap->GetTileSize_Width() >> 1)), static_cast<float>(232 - height * m_cMap->GetTileSize_Height()))));
 					break;
@@ -692,6 +690,7 @@ void CScene2D::Update(double dt)
 				delete theEnemy[i];
 				theEnemy[i] = nullptr;
 				theEnemy.erase(theEnemy.begin() + i);
+				--i;
 				continue;
 			}
 			if (!theEnemy[i]->IsDone())
@@ -707,6 +706,7 @@ void CScene2D::Update(double dt)
 				delete theAxeEnemy[i];
 				theAxeEnemy[i] = nullptr;
 				theAxeEnemy.erase(theAxeEnemy.begin() + i);
+				--i;
 				continue;
 			}
 			if (!theAxeEnemy[i]->IsDone())
@@ -732,6 +732,43 @@ void CScene2D::Update(double dt)
 
 		if (Scene2D_corruption->GetPosition().x > static_cast<float>(thePlayerInfo->GetMapOffset_x() + m_cMap->getScreenWidth() / 2))
 			Scene2D_corruption->SetPosition(Vector3(static_cast<float>(thePlayerInfo->GetMapOffset_x() + m_cMap->getScreenWidth() / 2),Scene2D_corruption->GetPosition().y));
+
+		if (ui->IsRespawned())
+		{
+			EntityManager::GetInstance()->ClearEntityList();
+			while (theEnemy.size())
+			{
+				delete theEnemy[0];
+				theEnemy[0] = nullptr;
+				theEnemy.erase(theEnemy.begin());
+			}
+			while (theAxeEnemy.size())
+			{
+				delete theAxeEnemy[0];
+				theAxeEnemy[0] = nullptr;
+				theAxeEnemy.erase(theAxeEnemy.begin());
+			}
+
+			for (int width = thePlayerInfo->GetTileOffset_x(); width < m_cMap->getNumOfTiles_MapWidth(); ++width)
+			{
+				for (int height = 0; height < m_cMap->getNumOfTiles_MapHeight(); ++height)
+				{
+					switch (m_cMap->theScreenMap[height][width])
+					{
+					case 101:
+						theEnemy.push_back(Create::EnemyEntity(m_cMap, new CStrategy_Shoot(), false
+							, Vector3(static_cast<float>(width * m_cMap->GetTileSize_Width() + (m_cMap->GetTileSize_Width() >> 1)), static_cast<float>(232 - height * m_cMap->GetTileSize_Height()))));
+						break;
+					case 102:
+						theAxeEnemy.push_back(Create::AxeEnemyEntity(m_cMap, new CStrategy_Kill(), false
+							, Vector3(static_cast<float>(width * m_cMap->GetTileSize_Width() + (m_cMap->GetTileSize_Width() >> 1)), static_cast<float>(232 - height * m_cMap->GetTileSize_Height()))));
+						break;
+					default:
+						break;
+					}
+				}
+			}
+		}
 
 		GraphicsManager::GetInstance()->UpdateLights(dt);
 	}
@@ -804,7 +841,7 @@ void CScene2D::RenderTileMap()
 									- thePlayerInfo->GetMapFineOffset_x()),
 									static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight));
 
-			if (m_cMap->theScreenMap[i][m] != 0
+			if (m_cMap->theScreenMap[i][m] != 0 && m_cMap->theScreenMap[i][m] < 100
 				&& (m*m_cMap->GetTileSize_Width() + kiHalfTileWidth < Scene2D_corruption->GetPosition().x + Scene2D_corruption->GetScale().x / 2 - kiHalfTileWidth))
 			{
 				switch (rand() % 5)
