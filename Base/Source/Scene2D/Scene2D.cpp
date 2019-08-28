@@ -748,7 +748,13 @@ void CScene2D::Update(double dt)
 				theAxeEnemy[0] = nullptr;
 				theAxeEnemy.erase(theAxeEnemy.begin());
 			}
-
+			// Shift when move more than 200 tiles to the right
+			while (thePlayerInfo->GetTileOffset_x() > 200)
+			{
+				m_cMap->ShiftMap(200);
+				thePlayerInfo->SetPos(Vector3(thePlayerInfo->position.x - m_cMap->GetTileSize_Width() * 200, thePlayerInfo->position.y));
+				Scene2D_corruption->SetPosition(Vector3(Scene2D_corruption->GetPosition().x - m_cMap->GetTileSize_Width() * 200, Scene2D_corruption->GetPosition().y));
+			}
 			for (int width = thePlayerInfo->GetTileOffset_x(); width < m_cMap->getNumOfTiles_MapWidth(); ++width)
 			{
 				for (int height = 0; height < m_cMap->getNumOfTiles_MapHeight(); ++height)
@@ -766,6 +772,18 @@ void CScene2D::Update(double dt)
 					default:
 						break;
 					}
+				}
+			}
+			if (thePlayerInfo->GetMap()->GetNumOfTiles_Width() - thePlayerInfo->GetTileOffset_x() < 300)
+			{
+				switch (Math::RandIntMinMax(0, 1))
+				{
+				case 0:
+					createWorld(D_HARD, 2);
+					break;
+				case 1:
+					createWorld(D_EXPERT, 2);
+					break;
 				}
 			}
 		}
