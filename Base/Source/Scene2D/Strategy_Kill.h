@@ -10,7 +10,7 @@ public:
 	CStrategy_Kill(void);
 	~CStrategy_Kill(void);
 
-	void Update(Vector3& PlayerPosition, Vector3& theEnemyPosition);
+	void Update(Vector3& PlayerPosition, Vector3& theEnemyPosition, double playerLevel);
 	void SetDestination(const float x, const float y);
 
 	int GetDestination_x(void);

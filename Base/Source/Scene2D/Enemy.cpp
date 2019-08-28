@@ -152,7 +152,7 @@ void CEnemy::Update(void)
 		{
 			if (!isDead && !isDone)
 			{
-				theStrategy->Update(theDestination, position);
+				theStrategy->Update(theDestination, position, GetLevel());
 				constrain();
 			}
 			if (isDone)
@@ -223,7 +223,6 @@ void CEnemy::constrain()
 				position.x = static_cast<float>((checkPosition_X - 1) * theMapReference->GetTileSize_Width() + (theMapReference->GetTileSize_Width() >> 1));
 			}
 		}
-
 	}
 
 	if (theStrategy->GetUD() > 0) // Up
