@@ -33,7 +33,7 @@ void CStrategy_Kill::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition, 
 	// Decide which state to change to
 	int distanceHeroToEnemy = CalculateDistance(PlayerPosition, theEnemyPosition);
 
-	if (playerLevel >= 9)
+	if (playerLevel >= 12)
 	{
 		if (distanceHeroToEnemy < (AI_STATE_ATTACK + 32)*(AI_STATE_ATTACK + 32))
 		{
@@ -66,13 +66,13 @@ void CStrategy_Kill::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition, 
 
 		break;
 	case ATTACK:
-		if (playerLevel >= 6 && !isOnAir && PlayerPosition.y > theEnemyPosition.y)
+		if (playerLevel >= 8 && !isOnAir && PlayerPosition.y > theEnemyPosition.y)
 		{
 			m = 6;
 		}
 		if (theEnemyPosition.x != PlayerPosition.x)
 		{
-			if (playerLevel >= 3)
+			if (playerLevel >= 5)
 			{
 				n = 1.5;
 			}

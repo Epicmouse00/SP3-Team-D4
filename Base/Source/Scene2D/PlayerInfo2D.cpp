@@ -352,9 +352,9 @@ void CPlayerInfo2D::AddXP(double xp)
 
 void CPlayerInfo2D::XPLevelUp(void)
 {
-	if (XP >= levelConst)
+	if (XP >= levelConst + 2)
 	{
-		XP -= levelConst;
+		XP -= levelConst + 2;
 		++level;
 		++levelConst;
 	}

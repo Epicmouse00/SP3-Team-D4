@@ -26,7 +26,7 @@ void CStrategy_Shoot::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition,
 {
 	// Decide which state to change to
 	int distanceHeroToEnemy = CalculateDistance(PlayerPosition, theEnemyPosition);
-	if (playerLevel >= 6)
+	if (playerLevel >= 8)
 	{
 		if (distanceHeroToEnemy < (AI_STATE_ATTACK + 32)*(AI_STATE_ATTACK + 32))
 		{
@@ -53,11 +53,11 @@ void CStrategy_Shoot::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition,
 		++bounce;
 		if (bounce > 59)
 		{
-			if (playerLevel >= 9)
+			if (playerLevel >= 12)
 			{
 				bounce -= Math::RandIntMinMax(10, 40);
 			}
-			else if (playerLevel >= 3)
+			else if (playerLevel >= 5)
 			{
 				bounce -= Math::RandIntMinMax(20, 50);
 			}
@@ -82,7 +82,7 @@ void CStrategy_Shoot::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition,
 				theEnemyPosition.x = static_cast<float>(theEnemyPosition.x + n);
 			}
 
-			if (playerLevel >= 6)
+			if (playerLevel >= 8)
 			{
 				m = 1;
 				if (theEnemyPosition.y < PlayerPosition.y)
