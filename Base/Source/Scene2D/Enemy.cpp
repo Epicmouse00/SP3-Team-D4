@@ -152,7 +152,7 @@ void CEnemy::Update(void)
 		{
 			if (!isDead && !isDone)
 			{
-				theStrategy->Update(theDestination, position);
+				theStrategy->Update(theDestination, position, GetLevel());
 				constrain();
 			}
 			if (isDone)

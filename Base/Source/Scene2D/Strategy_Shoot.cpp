@@ -22,11 +22,21 @@ CStrategy_Shoot::~CStrategy_Shoot()
 /********************************************************************************
  Update method
 ********************************************************************************/
-void CStrategy_Shoot::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition)
+void CStrategy_Shoot::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition, double playerLevel)
 {
 	// Decide which state to change to
 	int distanceHeroToEnemy = CalculateDistance(PlayerPosition, theEnemyPosition);
-	if (distanceHeroToEnemy < AI_STATE_ATTACK*AI_STATE_ATTACK)
+	if (playerLevel >= 3)
+	{
+		if (distanceHeroToEnemy < (AI_STATE_ATTACK + 32)*(AI_STATE_ATTACK + 32))
+		{
+			if (distanceHeroToEnemy < AI_STATE_REPEL*AI_STATE_REPEL)
+				CurrentState = REPEL;
+			else
+				CurrentState = ATTACK;
+		}
+	}
+	else if (distanceHeroToEnemy < AI_STATE_ATTACK*AI_STATE_ATTACK)
 	{
 		if (distanceHeroToEnemy < AI_STATE_REPEL*AI_STATE_REPEL)
 			CurrentState = REPEL;
@@ -43,7 +53,18 @@ void CStrategy_Shoot::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition)
 		++bounce;
 		if (bounce > 59)
 		{
-			bounce -= Math::RandIntMinMax(20, 60);
+			if (playerLevel >= 4)
+			{
+				bounce -= Math::RandIntMinMax(10, 40);
+			}
+			else if (playerLevel <= 3)
+			{
+				bounce -= Math::RandIntMinMax(20, 50);
+			}
+			else if (playerLevel <= 1)
+			{
+				bounce -= Math::RandIntMinMax(30, 60);
+			}
 			Vector3 direction = (PlayerPosition - theEnemyPosition).Normalized();
 			Create::Projectile("Crystal_Projectile_1", theEnemyPosition, Vector3(10, 10, 10), direction, 1.5f, 100, EntityBase::E_ENEMY_PROJECTILES);
 		}

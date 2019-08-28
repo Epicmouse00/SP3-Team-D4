@@ -14,7 +14,7 @@ public:
 	CStrategy(void);
 	~CStrategy(void);
 
-	virtual void Update(Vector3& theDestination, Vector3& theEnemyPosition) = 0;
+	virtual void Update(Vector3& theDestination, Vector3& theEnemyPosition, double playerLevel) = 0;
 
 	virtual void SetDestination(const float x, const float y) = 0;
 
