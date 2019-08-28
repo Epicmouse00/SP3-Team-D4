@@ -83,6 +83,22 @@ bool EntityManager::RemoveEntity(EntityBase* _existingEntity)
 	return false;
 }
 
+void EntityManager::ClearEntityList()
+{
+	std::list<EntityBase*>::iterator it = entityList.begin(), end = entityList.end();
+	while (it != end)
+	{
+		if (!((*it)->GetType() == EntityBase::E_CORRUPTION))
+		{
+			if (!((*it)->GetType() == EntityBase::E_ENEMY))
+				delete *it;
+			it = entityList.erase(it);
+		}
+		else
+			++it;
+	}
+}
+
 // Constructor
 EntityManager::EntityManager()
 {
@@ -173,7 +189,7 @@ bool EntityManager::CheckForCollision(void)
 
 				if (((int)(thisEntityGetPosition.x - (TileSize_Width >> 1)) % TileSize_Width) == 0)
 				{
-					if (thePlayerInfoGetMap->theScreenMap[checkPosition_Y][checkPosition_X] > 0)
+					if (thePlayerInfoGetMap->theScreenMap[checkPosition_Y][checkPosition_X] > 0 && thePlayerInfoGetMap->theScreenMap[checkPosition_Y][checkPosition_X] < 100)
 					{
 						thisEntity->SetIsDead(true); // projectiles X walls
 						continue;
@@ -181,8 +197,8 @@ bool EntityManager::CheckForCollision(void)
 				}
 				else
 				{
-					if ((thePlayerInfoGetMap->theScreenMap[checkPosition_Y][checkPosition_X] > 0) ||
-						(checkPosition_X + 1 < thePlayerInfoGetMap->GetNumOfTiles_Width() && (thePlayerInfoGetMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] > 0)))
+					if ((thePlayerInfoGetMap->theScreenMap[checkPosition_Y][checkPosition_X] > 0 && thePlayerInfoGetMap->theScreenMap[checkPosition_Y][checkPosition_X] < 100) ||
+						(checkPosition_X + 1 < thePlayerInfoGetMap->GetNumOfTiles_Width() && (thePlayerInfoGetMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] > 0 && thePlayerInfoGetMap->theScreenMap[checkPosition_Y][checkPosition_X + 1] < 100)))
 					{
 						thisEntity->SetIsDead(true); // projectiles X walls 2
 						continue;

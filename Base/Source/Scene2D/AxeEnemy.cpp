@@ -213,7 +213,7 @@ void CAxeEnemy::constrain()
 
 		if (checkPosition_X >= 0)
 		{
-			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] > 0)
+			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] > 0 && theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] < 100)
 			{
 				position.x = static_cast<float>((checkPosition_X + 1) * theMapReference->GetTileSize_Width() + (theMapReference->GetTileSize_Width() >> 1));
 				if (!theStrategy->GetIsOnAir())
@@ -230,7 +230,7 @@ void CAxeEnemy::constrain()
 
 		if (checkPosition_X < theMapReference->GetNumOfTiles_Width())
 		{
-			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] > 0)
+			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] > 0 && theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] < 100)
 			{
 				position.x = static_cast<float>((checkPosition_X - 1) * theMapReference->GetTileSize_Width() + (theMapReference->GetTileSize_Width() >> 1));
 				if (!theStrategy->GetIsOnAir())
@@ -251,7 +251,7 @@ void CAxeEnemy::constrain()
 
 		if (((int)(position.x - (theMapReference->GetTileSize_Width() >> 1)) % theMapReference->GetTileSize_Width()) == 0)
 		{
-			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] > 0)
+			if (theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] > 0 && theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] < 100)
 			{
 				position.y = static_cast<float>((theMapReference->GetNumOfTiles_Height() - checkPosition_Y - 1) * theMapReference->GetTileSize_Height() - (theMapReference->GetTileSize_Height() >> 1));
 				theStrategy->SetUD(0);
@@ -259,8 +259,8 @@ void CAxeEnemy::constrain()
 		}
 		else
 		{
-			if ((theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] > 0) ||
-				(theMapReference->theScreenMap[checkPosition_Y][checkPosition_X + 1] > 0))
+			if ((theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] > 0 && theMapReference->theScreenMap[checkPosition_Y][checkPosition_X] < 100) ||
+				(theMapReference->theScreenMap[checkPosition_Y][checkPosition_X + 1] > 0 && theMapReference->theScreenMap[checkPosition_Y][checkPosition_X + 1] < 100))
 			{
 				position.y = static_cast<float>((theMapReference->GetNumOfTiles_Height() - checkPosition_Y - 1) * theMapReference->GetTileSize_Height() - (theMapReference->GetTileSize_Height() >> 1));
 				theStrategy->SetUD(0);
@@ -275,7 +275,7 @@ void CAxeEnemy::constrain()
 
 		if (((int)(position.x - (theMapReference->GetTileSize_Width() >> 1)) % theMapReference->GetTileSize_Width()) == 0)
 		{
-			if (theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X] > 0)
+			if (theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X] > 0 && theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X] < 100)
 			{
 				position.y = static_cast<float>((theMapReference->GetNumOfTiles_Height() - checkPosition_Y -1) * theMapReference->GetTileSize_Height() + (theMapReference->GetTileSize_Height() >> 1));
 				theStrategy->SetIsOnAir(false);
@@ -286,8 +286,8 @@ void CAxeEnemy::constrain()
 		}
 		else
 		{
-			if ((theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X] > 0) ||
-				(theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X + 1] > 0))
+			if ((theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X] > 0 && theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X] < 100) ||
+				(theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X + 1] > 0 && theMapReference->theScreenMap[checkPosition_Y + 1][checkPosition_X + 1] < 100))
 			{
 				position.y = static_cast<float>((theMapReference->GetNumOfTiles_Height() - checkPosition_Y -1) * theMapReference->GetTileSize_Height() + (theMapReference->GetTileSize_Height() >> 1));
 				theStrategy->SetIsOnAir(false);
