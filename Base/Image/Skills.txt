@@ -1,0 +1,26 @@
+Double Jump
+Can Jump twice
+Dash Attack
+Attacks after dash
+Deflect Projectiles
+Proj. Deflect "Slashs"
+Double Attack
+Attacks twice "J" Key
+Charge Attack
+Charge attacks "k" key
+Faster Roll
+Rolls faster
+Higher Jump
+Jumps Higher
+Triple Jump
+Can Jump Thrice
+Air Roll
+Rolls in air "L" Key
+Extra Life
+2 Hearts now
+Enhanced Roll
+Rolls further
+Extra Life+
+3 Hearts
+LifeSteal
+Cannibalism

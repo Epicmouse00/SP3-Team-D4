@@ -9,6 +9,7 @@ Player Collision (Out of bounds)
 Entity Collision
 Projectiles
 Enhanced enemy array, map, and rearmap systems for infinite levels
+Credits, Instruction & Skills text file reading etc.
 
 Jovan:
 Art assets
