@@ -19,6 +19,7 @@ UserInterface::UserInterface(CProjectile* temporo)
 	, selectionIndex(0)
 	, dieTimer(0)
 	, corruptionTimer(0)
+	, is_Respawned(false)
 {
 	temporop = temporo;
 	theHeartInfo = Hearts::GetInstance();
@@ -419,6 +420,7 @@ bool UserInterface::Update(double dt)
 			screen = SC_PLAY;
 			ChangeScreen(screen);
 			thePlayerInfo->Respawn();
+			is_Respawned = true;
 			temporop->SetPosition(Vector3(static_cast<float>(thePlayerInfo->GetPos().x - thePlayerInfo->GetMap()->getScreenWidth()), static_cast<float>(thePlayerInfo->GetMap()->getScreenHeight()) / 2, 0));
 			thePlayerInfo->Heal(false);
 			return true;
@@ -724,6 +726,16 @@ bool UserInterface::GetScreenStatus()
 		break;
 	}
 	return true;
+}
+
+bool UserInterface::IsRespawned()
+{
+	if(is_Respawned)
+	{
+		is_Respawned = false;
+		return true;
+	}
+	return false;
 }
 
 void UserInterface::Render()// this is at the back since it needs to be on top? (eg. real time skill tree upgrading / shoping)

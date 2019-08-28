@@ -21,6 +21,7 @@ public:
 	~UserInterface();
 	bool Update(double dt);
 	bool GetScreenStatus();
+	bool IsRespawned();
 	void Render();
 
 private:
@@ -54,6 +55,7 @@ private:
 	int selectionIndex;
 	double dieTimer;
 	double corruptionTimer;
+	bool is_Respawned;
 
 	CPlayerInfo2D* thePlayerInfo;
 	Hearts* theHeartInfo;

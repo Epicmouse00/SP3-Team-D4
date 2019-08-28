@@ -19,6 +19,7 @@ public:
 
 	void AddEntity(EntityBase* _newEntity);
 	bool RemoveEntity(EntityBase* _existingEntity);
+	void ClearEntityList();
 
 private:
 	EntityManager();
