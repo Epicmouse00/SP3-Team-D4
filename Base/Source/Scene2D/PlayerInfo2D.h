@@ -106,7 +106,7 @@ public:
 	void AddLifesteal(int lifesteal = 1);
 	void LifestealLifeUp(void);
 	// Get Level of player
-	double GetLevel(void) const;
+	double GetLevel(bool type = false) const;
 	bool MinusLevel(void);
 	bool isUnlockable(int selectionIndex) const;
 	// Get Tile Offset for x-axis
@@ -308,8 +308,11 @@ private:
 
 	// Experience
 	double XP;
-	double maxXP;
 	double level;
+	double levelConst;
+	double respawnXP;
+	double respawnLevel;
+	double respawnLevelConst;
 
 	// Skill Tree
 	bool skill[SK_TOTAL];

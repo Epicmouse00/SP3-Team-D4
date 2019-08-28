@@ -65,12 +65,15 @@ CPlayerInfo2D::CPlayerInfo2D(void)
 	, chargeAttack(0.f)
 	, chargeTime(5.f)
 	, XP(0)
-	, maxXP(10)
 	, level(0)
+	, levelConst(0)
 	, lifesteal(0)
 	, lifestealLimit(10)
 	, respawnPos(Vector3())
 	, respawn(false)
+	, respawnXP(0)
+	, respawnLevel(0)
+	, respawnLevelConst(0)
 {
 }
 
@@ -349,10 +352,11 @@ void CPlayerInfo2D::AddXP(double xp)
 
 void CPlayerInfo2D::XPLevelUp(void)
 {
-	if (XP >= maxXP)
+	if (XP > levelConst)
 	{
-		XP /= maxXP;
+		XP /= levelConst;
 		++level;
+		++levelConst;
 	}
 }
 
@@ -381,9 +385,12 @@ void CPlayerInfo2D::LifestealLifeUp(void)
 	}
 }
 
-double CPlayerInfo2D::GetLevel(void) const
+double CPlayerInfo2D::GetLevel(bool type) const
 {
-	return level;
+	if (type)
+		return levelConst;
+	else
+		return level;
 }
 
 bool CPlayerInfo2D::MinusLevel(void)
@@ -1066,6 +1073,9 @@ void CPlayerInfo2D::Heal(bool sound, int life)
 void CPlayerInfo2D::Respawn(void)
 {
 	position = respawnPos;
+	XP = respawnXP;
+	level = respawnLevel;
+	levelConst = respawnLevelConst;
 	SetAnimationStatus(P_IDLE_R1);
 	respawn = true;
 }
@@ -1078,6 +1088,9 @@ bool CPlayerInfo2D::getRespawn(void)
 void CPlayerInfo2D::SetSpawn()
 {
 	respawnPos = position;
+	respawnXP = XP;
+	respawnLevel = level;
+	respawnLevelConst = levelConst;
 }
 
 bool CPlayerInfo2D::isCharged(void) const

@@ -469,7 +469,7 @@ bool UserInterface::Update(double dt)
 		staminaBar[barStatus]->SetScale(Vector3((staminatemp) * 25, staminaBar[barStatus]->GetScale().y));
 		staminaBar[barStatus]->SetPosition(Vector3(staminaBar[barStatus]->GetScale().x / 2 + 18, staminaBar[barStatus]->GetPosition().y));
 
-		xpBar->SetScale(Vector3(static_cast<float>((thePlayerInfo->GetXP()) * 6), xpBar->GetScale().y));
+		xpBar->SetScale(Vector3(static_cast<float>((thePlayerInfo->GetXP() / thePlayerInfo->GetLevel(true)) * 60), xpBar->GetScale().y));
 		xpBar->SetPosition(Vector3(xpBar->GetScale().x / 2 + 150, xpBar->GetPosition().y));
 
 		lifeBar->SetScale(Vector3(static_cast<float>((thePlayerInfo->GetLifesteal()) * 6), lifeBar->GetScale().y));
