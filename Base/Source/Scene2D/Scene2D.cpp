@@ -70,7 +70,7 @@ void CScene2D::createWorld(size_t Difficulty, size_t Repeat)
 			break;
 		case D_HARD:
 			{
-				ss << "Levels//Hard" << Math::RandIntMinMax(1, 1) << ".csv";
+				ss << "Levels//Hard" << Math::RandIntMinMax(1, 3) << ".csv";
 			}
 			break;
 		case D_EXPERT:
