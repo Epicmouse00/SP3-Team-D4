@@ -1277,7 +1277,7 @@ void CScene2D::LoadMeshes(void)
 	}
 	// UI
 	{
-		MeshBuilder::GetInstance()->GenerateQuad("UI_BOX", Color(1, 0, 1), 1.f);
+		MeshBuilder::GetInstance()->GenerateQuad("UI_BOX", Color(0.2f, 0.2f, 0.6f), 1.f);
 		MeshBuilder::GetInstance()->GenerateQuad("Corrupt_temp", Color(1, 0, 1), 1.f);
 		MeshBuilder::GetInstance()->GetMesh("Corrupt_temp")->textureID = LoadTGA("Image//corruptionAlpha.tga");
 		MeshBuilder::GetInstance()->GenerateQuad("UI_BOX2", Color(0, 0, 1), 1.f);

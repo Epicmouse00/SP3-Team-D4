@@ -5,8 +5,9 @@ Melvin:
 Scrolling (Original framework couldn't scroll properly)
 UI base
 Screen changing
-Collision (Couldn't work before cuz of scrolling error)
-Corruption projectile
+Player Collision (Out of bounds)
+Entity Collision
+Projectiles
 Enhanced enemy array, map, and rearmap systems for infinite levels
 
 Jovan:

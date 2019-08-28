@@ -160,7 +160,7 @@ bool EntityManager::CheckForCollision(void)
 			{
 				int checkPosition_X = (int)((thisEntityGetPosition.x - (TileSize_Width >> 1)) / TileSize_Width);
 				int checkPosition_Y = thePlayerInfoGetMap->GetNumOfTiles_Height() -
-					(int)ceil((float)((thisEntityGetPosition.y + (TileSize_Height >> 1)) / TileSize_Height));
+					(int)ceil((float)(thisEntityGetPosition.y / TileSize_Height));
 
 				if (thisEntityGetPosition.x > thePlayerInfoGetMap->getNumOfTiles_MapWidth() * TileSize_Width ||
 					thisEntityGetPosition.x < 0 ||
