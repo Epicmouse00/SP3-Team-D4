@@ -21,7 +21,7 @@ CStrategy_Kill::~CStrategy_Kill()
 /********************************************************************************
  Update method
 ********************************************************************************/
-void CStrategy_Kill::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition)
+void CStrategy_Kill::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition, double playerLevel)
 {
 	// Gravity
 	if (isOnAir)
@@ -32,7 +32,15 @@ void CStrategy_Kill::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition)
 
 	// Decide which state to change to
 	int distanceHeroToEnemy = CalculateDistance(PlayerPosition, theEnemyPosition);
-	if (distanceHeroToEnemy < AI_STATE_ATTACK*AI_STATE_ATTACK)
+
+	if (playerLevel >= 4)
+	{
+		if (distanceHeroToEnemy < (AI_STATE_ATTACK + 32)*(AI_STATE_ATTACK + 32))
+		{
+			CurrentState = ATTACK;
+		}
+	}
+	else if (distanceHeroToEnemy < AI_STATE_ATTACK*AI_STATE_ATTACK)
 	{		
 		CurrentState = ATTACK;
 	}
@@ -54,15 +62,27 @@ void CStrategy_Kill::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition)
 			n = -n;
 		if (bounce < 17)
 			theEnemyPosition.x = theEnemyPosition.x + n;
+		else CurrentState = IDLE;
+
 		break;
 	case ATTACK:
+		if (playerLevel >= 3 && !isOnAir && PlayerPosition.y > theEnemyPosition.y)
+		{
+			m = 6;
+		}
 		if (theEnemyPosition.x != PlayerPosition.x)
 		{
-			n = 1;
+			if (playerLevel >= 2)
+			{
+				n = 1.5;
+			}
+			else n = 1;
+
 			if (theEnemyPosition.x > PlayerPosition.x)
 			{
 				n = -n;
 			}
+
 			theEnemyPosition.x = theEnemyPosition.x + n;
 		}
 		break;

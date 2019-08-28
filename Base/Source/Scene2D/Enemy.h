@@ -1,6 +1,7 @@
 #pragma once
 #include "Vector3.h"
 #include "Map.h"
+#include "PlayerInfo2D.h"
 #include "Strategy.h"
 #include "Strategy_Shoot.h"
 #include "AnimationCrystal.h"
