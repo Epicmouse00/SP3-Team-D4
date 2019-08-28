@@ -410,7 +410,7 @@ bool UserInterface::Update(double dt)
 				textObj = NULL;
 			}
 		}
-		return true;
+		return false;
 		break;
 	}
 	case SC_PLAY: // This just checks for changes in UI* stuff while in play
