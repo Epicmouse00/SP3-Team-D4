@@ -218,6 +218,7 @@ bool UserInterface::Update(double dt)
 			|| KeyboardController::GetInstance()->IsKeyPressed(VK_SPACE)
 			|| GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_A))
 		{
+			thePlayerInfo->AttackSound();
 			switch (choice) {
 			case 4:
 				screen = SC_PLAY;
@@ -398,6 +399,7 @@ bool UserInterface::Update(double dt)
 			|| KeyboardController::GetInstance()->IsKeyPressed(VK_SPACE)
 			|| GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_A))
 		{
+			thePlayerInfo->DoorSound();
 			screen = SC_MAIN;
 			ChangeScreen(screen);
 			if (textObj != NULL) {
