@@ -8,7 +8,7 @@
 #include <fstream>
 
 using namespace std;
-UserInterface::UserInterface()
+UserInterface::UserInterface(CProjectile* temporo)
 	: choice(4)
 	, maxChoices(5)
 	, screen(SC_MAIN)
@@ -19,6 +19,7 @@ UserInterface::UserInterface()
 	, selectionIndex(0)
 	, dieTimer(0)
 {
+	temporop = temporo;
 	theHeartInfo = Hearts::GetInstance();
 	theHeartInfo->Init();
 
@@ -494,6 +495,8 @@ bool UserInterface::Update(double dt)
 		{
 			CSoundEngine::GetInstance()->PlayASound("levelup");
 			screen = SC_SKILL_TREE;
+			if(temporop->GetPosition().x < static_cast<float>(thePlayerInfo->GetPos().x - thePlayerInfo->GetMap()->getScreenWidth()))
+				temporop->SetPosition(Vector3(static_cast<float>(thePlayerInfo->GetPos().x - thePlayerInfo->GetMap()->getScreenWidth()), static_cast<float>(thePlayerInfo->GetMap()->getScreenHeight()) / 2, 0));
 			ChangeScreen(screen);
 			return true;
 		}
@@ -624,8 +627,13 @@ void UserInterface::SetWords(SCREEN_TYPE screenType)
 	switch(screenType)
 	{
 	case SC_INSTRUCTIONS:
-		file.open(".//Image//Instructions.txt", ios::in);
+	{
+		if (GamePadXbox::GetInstance()->is_connected())
+			file.open(".//Image//Instructions.txt", ios::in);
+		else
+			file.open(".//Image//Instructions2.txt", ios::in);
 		break;
+	}
 	case SC_CREDIT:
 		file.open(".//Image//Credits.txt", ios::in);
 		break;
@@ -691,7 +699,7 @@ bool UserInterface::GetScreenStatus()
 		return true;
 		break;
 	case SC_SKILL_TREE:
-		return false;
+		return true;
 		break;
 	case SC_GAMEOVER:
 		return true;

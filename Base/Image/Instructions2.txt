@@ -1,0 +1,13 @@
+12
+
+Keyboard
+WASD - Move
+J - Attack
+K - Special attacks
+Spacebar - Jump
+L - Roll
+E - Open level up menu
+P - Pause
+
+1,2 - Toggle front face culling
+3,4 - Toggle wireframe mode

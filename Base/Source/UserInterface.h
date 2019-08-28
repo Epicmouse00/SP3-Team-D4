@@ -2,6 +2,7 @@
 #include "UIButton.h"
 #include "Scene2D/PlayerInfo2D.h"
 #include "../../Base/Source/Scene2D/Hearts.h"
+#include "Projectile/Projectile.h"
 
 class UserInterface
 {
@@ -16,7 +17,7 @@ public:
 		SC_CREDIT,
 		SC_TOTAL
 	};
-	UserInterface();
+	UserInterface(CProjectile* temporo);
 	~UserInterface();
 	bool Update(double dt);
 	bool GetScreenStatus();
@@ -49,6 +50,7 @@ private:
 	SpriteEntity* levelUpScreen;
 	SpriteEntity** skillUnlockedFrames;
 	SpriteEntity* skillSelectedFrame;
+	CProjectile* temporop;
 	int selectionIndex;
 	double dieTimer;
 

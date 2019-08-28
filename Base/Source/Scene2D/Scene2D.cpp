@@ -349,7 +349,15 @@ void CScene2D::Init()
 	thePlayerInfo->SetMap(m_cMap);
 	thePlayerInfo->SetRearMap(m_cRearMap);
 
-	ui = new UserInterface;
+	temporop = Create::Projectile("Corrupt_temp",
+		Vector3(),
+		Vector3(static_cast<float>(m_cMap->getScreenWidth()),
+			static_cast<float>(m_cMap->getScreenHeight())),
+		Vector3(1, 0, 0),
+		1.f, 30.f, EntityBase::ENTITY_TYPE::E_CORRUPTION);
+	temporopPush();
+
+	ui = new UserInterface(temporop);
 	theSlashInfo = Slash::GetInstance();
 	theSlashInfo->Init();
 
@@ -621,14 +629,6 @@ void CScene2D::Init()
 	// Create the 3 enemies
 	//theEnemy = new CEnemy*[m_iNumEnemy];
 	//theAxeEnemy = new CAxeEnemy*[m_iNumAxeEnemy];
-
-	temporop = Create::Projectile("Corrupt_temp",
-		Vector3(),
-		Vector3(static_cast<float>(m_cMap->getScreenWidth()),
-		static_cast<float>(m_cMap->getScreenHeight())),
-		Vector3(1, 0, 0),
-		1.f, 30.f, EntityBase::ENTITY_TYPE::E_CORRUPTION);
-	temporopPush();
 
 	Scene2D_Enemy = new SpriteEntity*[CAnimationCrystal::C_TOTAL]; // Enemy stuff
 	Scene2D_Enemy[0] = Create::Sprite2DObject("Crystal_Attack_1",
