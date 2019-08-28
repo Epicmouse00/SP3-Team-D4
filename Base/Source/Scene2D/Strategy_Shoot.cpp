@@ -81,6 +81,16 @@ void CStrategy_Shoot::Update(Vector3& PlayerPosition, Vector3& theEnemyPosition,
 				}
 				theEnemyPosition.x = theEnemyPosition.x + n;
 			}
+
+			if (playerLevel >= 3)
+			{
+				m = 1;
+				if (theEnemyPosition.y < PlayerPosition.y)
+				{
+					m = -m;
+				}
+				theEnemyPosition.y = theEnemyPosition.y + m;
+			}
 		}
 		break;
 	default:
