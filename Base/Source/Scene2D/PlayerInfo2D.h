@@ -181,6 +181,7 @@ public:
 	void UpdateGoodies(const int tileIndex_Column, const int tileIndex_Row);
 	// Sound
 	void AttackSound(void) const;
+	void SelectSound(int type = 0) const;
 	void StepSound(void) const;
 	void DoorSound(void) const;
 	void DeflectSound(void) const;

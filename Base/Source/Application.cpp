@@ -162,13 +162,16 @@ void Application::UpdateInput()
 	glfwGetCursorPos(m_window, &mouse_currX, &mouse_currY);
 	MouseController::GetInstance()->UpdateMousePosition(mouse_currX, mouse_currY);
 
-	// Update Keyboard Input
-	for (int i = 0; i < KeyboardController::MAX_KEYS; ++i)
-		KeyboardController::GetInstance()->UpdateKeyboardStatus(i, IsKeyPressed(i));
-
 	if (GamePadXbox::GetInstance()->is_connected())
 	{
+		// Update Controller Input
 		GamePadXbox::GetInstance()->update();
+	}
+	else
+	{
+		// Update Keyboard Input
+		for (int i = 0; i < KeyboardController::MAX_KEYS; ++i)
+			KeyboardController::GetInstance()->UpdateKeyboardStatus(i, IsKeyPressed(i));
 	}
 }
 

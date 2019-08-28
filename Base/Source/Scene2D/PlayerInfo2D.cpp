@@ -1504,6 +1504,24 @@ void CPlayerInfo2D::AttackSound(void) const
 	}
 }
 
+void CPlayerInfo2D::SelectSound(int type) const
+{
+	switch (type)
+	{
+	case 0:
+		CSoundEngine::GetInstance()->PlayASound("select");
+		break;
+	case 1:
+		CSoundEngine::GetInstance()->PlayASound("select2");
+		break;
+	case 2:
+		CSoundEngine::GetInstance()->PlayASound("select3");
+		break;
+	default:
+		break;
+	}
+}
+
 void CPlayerInfo2D::StepSound(void) const
 {
 	switch (rand() % 4)
@@ -1627,6 +1645,10 @@ void CPlayerInfo2D::InitSound(void) const
 	CSoundEngine::GetInstance()->AddSound("damaged", "Sound//damaged.wav");
 	CSoundEngine::GetInstance()->AddSound("heal", "Sound//heal.wav");
 	CSoundEngine::GetInstance()->AddSound("unlocked", "Sound//unlocked.wav");
+	CSoundEngine::GetInstance()->AddSound("select", "Sound//select.wav");
+	CSoundEngine::GetInstance()->AddSound("select2", "Sound//select2.wav");
+	CSoundEngine::GetInstance()->AddSound("select3", "Sound//select3.wav");
+	CSoundEngine::GetInstance()->AddSound("levelup", "Sound//levelup.wav");
 }
 
 bool CPlayerInfo2D::Roll()

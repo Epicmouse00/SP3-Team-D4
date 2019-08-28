@@ -199,6 +199,7 @@ bool UserInterface::Update(double dt)
 			|| KeyboardController::GetInstance()->IsKeyPressed('W')
 			|| GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_DPAD_UP))
 		{
+			thePlayerInfo->SelectSound();
 			buttonObj[choice]->SetSelected(false);
 			choice = (choice + 1) % maxChoices;
 			buttonObj[choice]->SetSelected(true);
@@ -207,6 +208,7 @@ bool UserInterface::Update(double dt)
 			|| KeyboardController::GetInstance()->IsKeyPressed('S')
 			|| GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_DPAD_DOWN))
 		{
+			thePlayerInfo->SelectSound();
 			buttonObj[choice]->SetSelected(false);
 			if (--choice < 0)
 			{
@@ -218,7 +220,7 @@ bool UserInterface::Update(double dt)
 			|| KeyboardController::GetInstance()->IsKeyPressed(VK_SPACE)
 			|| GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_A))
 		{
-			thePlayerInfo->AttackSound();
+			thePlayerInfo->SelectSound(1);
 			switch (choice) {
 			case 4:
 				screen = SC_PLAY;
@@ -258,6 +260,7 @@ bool UserInterface::Update(double dt)
 			|| KeyboardController::GetInstance()->IsKeyPressed('W')
 			|| GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_DPAD_UP))
 		{
+			thePlayerInfo->SelectSound();
 			buttonObj[choice]->SetSelected(false);
 			choice = (choice + 1) % maxChoices;
 			buttonObj[choice]->SetSelected(true);
@@ -266,6 +269,7 @@ bool UserInterface::Update(double dt)
 			|| KeyboardController::GetInstance()->IsKeyPressed('S')
 			|| GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_DPAD_DOWN))
 		{
+			thePlayerInfo->SelectSound();
 			buttonObj[choice]->SetSelected(false);
 			if (--choice < 0)
 			{
@@ -277,6 +281,7 @@ bool UserInterface::Update(double dt)
 			|| KeyboardController::GetInstance()->IsKeyPressed(VK_SPACE)
 			|| GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_A))
 		{
+			thePlayerInfo->SelectSound(1);
 			switch (choice) {
 			case 2:
 				screen = SC_PLAY;
@@ -303,6 +308,7 @@ bool UserInterface::Update(double dt)
 	{
 		if (KeyboardController::GetInstance()->IsKeyPressed('A') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_DPAD_LEFT))
 		{
+			thePlayerInfo->SelectSound();
 			if (selectionIndex != 0)
 			{
 				if (selectionIndex != 1 && selectionIndex != 5 && selectionIndex != 9)
@@ -317,6 +323,7 @@ bool UserInterface::Update(double dt)
 		}
 		else if (KeyboardController::GetInstance()->IsKeyPressed('D') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_DPAD_RIGHT))
 		{
+			thePlayerInfo->SelectSound();
 			if (selectionIndex != 4 && selectionIndex != 8 && selectionIndex != 12)
 			{
 				if (selectionIndex != 0)
@@ -331,6 +338,7 @@ bool UserInterface::Update(double dt)
 		}
 		else if (KeyboardController::GetInstance()->IsKeyPressed('W') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_DPAD_UP))
 		{
+			thePlayerInfo->SelectSound();
 			if (selectionIndex == 0 || selectionIndex > 4)
 			{
 				if (selectionIndex != 0)
@@ -345,6 +353,7 @@ bool UserInterface::Update(double dt)
 		}
 		else if (KeyboardController::GetInstance()->IsKeyPressed('S') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_DPAD_DOWN))
 		{
+			thePlayerInfo->SelectSound();
 			if (selectionIndex == 0 || selectionIndex < 9)
 			{
 				if (selectionIndex != 0)
@@ -364,6 +373,8 @@ bool UserInterface::Update(double dt)
 			{
 				thePlayerInfo->setSkill(selectionIndex, true);
 			}
+			else
+				thePlayerInfo->SelectSound(2);
 		}
 
 		if (KeyboardController::GetInstance()->IsKeyPressed('E') || GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_X))
@@ -399,7 +410,7 @@ bool UserInterface::Update(double dt)
 			|| KeyboardController::GetInstance()->IsKeyPressed(VK_SPACE)
 			|| GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_A))
 		{
-			thePlayerInfo->DoorSound();
+			thePlayerInfo->SelectSound(1);
 			screen = SC_MAIN;
 			ChangeScreen(screen);
 			if (textObj != NULL) {
@@ -465,6 +476,7 @@ bool UserInterface::Update(double dt)
 			&& (thePlayerInfo->GetMap()->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X]==30||
 			thePlayerInfo->checkPosition_X + 1 < thePlayerInfo->GetMap()->GetNumOfTiles_Width() && thePlayerInfo->GetMap()->theScreenMap[thePlayerInfo->checkPosition_Y][thePlayerInfo->checkPosition_X + 1] == 30))
 		{
+			CSoundEngine::GetInstance()->PlayASound("levelup");
 			screen = SC_SKILL_TREE;
 			ChangeScreen(screen);
 			return true;
