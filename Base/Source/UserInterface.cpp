@@ -249,7 +249,7 @@ bool UserInterface::Update(double dt)
 				ChangeScreen(screen);
 				break;
 			case 1:
-				ShellExecuteA(NULL, (LPCSTR)"open", (LPCSTR)"https://www.teepublic.com/t-shirt/5731054-rollin-like-lonin/", NULL, NULL, SW_SHOWNORMAL);
+				ShellExecuteA(NULL, (LPCSTR)"open", (LPCSTR)"https://www.teepublic.com/user/leonidastee/albums/40379-lonin/", NULL, NULL, SW_SHOWNORMAL);
 				thePlayerInfo->setExit(true);
 				break;
 			case 0:
