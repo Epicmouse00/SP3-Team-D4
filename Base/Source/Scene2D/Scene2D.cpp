@@ -349,15 +349,14 @@ void CScene2D::Init()
 	thePlayerInfo->SetMap(m_cMap);
 	thePlayerInfo->SetRearMap(m_cRearMap);
 
-	temporop = Create::Projectile("Corrupt_temp",
-		Vector3(),
+	Scene2D_corruption = Create::Projectile("Corrupt_temp",
+		Vector3(static_cast<float>(thePlayerInfo->GetPos().x - m_cMap->getScreenWidth()), static_cast<float>(m_cMap->getScreenHeight()) / 2, 0),
 		Vector3(static_cast<float>(m_cMap->getScreenWidth()),
 			static_cast<float>(m_cMap->getScreenHeight())),
 		Vector3(1, 0, 0),
 		1.f, 30.f, EntityBase::ENTITY_TYPE::E_CORRUPTION);
-	temporopPush();
 
-	ui = new UserInterface(temporop);
+	ui = new UserInterface(Scene2D_corruption);
 	theSlashInfo = Slash::GetInstance();
 	theSlashInfo->Init();
 
@@ -622,14 +621,6 @@ void CScene2D::Init()
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 		Vector3(16.0f, 16.0f, 0.0f));
 
-	//Scene2D_Goodies_TreasureChest = Create::Sprite2DObject("SCENE2D_TILE_TREASURECHEST",
-	//	Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
-	//	Vector3(16.0f, 16.0f, 0.0f));
-
-	// Create the 3 enemies
-	//theEnemy = new CEnemy*[m_iNumEnemy];
-	//theAxeEnemy = new CAxeEnemy*[m_iNumAxeEnemy];
-
 	Scene2D_Enemy = new SpriteEntity*[CAnimationCrystal::C_TOTAL]; // Enemy stuff
 	Scene2D_Enemy[0] = Create::Sprite2DObject("Crystal_Attack_1",
 		Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
@@ -690,9 +681,6 @@ void CScene2D::Update(double dt)
 {
 	if (ui->Update(dt))
 	{
-		if (!ui->GetScreenStatus() || thePlayerInfo->getRespawn())// Note : add like a 60 sec countdown float or something? and when (that countdown reaches 0 / exit terminal), change the tile (3) int the m_cmap to something else...
-			temporopPush();
-
 		// Update our entities
 		EntityManager::GetInstance()->Update(dt);
 		
@@ -780,8 +768,8 @@ void CScene2D::Update(double dt)
 			doorIsOpen = true;
 		}
 
-		if (temporop->GetPosition().x > static_cast<float>(thePlayerInfo->GetMapOffset_x() + m_cMap->getScreenWidth() / 2))
-			temporop->SetPosition(Vector3(static_cast<float>(thePlayerInfo->GetMapOffset_x() + m_cMap->getScreenWidth() / 2),temporop->GetPosition().y));
+		if (Scene2D_corruption->GetPosition().x > static_cast<float>(thePlayerInfo->GetMapOffset_x() + m_cMap->getScreenWidth() / 2))
+			Scene2D_corruption->SetPosition(Vector3(static_cast<float>(thePlayerInfo->GetMapOffset_x() + m_cMap->getScreenWidth() / 2),Scene2D_corruption->GetPosition().y));
 
 		GraphicsManager::GetInstance()->UpdateLights(dt);
 	}
@@ -821,8 +809,8 @@ void CScene2D::Render()
 		RenderEnemy();
 		// Render the player
 		RenderPlayer();
-		if(!temporop->IsDone())
-			temporop->RenderUI();
+
+		Scene2D_corruption->RenderUI();
 	}
 	ui->Render();
 }
@@ -831,12 +819,6 @@ void CScene2D::Exit()
 {
 	// Detach camera from other entities
 	GraphicsManager::GetInstance()->DetachCamera();
-}
-
-void CScene2D::temporopPush(void)
-{
-	//temporop->SetPosition(Vector3(static_cast<float>(thePlayerInfo->GetMapOffset_x() - m_cMap->getScreenWidth() / 2), static_cast<float>(m_cMap->getScreenHeight()) / 2, 0));
-	temporop->SetPosition(Vector3(static_cast<float>(thePlayerInfo->GetPos().x - m_cMap->getScreenWidth()), static_cast<float>(m_cMap->getScreenHeight()) / 2, 0));
 }
 
 void CScene2D::RenderTileMap()
@@ -861,7 +843,7 @@ void CScene2D::RenderTileMap()
 									static_cast<float>(224 - i * m_cMap->GetTileSize_Height() + kiHalfTileHeight));
 
 			if (m_cMap->theScreenMap[i][m] != 0
-				&& (m*m_cMap->GetTileSize_Width() + kiHalfTileWidth < temporop->GetPosition().x + temporop->GetScale().x / 2 - kiHalfTileWidth))
+				&& (m*m_cMap->GetTileSize_Width() + kiHalfTileWidth < Scene2D_corruption->GetPosition().x + Scene2D_corruption->GetScale().x / 2 - kiHalfTileWidth))
 			{
 				switch (rand() % 5)
 				{
