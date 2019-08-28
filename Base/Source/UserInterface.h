@@ -12,6 +12,8 @@ public:
 		SC_PAUSE,
 		SC_SKILL_TREE,
 		SC_GAMEOVER,
+		SC_INSTRUCTIONS,
+		SC_CREDIT,
 		SC_TOTAL
 	};
 	UserInterface();
@@ -22,6 +24,7 @@ public:
 
 private:
 	void ChangeScreen(SCREEN_TYPE screenType);
+	void SetWords(SCREEN_TYPE screenType);
 
 	int choice;
 	int maxChoices;
@@ -30,7 +33,7 @@ private:
 	SpriteEntity** titleScreen;
 
 	SpriteEntity** heartEntity;
-	UIButton* buttonObj[3];
+	UIButton* buttonObj[5];
 	SpriteEntity* xpBar;
 	SpriteEntity* xpBlock;
 	SpriteEntity* xpBlock2;
@@ -40,7 +43,8 @@ private:
 	SpriteEntity* lifeBlock;
 	SpriteEntity* lifeBar;
 	SpriteEntity* UI_Bar;
-	TextEntity* textObj[2];
+	int numOfLines;
+	TextEntity** textObj;
 	SpriteEntity* levelUpScreen;
 	SpriteEntity** skillUnlockedFrames;
 	SpriteEntity* skillSelectedFrame;

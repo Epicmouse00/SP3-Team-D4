@@ -5,14 +5,17 @@
 #include "MeshBuilder.h"
 #include "Application.h"
 #include "SoundEngine.h"
+#include <fstream>
 
 using namespace std;
 UserInterface::UserInterface()
-	: choice(2)
-	, maxChoices(3)
+	: choice(4)
+	, maxChoices(5)
 	, screen(SC_MAIN)
 	, theHeartInfo(NULL)
 	, barStatus(0)
+	, numOfLines(0)
+	, textObj(NULL)
 	, selectionIndex(0)
 	, dieTimer(0)
 {
@@ -124,17 +127,8 @@ UserInterface::UserInterface()
 
 	float fontSize = 16.0f;
 	float halfFontSize = fontSize / 2.0f;
-	for (int i = 0; i < 2; ++i)
-	{//pointing at null...
-		textObj[i] = Create::Text2DObject("text",
-			Vector3(5, 5 + fontSize * i + halfFontSize, 0.0f),
-			"",
-			Vector3(fontSize, fontSize, fontSize), Color(1.0f, 0.0f, 0.0f));
-	}
-	textObj[0]->SetText("Something");
-	textObj[1]->SetText("Something2");
 
-	for (int i = 0; i < 3; ++i)
+	for (int i = 0; i < maxChoices; ++i)
 	{
 		buttonObj[i] = new UIButton;
 		buttonObj[i]->SetPosition(Vector3(5, 5 + fontSize * i + halfFontSize, 0.0f));
@@ -225,7 +219,7 @@ bool UserInterface::Update(double dt)
 			|| GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_A))
 		{
 			switch (choice) {
-			case 2:
+			case 4:
 				screen = SC_PLAY;
 				ChangeScreen(screen);
 				// Press F to at main menu to get all skills
@@ -236,6 +230,14 @@ bool UserInterface::Update(double dt)
 				CPlayerInfo2D::GetInstance()->Heal(false);
 				CSoundEngine::GetInstance()->PlayBGM("bgm");
 				return true;
+				break;
+			case 3:
+				screen = SC_INSTRUCTIONS;
+				ChangeScreen(screen);
+				break;
+			case 2:
+				screen = SC_CREDIT;
+				ChangeScreen(screen);
 				break;
 			case 1:
 				ShellExecuteA(NULL, (LPCSTR)"open", (LPCSTR)"https://www.teepublic.com/t-shirt/5731054-rollin-like-lonin/", NULL, NULL, SW_SHOWNORMAL);
@@ -282,8 +284,14 @@ bool UserInterface::Update(double dt)
 				return true;
 				break;
 			case 1:
+				screen = SC_PLAY;
+				ChangeScreen(screen);
+				CSoundEngine::GetInstance()->PlayBGM("bgm");
+				thePlayerInfo->Respawn();
+				thePlayerInfo->Heal(false);
 				break;
 			case 0:
+				thePlayerInfo->setExit(true);
 				break;
 			}
 		}
@@ -383,6 +391,28 @@ bool UserInterface::Update(double dt)
 		return true;
 		break;
 	}
+	case SC_INSTRUCTIONS:
+	case SC_CREDIT:
+	{
+		if (KeyboardController::GetInstance()->IsKeyPressed(VK_RETURN)
+			|| KeyboardController::GetInstance()->IsKeyPressed(VK_SPACE)
+			|| GamePadXbox::GetInstance()->IsKeyPressed(GamePadXbox::GamePad_Button_A))
+		{
+			screen = SC_MAIN;
+			ChangeScreen(screen);
+			if (textObj != NULL) {
+				for (int i = 0; i < numOfLines; ++i) {
+					delete textObj[i];
+					textObj[i] = NULL;
+				}
+				numOfLines = 0;
+				delete textObj;
+				textObj = NULL;
+			}
+		}
+		return true;
+		break;
+	}
 	case SC_PLAY: // This just checks for changes in UI* stuff while in play
 	{
 		// Heart update
@@ -404,16 +434,16 @@ bool UserInterface::Update(double dt)
 		lifeBar->SetScale(Vector3(static_cast<float>((thePlayerInfo->GetLifesteal()) * 6), lifeBar->GetScale().y));
 		lifeBar->SetPosition(Vector3(lifeBar->GetScale().x / 2 + 270, lifeBar->GetPosition().y));
 
-		std::ostringstream ss;
-		ss.precision(5);
-		ss << "CP: " << thePlayerInfo->checkPosition_X << ", " << thePlayerInfo->checkPosition_Y << endl
-			<< "P: " << thePlayerInfo->position << endl;
-		textObj[1]->SetText(ss.str());
+		//std::ostringstream ss;
+		//ss.precision(5);
+		//ss << "CP: " << thePlayerInfo->checkPosition_X << ", " << thePlayerInfo->checkPosition_Y << endl
+		//	<< "P: " << thePlayerInfo->position << endl;
+		//textObj[1]->SetText(ss.str());
 
-		ss.str("");
-		ss.clear();
-		ss << "mapOffset_x: " << thePlayerInfo->mapOffset_x << endl;
-		textObj[0]->SetText(ss.str());
+		//ss.str("");
+		//ss.clear();
+		//ss << "mapOffset_x: " << thePlayerInfo->mapOffset_x << endl;
+		//textObj[0]->SetText(ss.str());
 
 		if (thePlayerInfo->GetHp() <= 0)
 		{
@@ -435,8 +465,6 @@ bool UserInterface::Update(double dt)
 		{
 			screen = SC_SKILL_TREE;
 			ChangeScreen(screen);
-			choice = 2;
-			maxChoices = 3;
 			return true;
 		}
 
@@ -444,8 +472,6 @@ bool UserInterface::Update(double dt)
 		{
 			screen = SC_PAUSE;
 			ChangeScreen(screen);
-			choice = 2;
-			maxChoices = 3;
 			return false;
 		}
 		return true;
@@ -465,7 +491,17 @@ void UserInterface::ChangeScreen(SCREEN_TYPE screenType)
 	switch (screenType) {
 	case SC_MAIN:
 		CSoundEngine::GetInstance()->PlayBGM("bgmrroll");
-		buttonObj[2]->SetText("Play");
+
+		maxChoices = 5;
+		buttonObj[choice]->SetSelected(false);
+		choice = 4;
+		buttonObj[choice]->SetSelected(true);
+
+		buttonObj[4]->SetText("Play");
+
+		buttonObj[3]->SetText("Instructions");
+
+		buttonObj[2]->SetText("Credits");
 
 		buttonObj[1]->SetText("Merch");
 
@@ -477,38 +513,108 @@ void UserInterface::ChangeScreen(SCREEN_TYPE screenType)
 		break;
 	case SC_PAUSE:
 		CSoundEngine::GetInstance()->PlayBGM("bgmwalk");
+
+		maxChoices = 3;
+		buttonObj[choice]->SetSelected(false);
+		choice = 2;
+		buttonObj[choice]->SetSelected(true);
+
 		buttonObj[2]->SetText("Continue");
 
-		buttonObj[1]->SetText("Save");
+		buttonObj[1]->SetText("Load");
 
-		buttonObj[0]->SetText("Load");
+		buttonObj[0]->SetText("Exit");
 		thePlayerInfo->setScreenState(SC_PAUSE);
 		break;
 	case SC_SKILL_TREE:
 		thePlayerInfo->SetAnimationStatus(CPlayerInfo2D::P_IDLE_R1);
-		buttonObj[2]->SetText("SKILL TREE");
-
-		buttonObj[1]->SetText("");
-
-		buttonObj[0]->SetText("");
+		for (int i = 1; i < maxChoices; ++i) {
+			buttonObj[i]->SetText("");
+		}
+		maxChoices = 0;
+		buttonObj[choice]->SetSelected(false);
+		choice = 0;
 
 		levelUpScreen->SetPosition(Vector3(static_cast<float>(thePlayerInfo->GetMap()->getScreenWidth()) / 2, static_cast<float>(thePlayerInfo->GetMap()->getScreenHeight()) / 2, 0.0f));
 		
 		thePlayerInfo->setScreenState(SC_SKILL_TREE);
 		break;
 	case SC_GAMEOVER:
-		buttonObj[2]->SetText("Game Over?");
+		for (int i = 1; i < maxChoices; ++i) {
+			buttonObj[i]->SetText("");
+		}
+		maxChoices = 1;
 
-		buttonObj[1]->SetText("");
+		buttonObj[choice]->SetSelected(false);
+		choice = 0;
+		buttonObj[choice]->SetSelected(true);
 
-		buttonObj[0]->SetText("");
+		buttonObj[0]->SetText("Game Over?");
 
 		thePlayerInfo->setScreenState(SC_GAMEOVER);
+		break;
+	case SC_INSTRUCTIONS:
+		for (int i = 1; i < maxChoices; ++i) {
+			buttonObj[i]->SetText("");
+		}
+		maxChoices = 1;
+
+		buttonObj[choice]->SetSelected(false);
+		choice = 0;
+		buttonObj[choice]->SetSelected(true);
+
+		buttonObj[0]->SetText("Back");
+
+		SetWords(screen);
+
+		break;
+	case SC_CREDIT:
+		for (int i = 1; i < maxChoices; ++i) {
+			buttonObj[i]->SetText("");
+		}
+		maxChoices = 1;
+
+		buttonObj[choice]->SetSelected(false);
+		choice = 0;
+		buttonObj[choice]->SetSelected(true);
+
+		buttonObj[0]->SetText("Back");
+
+		SetWords(screen);
+
 		break;
 	}
 }
 
-
+void UserInterface::SetWords(SCREEN_TYPE screenType)
+{
+	ifstream file;
+	switch(screenType)
+	{
+	case SC_INSTRUCTIONS:
+		file.open(".//Image//Instructions.txt", ios::in);
+		break;
+	case SC_CREDIT:
+		file.open(".//Image//Credits.txt", ios::in);
+		break;
+	}
+	if (file.is_open())
+	{
+		string aText = "";
+		getline(file, aText);
+		numOfLines = stoi(aText);
+		textObj = new TextEntity*[numOfLines];
+		for (int i = 0; file.good() && i < numOfLines; ++i)
+		{
+			string aLineOfText = "";
+			getline(file, aLineOfText);
+			textObj[i] = Create::Text2DObject("text",
+				Vector3(5, 230 - 16 * i - 8, 0.0f),
+				aLineOfText,
+				Vector3(8, 8), Color(1.0f, 0.0f, 0.0f));
+		}
+	}
+}
 
 bool UserInterface::GetScreenStatus()
 {
@@ -526,7 +632,13 @@ bool UserInterface::GetScreenStatus()
 		return false;
 		break;
 	case SC_GAMEOVER:
-		return true;// Note : change this to false, and add a case SC_GAME_OVER
+		return true;
+		break;
+	case SC_INSTRUCTIONS:
+		return false;
+		break;
+	case SC_CREDIT:
+		return false;
 		break;
 	}
 	return true;
@@ -540,9 +652,10 @@ void UserInterface::Render()// this is at the back since it needs to be on top? 
 			titleScreen[1]->RenderUI();
 		else
 			titleScreen[0]->RenderUI();
-		buttonObj[0]->RenderUI();
-		buttonObj[1]->RenderUI();
-		buttonObj[2]->RenderUI();
+
+		for (int i = 0; i < maxChoices; ++i) {
+			buttonObj[i]->RenderUI();
+		}
 		break;
 	case SC_PLAY:
 		UI_Bar->RenderUI();
@@ -563,19 +676,14 @@ void UserInterface::Render()// this is at the back since it needs to be on top? 
 			lifeBar->RenderUI();
 			lifeBlock->RenderUI();
 		}
-		textObj[0]->RenderUI();
-		textObj[1]->RenderUI();
 		return;
 		break;
 	case SC_PAUSE:
-		buttonObj[0]->RenderUI();
-		buttonObj[1]->RenderUI();
-		buttonObj[2]->RenderUI();
+		for (int i = 0; i < maxChoices; ++i) {
+			buttonObj[i]->RenderUI();
+		}
 		break;
 	case SC_SKILL_TREE:
-		buttonObj[0]->RenderUI();
-		buttonObj[1]->RenderUI();
-		buttonObj[2]->RenderUI();
 		levelUpScreen->RenderUI();
 		for (int i = 0; i < 13; ++i)
 		{
@@ -587,9 +695,21 @@ void UserInterface::Render()// this is at the back since it needs to be on top? 
 		skillSelectedFrame->RenderUI();
 		break;
 	case SC_GAMEOVER:
+		for (int i = 0; i < maxChoices; ++i) {
+			buttonObj[i]->RenderUI();
+		}
+		break;
+	case SC_INSTRUCTIONS:
+		titleScreen[0]->RenderUI();
+		for (int i = 0; i < numOfLines; ++i)
+			textObj[i]->RenderUI();
 		buttonObj[0]->RenderUI();
-		buttonObj[1]->RenderUI();
-		buttonObj[2]->RenderUI();
+		break;
+	case SC_CREDIT:
+		titleScreen[0]->RenderUI();
+		for (int i = 0; i < numOfLines; ++i)
+			textObj[i]->RenderUI();
+		buttonObj[0]->RenderUI();
 		break;
 	}
 }
