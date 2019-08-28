@@ -509,6 +509,8 @@ bool UserInterface::Update(double dt)
 			screen = SC_SKILL_TREE;
 			if(temporop->GetPosition().x < static_cast<float>(thePlayerInfo->GetPos().x - thePlayerInfo->GetMap()->getScreenWidth()))
 				temporop->SetPosition(Vector3(static_cast<float>(thePlayerInfo->GetPos().x - thePlayerInfo->GetMap()->getScreenWidth()), static_cast<float>(thePlayerInfo->GetMap()->getScreenHeight()) / 2, 0));
+			if (thePlayerInfo->GetTileOffset_x() > 200 || thePlayerInfo->GetMap()->GetNumOfTiles_Width() - thePlayerInfo->GetTileOffset_x() < 300);// if(Move forward too much(delete back) / Move forward too much(add forward))
+				is_Respawned = true;// i mean.. i "could" place this outside of this.. but i dw sudden lag for no reason
 			corruptionTimer = 30.f;
 			temporop->SetSpeed(5.f);
 			ChangeScreen(screen);

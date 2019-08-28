@@ -33,6 +33,7 @@ public:
 	int getScreenWidth(void);
 	vector<vector<int> > theScreenMap;
 	bool AddRearFile(CMap* map, CMap* ref);
+	void ShiftMap(int amount);
 private:
 	int theScreen_Height;			// The map's height
 	int theScreen_Width;			// The map's width
