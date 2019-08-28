@@ -42,7 +42,7 @@ private:
 		D_HARD,
 		D_EXPERT
 	};
-	void createWorld(size_t Difficulty, size_t Repeat);
+	void createWorld(size_t Difficulty = 100, size_t Repeat = 1);
 
 	ShaderProgram* currProg;
 	FPSCamera camera;

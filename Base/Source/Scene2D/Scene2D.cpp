@@ -50,77 +50,38 @@ void CScene2D::createWorld(size_t Difficulty, size_t Repeat)
 	for (size_t i = 0; i < Repeat; ++i)
 	{
 		int initialWidth = m_cMap->getNumOfTiles_MapWidth();
+		std::ostringstream ss;
 		switch (Difficulty)
 		{
+		case 100: // 100 is for testing
+			{
+				ss << "Levels//Test.csv";
+			}
+			break;
 		case D_EASY:
 			{
-				switch (Math::RandIntMinMax(0, 3))
-				{
-				case 0:
-					m_cMap->LoadMap("Levels//Easy1.csv");
-					break;
-				case 1:
-					m_cMap->LoadMap("Levels//Easy2.csv");
-					break;
-				case 2:
-					m_cMap->LoadMap("Levels//Easy3.csv");
-					break;
-				case 3:
-					m_cMap->LoadMap("Levels//Easy4.csv");
-					break;
-				default:
-					break;
-				}
+				ss << "Levels//Easy" << Math::RandIntMinMax(1, 3) << ".csv";
 			}
 			break;
 		case D_NORMAL:
 			{
-				switch (Math::RandIntMinMax(0, 1))
-				{
-				case 0:
-					m_cMap->LoadMap("Levels//MapDesign.csv");
-					break;
-				case 1:
-					m_cMap->LoadMap("Levels//MapDesign2.csv");
-					break;
-				default:
-					break;
-				}
+				ss << "Levels//Normal" << Math::RandIntMinMax(1, 5) << ".csv";
 			}
 			break;
 		case D_HARD:
 			{
-				switch (Math::RandIntMinMax(0, 1))
-				{
-				case 0:
-					m_cMap->LoadMap("Levels//MapDesign.csv");
-					break;
-				case 1:
-					m_cMap->LoadMap("Levels//MapDesign2.csv");
-					break;
-				default:
-					break;
-				}
+				ss << "Levels//Hard" << Math::RandIntMinMax(1, 1) << ".csv";
 			}
 			break;
 		case D_EXPERT:
 			{
-				switch (Math::RandIntMinMax(0, 1))
-				{
-				case 0:
-					m_cMap->LoadMap("Levels//MapDesign.csv");
-					break;
-				case 1:
-					m_cMap->LoadMap("Levels//MapDesign2.csv");
-					break;
-				default:
-					break;
-				}
+				ss << "Levels//MapDesign" << Math::RandIntMinMax(1, 2) << ".csv";
 			}
 			break;
 		default:
 			break;
 		}
+		m_cMap->LoadMap(ss.str());
 		// unlimited??? (limited by max vector size?)
 		for (int width = initialWidth; width < m_cMap->getNumOfTiles_MapWidth(); ++width)
 		{
@@ -322,8 +283,9 @@ void CScene2D::Init()
 	m_cMap = new CMap();
 	m_cMap->Init(Application::GetInstance().GetWindowHeight()-16, Application::GetInstance().GetWindowWidth(), 15, 64, 240, 1024);
 	Math::InitRNG();
-	createWorld(D_EASY, 10);
-	createWorld(D_NORMAL, 10);
+	createWorld();
+	createWorld(D_EASY, 5);
+	createWorld(D_NORMAL, 5);
 	createWorld(D_HARD, 10);
 	createWorld(D_EXPERT, 10);
 	
