@@ -61,11 +61,14 @@ UserInterface::UserInterface(CProjectile* temporo)
 			Vector3(32.f, 208.f, 0.0f),
 			Vector3(32.0f, 16.0f, 0.0f));
 
-		titleScreen = new SpriteEntity*[2];
+		titleScreen = new SpriteEntity*[3];
 		titleScreen[0] = Create::Sprite2DObject("Title_Screen",
 			Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 			Vector3(360.0f, 240.0f, 0.0f));
 		titleScreen[1] = Create::Sprite2DObject("Title_Screen2",
+			Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
+			Vector3(360.0f, 240.0f, 0.0f));
+		titleScreen[2] = Create::Sprite2DObject("SCENE2D_BKGROUND",
 			Vector3(halfWindowWidth, halfWindowHeight, 0.0f),
 			Vector3(360.0f, 240.0f, 0.0f));
 
@@ -174,7 +177,7 @@ UserInterface::~UserInterface()
 		delete buttonObj[i];
 		buttonObj[i] = NULL;
 	}
-	for (int i = 0; i < 2; ++i)
+	for (int i = 0; i < 3; ++i)
 	{
 		delete titleScreen[i];
 		titleScreen[i] = NULL;
@@ -798,13 +801,13 @@ void UserInterface::Render()// this is at the back since it needs to be on top? 
 		}
 		break;
 	case SC_INSTRUCTIONS:
-		titleScreen[0]->RenderUI();
+		titleScreen[2]->RenderUI();
 		for (int i = 0; i < numOfLines; ++i)
 			textObj[i]->RenderUI();
 		buttonObj[0]->RenderUI();
 		break;
 	case SC_CREDIT:
-		titleScreen[0]->RenderUI();
+		titleScreen[2]->RenderUI();
 		for (int i = 0; i < numOfLines; ++i)
 			textObj[i]->RenderUI();
 		buttonObj[0]->RenderUI();
